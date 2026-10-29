@@ -19,8 +19,7 @@ ALLOWED_TYPES = {
 
 @login_required
 def documents_view(request):
-    docs = UploadedDocument.objects.filter(user=request.user)
-    return render(request, 'documents/list.html', {'documents': docs})
+    return redirect('home')
 
 
 @login_required
@@ -58,8 +57,7 @@ def upload_document_view(request):
 
 @login_required
 def document_analyze_view(request, doc_id):
-    doc = get_object_or_404(UploadedDocument, id=doc_id, user=request.user)
-    return render(request, 'documents/analyze.html', {'document': doc})
+    return redirect('home')
 
 
 @login_required
