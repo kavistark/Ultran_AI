@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}Confirm Account Deletion — AI ULTRAN{% endblock %}
+
+{% block content %}
+<div class="container py-5" style="max-width: 520px;">
+    <div class="card border-danger border-opacity-50 fade-in">
+        <div class="card-body p-5 text-center">
+            <div style="font-size: 3.5rem; margin-bottom: 16px;">⚠️</div>
+            <h3 class="fw-bold text-danger mb-2">Delete Your Account?</h3>
+            <p class="text-secondary mb-4" style="line-height: 1.6;">
+                This action is <strong>irreversible</strong>. All your conversations, memory preferences, reminders, action audit logs, and uploaded documents will be permanently purged from the database and storage.
+            </p>
+
+            <form method="POST">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger w-100 py-2 mb-3 fw-bold">
+                    <i class="fas fa-trash me-2"></i>Yes, Permanently Delete My Account
+                </button>
+            </form>
+            <a href="{% url 'preferences' %}" class="btn btn-outline-secondary w-100">Cancel & Go Back</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

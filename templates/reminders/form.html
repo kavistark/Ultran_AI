@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block title %}{{ action }} Reminder — AI ULTRAN{% endblock %}
+
+{% block content %}
+<div class="container py-4" style="max-width: 600px;">
+    <div class="mb-4">
+        <a href="{% url 'reminders_list' %}" class="text-secondary text-decoration-none small d-inline-flex align-items-center gap-1 mb-2">
+            <i class="fas fa-arrow-left"></i> Back to Reminders
+        </a>
+        <h2 class="fw-bold mb-1">{{ action }} Reminder</h2>
+        <p class="text-secondary mb-0">Set task priority, description, and scheduled notification date & time.</p>
+    </div>
+
+    <div class="card fade-in">
+        <div class="card-body p-4">
+            <form method="POST">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label class="form-label" for="{{ form.title.id_for_label }}">Reminder Title</label>
+                    {{ form.title }}
+                    {% if form.title.errors %}<div class="text-danger small mt-1">{{ form.title.errors }}</div>{% endif %}
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" for="{{ form.description.id_for_label }}">Description (Optional)</label>
+                    {{ form.description }}
+                </div>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-md-7">
+                        <label class="form-label" for="{{ form.due_time.id_for_label }}">Due Date & Time</label>
+                        {{ form.due_time }}
+                        {% if form.due_time.errors %}<div class="text-danger small mt-1">{{ form.due_time.errors }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-5">
+                        <label class="form-label" for="{{ form.priority.id_for_label }}">Priority</label>
+                        {{ form.priority }}
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-center gap-2">
+                    <button type="submit" class="btn btn-primary px-4 fw-bold">
+                        <i class="fas fa-floppy-disk me-1"></i> Save Reminder
+                    </button>
+                    <a href="{% url 'reminders_list' %}" class="btn btn-outline-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

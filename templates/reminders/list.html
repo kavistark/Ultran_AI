@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+{% block title %}Reminders & Productivity — AI ULTRAN{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-3">
+        <div>
+            <h2 class="fw-bold mb-1"><i class="fas fa-bell text-warning me-2"></i>Task & Reminder Management</h2>
+            <p class="text-secondary mb-0">Organize your tasks manually or tell ULTRAN: “Remind me to call John tomorrow at 5 PM”.</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{% url 'assistant' %}" class="btn btn-outline-primary">
+                <i class="fas fa-microphone me-1"></i>Voice Schedule
+            </a>
+            <a href="{% url 'reminder_create' %}" class="btn btn-primary">
+                <i class="fas fa-plus me-1"></i>New Reminder
+            </a>
+        </div>
+    </div>
+
+    <!-- Pending Tasks Table -->
+    <div class="card mb-4">
+        <div class="card-header d-flex align-items-center justify-content-between">
+            <div><i class="fas fa-clock text-warning me-2"></i>Pending Reminders ({{ pending.count }})</div>
+            <span class="badge" style="background: rgba(245, 158, 11, 0.15); color: #fbbf24;">Active</span>
+        </div>
+        <div class="card-body p-0">
+            {% if pending %}
+            <div class="table-responsive">
+                <table class="table table-hover mb-0 align-middle">
+                    <thead>
+                        <tr class="text-secondary" style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.8px;">
+                            <th class="ps-4 py-3">Task Details</th>
+                            <th class="py-3">Scheduled Due Time</th>
+                            <th class="py-3">Priority</th>
+                            <th class="pe-4 py-3 text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for reminder in pending %}
+                        <tr>
+                            <td class="ps-4 py-3">
+                                <div class="fw-bold text-light">{{ reminder.title }}</div>
+                                {% if reminder.description %}
+                                <small class="text-secondary">{{ reminder.description }}</small>
+                                {% endif %}
+                            </td>
+                            <td class="py-3">
+                                <div><i class="fas fa-calendar-day text-info me-1"></i>{{ reminder.due_time|date:"M j, Y" }}</div>
+                                <small class="text-muted"><i class="fas fa-clock me-1"></i>{{ reminder.due_time|date:"g:i A" }}</small>
+                            </td>
+                            <td class="py-3">
+                                <span class="badge priority-{{ reminder.priority }}">{{ reminder.priority }}</span>
+                            </td>
+                            <td class="pe-4 py-3 text-end">
+                                <div class="d-inline-flex gap-2">
+                                    <a href="{% url 'reminder_complete' reminder.id %}" class="btn btn-sm btn-outline-success" title="Mark complete">
+                                        <i class="fas fa-check"></i>
+                                    </a>
+                                    <a href="{% url 'reminder_edit' reminder.id %}" class="btn btn-sm btn-outline-primary" title="Edit reminder">
+                                        <i class="fas fa-pen"></i>
+                                    </a>
+                                    <form method="POST" action="{% url 'reminder_delete' reminder.id %}" class="d-inline" onsubmit="return confirm('Delete this reminder?');">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-center py-5 text-secondary">
+                <div style="font-size: 3rem; margin-bottom: 12px; opacity: 0.5;">✅</div>
+                <h5 class="fw-bold mb-1">No pending tasks</h5>
+                <p class="text-muted small mb-3">You're completely caught up! Add a new reminder or use voice commands.</p>
+                <a href="{% url 'reminder_create' %}" class="btn btn-sm btn-primary">
+                    <i class="fas fa-plus me-1"></i>Create Reminder
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Completed Tasks -->
+    {% if completed %}
+    <div class="card border-secondary border-opacity-25">
+        <div class="card-header text-secondary d-flex align-items-center gap-2">
+            <i class="fas fa-circle-check text-success"></i> Recently Completed Reminders
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table mb-0 align-middle">
+                    <tbody>
+                        {% for reminder in completed %}
+                        <tr>
+                            <td class="ps-4 py-2 text-decoration-line-through text-muted" style="width: 50%;">
+                                {{ reminder.title }}
+                            </td>
+                            <td class="py-2 text-muted small">
+                                Completed {{ reminder.updated_at|timesince }} ago
+                            </td>
+                            <td class="pe-4 py-2 text-end">
+                                <span class="badge" style="background: rgba(16, 185, 129, 0.15); color: #34d399;">Done</span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+

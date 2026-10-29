@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% block title %}Conversation History — AI ULTRAN{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <div>
+            <h2 class="fw-bold mb-1"><i class="fas fa-clock-rotate-left text-info me-2"></i>Conversation History</h2>
+            <p class="text-secondary mb-0">Review past multi-turn discussions and voice sessions.</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{% url 'new_conversation' %}" class="btn btn-primary">
+                <i class="fas fa-plus me-1"></i>New Conversation
+            </a>
+            {% if conversations %}
+            <button class="btn btn-outline-danger" onclick="clearAllHistory()">
+                <i class="fas fa-trash me-1"></i>Clear All History
+            </button>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if conversations %}
+    <div class="row g-3">
+        {% for conv in conversations %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100">
+                <div class="card-body p-4 d-flex flex-column justify-content-between">
+                    <div>
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <div style="width: 40px; height: 40px; border-radius: 12px; background: rgba(59, 130, 246, 0.15); display: flex; align-items: center; justify-content: center; color: var(--accent-blue);">
+                                <i class="fas fa-comments"></i>
+                            </div>
+                            <span class="badge" style="background: rgba(255, 255, 255, 0.08); color: var(--text-secondary); font-size: 0.75rem;">
+                                {{ conv.messages.count }} messages
+                            </span>
+                        </div>
+                        <h6 class="fw-bold mb-2 text-truncate" title="{{ conv.title }}">{{ conv.title }}</h6>
+                        <small class="text-secondary d-block mb-3">
+                            <i class="fas fa-calendar-day me-1"></i>Updated {{ conv.updated_at|timesince }} ago
+                        </small>
+                    </div>
+
+                    <div class="d-flex gap-2 pt-2 border-top" style="border-color: var(--border-color) !important;">
+                        <a href="{% url 'assistant_conversation' conv.id %}" class="btn btn-outline-primary btn-sm flex-grow-1">
+                            <i class="fas fa-arrow-up-right-from-square me-1"></i>Open Chat
+                        </a>
+                        <form method="POST" action="{% url 'delete_conversation' conv.id %}" class="d-inline" onsubmit="return confirm('Delete this conversation?');">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete conversation">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="card p-5 text-center my-4">
+        <div style="font-size: 3.5rem; margin-bottom: 16px; opacity: 0.5;">💬</div>
+        <h4 class="fw-bold mb-2">No conversations recorded</h4>
+        <p class="text-secondary mb-4">When you speak or chat with AI ULTRAN, your conversations will appear here.</p>
+        <div>
+            <a href="{% url 'assistant' %}" class="btn btn-primary">
+                <i class="fas fa-play me-2"></i>Start Your First Chat
+            </a>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    async function clearAllHistory() {
+        if (!confirm('Are you sure you want to delete all saved conversations? This cannot be undone.')) {
+            return;
+        }
+        try {
+            const res = await fetch('/api/history/delete-all/', {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                }
+            });
+            if (res.ok) {
+                window.location.reload();
+            } else {
+                alert('Failed to clear history. Please try again.');
+            }
+        } catch (e) {
+            alert('Error deleting history.');
+        }
+    }
+</script>
+{% endblock %}
+

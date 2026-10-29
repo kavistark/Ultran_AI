@@ -1,0 +1,298 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard — AI ULTRAN Workspace{% endblock %}
+
+{% block extra_css %}
+<style>
+    .workspace-banner {
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.12) 0%, rgba(139, 92, 246, 0.15) 100%);
+        border: 1px solid rgba(59, 130, 246, 0.25);
+        border-radius: 20px;
+        padding: 30px 36px;
+        margin-bottom: 30px;
+        position: relative;
+        overflow: hidden;
+    }
+    .stat-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
+        padding: 22px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+    .stat-card:hover {
+        transform: translateY(-3px);
+        border-color: var(--accent-blue);
+    }
+    .stat-value {
+        font-size: 2.1rem;
+        font-weight: 800;
+        line-height: 1.1;
+    }
+    .stat-label {
+        font-size: 0.82rem;
+        text-transform: uppercase;
+        font-weight: 700;
+        color: var(--text-muted);
+        letter-spacing: 0.8px;
+    }
+    .stat-icon {
+        width: 52px;
+        height: 52px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.4rem;
+    }
+    .action-button-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
+        padding: 22px;
+        text-decoration: none;
+        color: var(--text-primary);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        transition: all 0.2s ease;
+        height: 100%;
+    }
+    .action-button-card:hover {
+        transform: translateY(-4px);
+        border-color: var(--accent-blue);
+        color: #fff;
+        box-shadow: 0 10px 25px rgba(59, 130, 246, 0.15);
+    }
+    .action-icon {
+        width: 56px;
+        height: 56px;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        margin-bottom: 14px;
+    }
+    .list-item-hover {
+        padding: 14px 18px;
+        border-radius: 12px;
+        background: var(--bg-input);
+        border: 1px solid var(--border-color);
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        transition: all 0.2s;
+    }
+    .list-item-hover:hover {
+        border-color: rgba(59, 130, 246, 0.4);
+        background: rgba(59, 130, 246, 0.05);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-4 py-4">
+    <!-- Welcome Header Banner -->
+    <div class="workspace-banner fade-in">
+        <div class="row align-items-center g-3">
+            <div class="col-md-8">
+                <div class="d-flex align-items-center gap-2 mb-2">
+                    <span class="badge" style="background: rgba(16, 185, 129, 0.2); color: #34d399;">
+                        <i class="fas fa-check-circle me-1"></i>System Online
+                    </span>
+                    <span class="text-secondary" style="font-size: 0.85rem;">Mode: {{ pref.response_style|title }} Response</span>
+                </div>
+                <h2 class="fw-bold mb-1">
+                    Welcome back, {{ user.first_name|default:user.username }}!
+                </h2>
+                <p class="text-secondary mb-0" style="font-size: 1.05rem;">
+                    AI ULTRAN is ready to assist you. Chat with voice, organize reminders, and manage your productivity.
+                </p>
+            </div>
+            <div class="col-md-4 text-md-end d-flex gap-2 justify-content-md-end">
+                <a href="{% url 'voice_wave' %}" class="btn btn-primary btn-lg px-4" style="background: linear-gradient(135deg, #7c3aed 0%, #2563eb 100%); box-shadow: 0 0 20px rgba(124, 58, 237, 0.4);">
+                    <i class="fas fa-waveform-lines me-2 text-warning"></i>Voice Wave
+                </a>
+                <a href="{% url 'assistant' %}" class="btn btn-outline-secondary btn-lg">
+                    <i class="fas fa-comments"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Live Stat Counters -->
+    <div class="row g-4 mb-4">
+        <div class="col-sm-6 col-xl-3">
+            <div class="stat-card">
+                <div>
+                    <div class="stat-label">Conversations</div>
+                    <div class="stat-value text-primary mt-1">{{ conversations.count }}</div>
+                </div>
+                <div class="stat-icon" style="background: rgba(59, 130, 246, 0.15); color: var(--accent-blue);">
+                    <i class="fas fa-comments"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+            <div class="stat-card">
+                <div>
+                    <div class="stat-label">Pending Reminders</div>
+                    <div class="stat-value text-warning mt-1">{{ upcoming_reminders.count }}</div>
+                </div>
+                <div class="stat-icon" style="background: rgba(245, 158, 11, 0.15); color: var(--accent-yellow);">
+                    <i class="fas fa-bell"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+            <div class="stat-card">
+                <div>
+                    <div class="stat-label">Analyzed Documents</div>
+                    <div class="stat-value text-success mt-1">{{ request.user.documents.count }}</div>
+                </div>
+                <div class="stat-icon" style="background: rgba(16, 185, 129, 0.15); color: var(--accent-green);">
+                    <i class="fas fa-file-shield"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+            <div class="stat-card">
+                <div>
+                    <div class="stat-label">Approved Actions</div>
+                    <div class="stat-value text-purple mt-1" style="color: var(--accent-purple);">{{ recent_actions.count }}</div>
+                </div>
+                <div class="stat-icon" style="background: rgba(139, 92, 246, 0.15); color: var(--accent-purple);">
+                    <i class="fas fa-bolt"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Action Launchers -->
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-md-3">
+            <a href="{% url 'assistant' %}" class="action-button-card">
+                <div class="action-icon" style="background: rgba(59, 130, 246, 0.15); color: var(--accent-blue);">
+                    <i class="fas fa-microphone"></i>
+                </div>
+                <strong class="mb-1">AI Voice Chat</strong>
+                <small class="text-secondary">Speak or type prompts</small>
+            </a>
+        </div>
+        <div class="col-6 col-md-3">
+            <a href="{% url 'reminder_create' %}" class="action-button-card">
+                <div class="action-icon" style="background: rgba(245, 158, 11, 0.15); color: var(--accent-yellow);">
+                    <i class="fas fa-calendar-plus"></i>
+                </div>
+                <strong class="mb-1">New Reminder</strong>
+                <small class="text-secondary">Schedule tasks & events</small>
+            </a>
+        </div>
+        <div class="col-6 col-md-3">
+            <a href="{% url 'documents' %}" class="action-button-card">
+                <div class="action-icon" style="background: rgba(16, 185, 129, 0.15); color: var(--accent-green);">
+                    <i class="fas fa-file-upload"></i>
+                </div>
+                <strong class="mb-1">Analyze Document</strong>
+                <small class="text-secondary">PDF & Text summaries</small>
+            </a>
+        </div>
+        <div class="col-6 col-md-3">
+            <a href="{% url 'preferences' %}" class="action-button-card">
+                <div class="action-icon" style="background: rgba(139, 92, 246, 0.15); color: var(--accent-purple);">
+                    <i class="fas fa-sliders"></i>
+                </div>
+                <strong class="mb-1">Preferences</strong>
+                <small class="text-secondary">Voice, style & memory</small>
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Workspace Two Columns -->
+    <div class="row g-4">
+        <!-- Upcoming Reminders -->
+        <div class="col-lg-6">
+            <div class="card h-100">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <div><i class="fas fa-bell text-warning me-2"></i>Upcoming Reminders</div>
+                    <a href="{% url 'reminders_list' %}" class="btn btn-sm btn-outline-primary">View All</a>
+                </div>
+                <div class="card-body p-3">
+                    {% if upcoming_reminders %}
+                        {% for reminder in upcoming_reminders %}
+                        <div class="list-item-hover">
+                            <div class="d-flex align-items-center gap-3">
+                                <span class="badge priority-{{ reminder.priority }}">{{ reminder.priority }}</span>
+                                <div>
+                                    <div class="fw-bold text-light" style="font-size: 0.95rem;">{{ reminder.title }}</div>
+                                    <small class="text-secondary">
+                                        <i class="fas fa-calendar-day me-1"></i>{{ reminder.due_time|date:"M j, Y — g:i A" }}
+                                    </small>
+                                </div>
+                            </div>
+                            <a href="{% url 'reminder_complete' reminder.id %}" class="btn btn-sm" style="background: rgba(16, 185, 129, 0.12); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3);" title="Mark complete">
+                                <i class="fas fa-check"></i>
+                            </a>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center py-5 text-secondary">
+                            <div style="font-size: 3rem; margin-bottom: 12px; opacity: 0.5;">📅</div>
+                            <h6>No pending reminders scheduled</h6>
+                            <p class="small text-muted mb-3">Say "Remind me to..." in AI Chat or click below.</p>
+                            <a href="{% url 'reminder_create' %}" class="btn btn-sm btn-outline-primary">
+                                <i class="fas fa-plus me-1"></i>Add Reminder
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Conversations -->
+        <div class="col-lg-6">
+            <div class="card h-100">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <div><i class="fas fa-comments text-info me-2"></i>Recent Conversations</div>
+                    <a href="{% url 'history' %}" class="btn btn-sm btn-outline-primary">History</a>
+                </div>
+                <div class="card-body p-3">
+                    {% if conversations %}
+                        {% for conv in conversations %}
+                        <a href="{% url 'assistant_conversation' conv.id %}" class="list-item-hover text-decoration-none text-light d-block">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div class="d-flex align-items-center gap-3" style="max-width: 80%;">
+                                    <div style="width: 38px; height: 38px; border-radius: 10px; background: rgba(59, 130, 246, 0.15); display: flex; align-items: center; justify-content: center; color: var(--accent-blue); flex-shrink: 0;">
+                                        <i class="fas fa-message"></i>
+                                    </div>
+                                    <div class="text-truncate">
+                                        <div class="fw-semibold text-truncate">{{ conv.title }}</div>
+                                        <small class="text-muted"><i class="fas fa-clock me-1"></i>{{ conv.updated_at|timesince }} ago</small>
+                                    </div>
+                                </div>
+                                <i class="fas fa-chevron-right text-muted" style="font-size: 0.8rem;"></i>
+                            </div>
+                        </a>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center py-5 text-secondary">
+                            <div style="font-size: 3rem; margin-bottom: 12px; opacity: 0.5;">💬</div>
+                            <h6>No conversations yet</h6>
+                            <p class="small text-muted mb-3">Start your first voice or text conversation with ULTRAN.</p>
+                            <a href="{% url 'assistant' %}" class="btn btn-sm btn-primary">
+                                <i class="fas fa-play me-1"></i>Start Chat
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

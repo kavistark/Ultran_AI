@@ -1,0 +1,196 @@
+{% extends 'base.html' %}
+{% block title %}Analyze {{ document.name }} — AI ULTRAN{% endblock %}
+
+{% block extra_css %}
+<style>
+    .doc-layout-box {
+        display: flex;
+        flex-direction: column;
+        height: calc(100vh - 170px);
+        min-height: 500px;
+    }
+    .doc-conversation-stream {
+        flex: 1;
+        overflow-y: auto;
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+    .doc-bubble-msg {
+        max-width: 85%;
+        padding: 14px 18px;
+        border-radius: 16px;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        word-break: break-word;
+    }
+    .user-doc-bubble {
+        align-self: flex-end;
+        background: rgba(59, 130, 246, 0.2);
+        border: 1px solid rgba(59, 130, 246, 0.4);
+        color: #fff;
+    }
+    .ai-doc-bubble {
+        align-self: flex-start;
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        color: var(--text-primary);
+    }
+    .quick-prompt-pill {
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 20px;
+        padding: 6px 14px;
+        font-size: 0.85rem;
+        cursor: pointer;
+        color: var(--text-secondary);
+        transition: all 0.2s;
+    }
+    .quick-prompt-pill:hover {
+        background: rgba(16, 185, 129, 0.15);
+        color: #fff;
+        border-color: var(--accent-green);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-3">
+    <!-- Top Document Breadcrumb & Meta -->
+    <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+        <div class="d-flex align-items-center gap-3">
+            <a href="{% url 'documents' %}" class="btn btn-sm btn-outline-secondary">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            <div style="width: 40px; height: 40px; border-radius: 12px; background: rgba(16, 185, 129, 0.15); display: flex; align-items: center; justify-content: center; color: var(--accent-green); font-size: 1.2rem;">
+                <i class="fas fa-file-shield"></i>
+            </div>
+            <div>
+                <h5 class="fw-bold mb-0 text-truncate" style="max-width: 450px;">{{ document.name }}</h5>
+                <small class="text-secondary">{{ document.file_size|filesizeformat }} · Uploaded {{ document.uploaded_at|date:"M j, Y" }}</small>
+            </div>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{{ document.file.url }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                <i class="fas fa-arrow-up-right-from-square me-1"></i>View Raw File
+            </a>
+        </div>
+    </div>
+
+    <!-- Interrogation Container -->
+    <div class="card doc-layout-box">
+        <div class="card-header border-bottom d-flex align-items-center justify-content-between py-2 px-4" style="font-size: 0.88rem;">
+            <div class="d-flex align-items-center gap-2 text-info">
+                <i class="fas fa-brain"></i> Gemini Document Reasoning Engine
+            </div>
+            <span class="badge" style="background: rgba(16, 185, 129, 0.15); color: #34d399;">Context Ready</span>
+        </div>
+
+        <!-- Conversation Stream -->
+        <div class="doc-conversation-stream" id="docStream">
+            <div class="text-center my-auto py-4" id="emptyDocGreeting">
+                <div style="font-size: 3rem; margin-bottom: 12px; opacity: 0.5;">📄</div>
+                <h5 class="fw-bold mb-1">What would you like to know about this file?</h5>
+                <p class="text-secondary small mb-3">Click a quick prompt below or type your specific question.</p>
+                <div class="d-flex flex-wrap justify-content-center gap-2">
+                    <span class="quick-prompt-pill" onclick="sendDocPrompt('Provide a concise executive summary of this document.')">
+                        “Executive Summary”
+                    </span>
+                    <span class="quick-prompt-pill" onclick="sendDocPrompt('Extract all actionable items, deadlines, and key takeaways.')">
+                        “Action Items & Takeaways”
+                    </span>
+                    <span class="quick-prompt-pill" onclick="sendDocPrompt('List the main topics and important concepts covered.')">
+                        “Key Topics & Concepts”
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Input Box -->
+        <div class="p-3 border-top" style="background: var(--bg-secondary); border-color: var(--border-color) !important;">
+            <div class="input-group">
+                <input type="text" id="docQuestionInput" class="form-control" placeholder="Ask a question about this document..." onkeydown="if(event.key === 'Enter') submitDocQuery();">
+                <button class="btn btn-primary px-4 fw-bold" id="docSubmitBtn" onclick="submitDocQuery()">
+                    <i class="fas fa-paper-plane me-1"></i> Analyze
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const DOC_ID = {{ document.id }};
+    const CSRF_TOKEN = '{{ csrf_token }}';
+
+    function sendDocPrompt(promptText) {
+        document.getElementById('docQuestionInput').value = promptText;
+        submitDocQuery();
+    }
+
+    function appendDocBubble(role, content) {
+        const greeting = document.getElementById('emptyDocGreeting');
+        if (greeting) greeting.remove();
+
+        const stream = document.getElementById('docStream');
+        const bubble = document.createElement('div');
+        bubble.className = `doc-bubble-msg ${role === 'user' ? 'user-doc-bubble' : 'ai-doc-bubble'}`;
+        
+        let formatted = content
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/```([\s\S]*?)```/g, '<pre style="background:#090d16;padding:10px;border-radius:8px;margin:8px 0;"><code>$1</code></pre>')
+            .replace(/`([^`]+)`/g, '<code style="background:rgba(0,0,0,0.3);padding:2px 4px;border-radius:4px;">$1</code>')
+            .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+            .replace(/\n/g, '<br>');
+
+        bubble.innerHTML = formatted;
+        stream.appendChild(bubble);
+        stream.scrollTop = stream.scrollHeight;
+    }
+
+    async function submitDocQuery() {
+        const input = document.getElementById('docQuestionInput');
+        const query = input.value.trim();
+        if (!query) return;
+
+        input.value = '';
+        appendDocBubble('user', query);
+
+        // Loading indicator
+        const stream = document.getElementById('docStream');
+        const loading = document.createElement('div');
+        loading.id = 'docLoadingBubble';
+        loading.className = 'doc-bubble-msg ai-doc-bubble text-secondary d-flex align-items-center gap-2';
+        loading.innerHTML = '<i class="fas fa-spinner fa-spin text-info"></i> Analyzing document with Gemini...';
+        stream.appendChild(loading);
+        stream.scrollTop = stream.scrollHeight;
+
+        try {
+            const res = await fetch(`/api/documents/${DOC_ID}/ask/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': CSRF_TOKEN,
+                },
+                body: JSON.stringify({ question: query }),
+            });
+            const data = await res.json();
+            loading.remove();
+
+            if (data.error) {
+                appendDocBubble('assistant', `⚠️ **Error**: ${data.error}`);
+            } else {
+                appendDocBubble('assistant', data.response);
+            }
+        } catch (err) {
+            loading.remove();
+            appendDocBubble('assistant', '⚠️ Network error while analyzing document. Please try again.');
+        }
+    }
+</script>
+{% endblock %}
+

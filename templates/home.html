@@ -1,0 +1,316 @@
+{% extends 'base.html' %}
+{% block title %}AI ULTRAN — Voice Assistant using Python, Django & Gemini LLM{% endblock %}
+
+{% block extra_css %}
+<style>
+    .hero-section {
+        position: relative;
+        padding: 90px 0 70px;
+        overflow: hidden;
+        background: radial-gradient(circle at 50% 10%, rgba(59, 130, 246, 0.12) 0%, transparent 60%);
+    }
+    .badge-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 16px;
+        border-radius: 9999px;
+        background: rgba(59, 130, 246, 0.12);
+        border: 1px solid rgba(59, 130, 246, 0.3);
+        color: #60a5fa;
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-bottom: 24px;
+    }
+    .hero-title {
+        font-size: clamp(2.5rem, 5.5vw, 4.4rem);
+        font-weight: 800;
+        line-height: 1.12;
+        letter-spacing: -1.5px;
+        margin-bottom: 24px;
+    }
+    .hero-subtitle {
+        font-size: 1.2rem;
+        color: var(--text-secondary);
+        max-width: 620px;
+        line-height: 1.6;
+        margin-bottom: 36px;
+    }
+    .interactive-preview {
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 24px;
+        padding: 24px;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 30px rgba(59, 130, 246, 0.15);
+        position: relative;
+    }
+    .feature-box {
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 18px;
+        padding: 30px;
+        height: 100%;
+        transition: all 0.3s ease;
+    }
+    .feature-box:hover {
+        transform: translateY(-5px);
+        border-color: var(--accent-blue);
+        box-shadow: 0 15px 35px rgba(59, 130, 246, 0.12);
+    }
+    .feature-icon-wrapper {
+        width: 56px;
+        height: 56px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+    }
+    .pulse-indicator {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--accent-green);
+        box-shadow: 0 0 10px var(--accent-green);
+        margin-right: 6px;
+    }
+    .arch-step {
+        background: var(--bg-input);
+        border: 1px solid var(--border-color);
+        border-radius: 14px;
+        padding: 16px 20px;
+        position: relative;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-6">
+                <div class="badge-pill">
+                    <span class="pulse-indicator"></span> Google Gemini LLM · Voice-Wave UI Active
+                </div>
+                <h1 class="hero-title">
+                    Kavi's Personal AI <br>
+                    <span class="brand-text-grad">AI ULTRAN</span>
+                </h1>
+                <p class="hero-subtitle">
+                    An intelligent, voice-first personal AI assistant dedicated to Kavi. Speaks and listens in real time, manages your agenda, summarizes documents, and schedules tasks with permission-controlled automation.
+                </p>
+                <div class="d-flex flex-wrap gap-3">
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'voice_wave' %}" class="btn btn-primary btn-lg px-4" style="box-shadow: 0 0 25px rgba(59, 130, 246, 0.4);">
+                        <i class="fas fa-waveform-lines me-2"></i>Launch Voice Wave
+                    </a>
+                    <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary btn-lg">
+                        <i class="fas fa-grid-2 me-2"></i>Dashboard
+                    </a>
+                    {% else %}
+                    <a href="{% url 'login' %}" class="btn btn-primary btn-lg px-4">
+                        <i class="fas fa-microphone-lines me-2"></i>Sign In as Kavi
+                    </a>
+                    <a href="{% url 'register' %}" class="btn btn-outline-secondary btn-lg">
+                        <i class="fas fa-user-plus me-2"></i>Create Account
+                    </a>
+                    {% endif %}
+                </div>
+
+                <div class="d-flex align-items-center gap-4 mt-5 pt-3 text-secondary" style="font-size: 0.9rem;">
+                    <div><i class="fas fa-lock text-success me-2"></i>Protected Action Controller</div>
+                    <div><i class="fas fa-volume-high text-info me-2"></i>Two-Way Voice (STT & TTS)</div>
+                </div>
+            </div>
+
+            <!-- Interactive Preview Mockup -->
+            <div class="col-lg-6">
+                <div class="interactive-preview fade-in">
+                    <div class="d-flex align-items-center justify-content-between pb-3 mb-3 border-bottom" style="border-color: var(--border-color) !important;">
+                        <div class="d-flex align-items-center gap-2">
+                            <div class="brand-icon" style="width: 32px; height: 32px; font-size: 0.9rem;"><i class="fas fa-brain"></i></div>
+                            <strong>ULTRAN Core Live Preview</strong>
+                        </div>
+                        <span class="badge" style="background: rgba(16, 185, 129, 0.15); color: #34d399; font-size: 0.75rem;">
+                            <i class="fas fa-circle-dot me-1"></i>Active Engine
+                        </span>
+                    </div>
+
+                    <div class="d-flex flex-column gap-3" style="font-size: 0.95rem;">
+                        <!-- User message -->
+                        <div class="p-3 rounded-4" style="background: rgba(59, 130, 246, 0.12); border: 1px solid rgba(59, 130, 246, 0.25); align-self: flex-end; max-width: 90%;">
+                            <div class="text-secondary mb-1" style="font-size: 0.78rem;"><i class="fas fa-microphone me-1"></i>Voice Command Received</div>
+                            <strong>“Remind me to review the machine learning project tomorrow at 9 AM.”</strong>
+                        </div>
+
+                        <!-- System Controller Validation -->
+                        <div class="p-3 rounded-3" style="background: rgba(245, 158, 11, 0.1); border: 1px dashed rgba(245, 158, 11, 0.35); font-size: 0.85rem;">
+                            <div class="d-flex align-items-center justify-content-between mb-1">
+                                <span class="fw-bold" style="color: #fbbf24;"><i class="fas fa-shield-check me-1"></i>Action Controller Intercept</span>
+                                <span class="badge priority-medium">Validated Intent</span>
+                            </div>
+                            <div class="font-monospace text-secondary" style="font-size: 0.78rem;">
+                                {"intent": "create_reminder", "title": "Review machine learning project", "requires_confirmation": false}
+                            </div>
+                        </div>
+
+                        <!-- AI Response -->
+                        <div class="p-3 rounded-4" style="background: var(--bg-input); border: 1px solid var(--border-color); align-self: flex-start; max-width: 92%;">
+                            <div class="d-flex align-items-center gap-2 mb-1 text-info" style="font-size: 0.78rem;">
+                                <i class="fas fa-robot"></i> ULTRAN Speech Synthesis
+                            </div>
+                            <p class="mb-0">
+                                I've scheduled your reminder for <strong>tomorrow at 9:00 AM</strong>. I also summarized your pending agenda in your workspace dashboard.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 pt-3 border-top d-flex gap-2" style="border-color: var(--border-color) !important;">
+                        <input type="text" class="form-control" placeholder="“Summarize this document” or “Explain decorators”..." readonly style="opacity: 0.8; cursor: pointer;" onclick="window.location.href='{% url 'assistant' %}'">
+                        <a href="{% url 'assistant' %}" class="btn btn-primary"><i class="fas fa-microphone"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- System Principles & Architecture -->
+<section class="py-5" style="background: var(--bg-secondary); border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color);">
+    <div class="container py-4">
+        <div class="text-center mb-5">
+            <span class="text-uppercase fw-bold text-info" style="letter-spacing: 2px; font-size: 0.8rem;">Architecture & Core Principles</span>
+            <h2 class="fw-bold mt-2">Separation of Intelligence & Safe Execution</h2>
+            <p class="text-secondary mx-auto" style="max-width: 650px;">
+                Gemini handles understanding and natural reasoning. Django handles state, session authentication, and database isolation. A dedicated Action Controller validates commands against an allowlist before execution.
+            </p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="arch-step h-100">
+                    <div class="badge bg-primary mb-3">1. Interface & Voice</div>
+                    <h5>User Input & STT</h5>
+                    <p class="text-secondary mb-0" style="font-size: 0.9rem;">
+                        Browser captures voice through Web Speech API or typed input, securely delivering requests with CSRF protection to Django.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="arch-step h-100">
+                    <div class="badge bg-purple mb-3" style="background: var(--accent-purple);">2. Reasoning Engine</div>
+                    <h5>Gemini LLM Processing</h5>
+                    <p class="text-secondary mb-0" style="font-size: 0.9rem;">
+                        Google Gemini interprets user intent, incorporates personalized memory, and generates conversational answers or structured action payloads.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="arch-step h-100">
+                    <div class="badge bg-success mb-3">3. Protected Actions</div>
+                    <h5>Allowlist Validation</h5>
+                    <p class="text-secondary mb-0" style="font-size: 0.9rem;">
+                        The action controller blocks arbitrary OS/code execution, validates reminder dates, verifies ownership, and triggers voice feedback.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Modules & Features -->
+<section class="py-5">
+    <div class="container py-4">
+        <div class="text-center mb-5">
+            <span class="text-uppercase fw-bold text-info" style="letter-spacing: 2px; font-size: 0.8rem;">Comprehensive Capabilities</span>
+            <h2 class="fw-bold mt-2">Everything Built Into AI ULTRAN</h2>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-box">
+                    <div class="feature-icon-wrapper" style="background: rgba(59, 130, 246, 0.15); color: var(--accent-blue);">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <h5 class="fw-bold">Module 1 — AI Chat Assistant</h5>
+                    <p class="text-secondary" style="font-size: 0.92rem;">
+                        Context-aware multi-turn dialogues powered by Gemini. Ask anything, clear chats, copy code snippets, and review complete historical dialogues.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-box">
+                    <div class="feature-icon-wrapper" style="background: rgba(139, 92, 246, 0.15); color: var(--accent-purple);">
+                        <i class="fas fa-microphone-lines"></i>
+                    </div>
+                    <h5 class="fw-bold">Module 2 — Voice Interaction</h5>
+                    <p class="text-secondary" style="font-size: 0.92rem;">
+                        One-click microphone input with speech-to-text conversion and native browser text-to-speech voice playback with customizable pitch and rate.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-box">
+                    <div class="feature-icon-wrapper" style="background: rgba(245, 158, 11, 0.15); color: var(--accent-yellow);">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <h5 class="fw-bold">Module 3 — Productivity & Reminders</h5>
+                    <p class="text-secondary" style="font-size: 0.92rem;">
+                        Create, track, complete, and prioritize tasks. Voice commands automatically extract dates and times to populate your schedule.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-box">
+                    <div class="feature-icon-wrapper" style="background: rgba(16, 185, 129, 0.15); color: var(--accent-green);">
+                        <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <h5 class="fw-bold">Module 4 — Document Intelligence</h5>
+                    <p class="text-secondary" style="font-size: 0.92rem;">
+                        Upload PDFs, Markdown, and text files. Ask contextual questions, extract action items, and obtain AI summaries securely scoped to your account.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-box">
+                    <div class="feature-icon-wrapper" style="background: rgba(6, 182, 212, 0.15); color: var(--accent-cyan);">
+                        <i class="fas fa-brain-circuit"></i>
+                    </div>
+                    <h5 class="fw-bold">Module 5 — Personalization & Memory</h5>
+                    <p class="text-secondary" style="font-size: 0.92rem;">
+                        Configure response styles (concise, detailed, casual, formal), toggle conversational history retention, and manage your private data footprint.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-box">
+                    <div class="feature-icon-wrapper" style="background: rgba(239, 68, 68, 0.15); color: var(--accent-red);">
+                        <i class="fas fa-shield-halved"></i>
+                    </div>
+                    <h5 class="fw-bold">Module 6 — Controlled Action System</h5>
+                    <p class="text-secondary" style="font-size: 0.92rem;">
+                        Strict allowlist blocking arbitrary execution while providing an audit log of all system actions. Extensible for future Android companion APIs.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="py-4 mt-auto" style="background: var(--bg-secondary); border-top: 1px solid var(--border-color);">
+    <div class="container text-center text-secondary" style="font-size: 0.9rem;">
+        <p class="mb-1"><strong class="text-light">AI ULTRAN</strong> — Intelligent Voice Assistant Platform</p>
+        <p class="mb-0 text-muted">Python · Django · Google Gemini API · Web Speech API</p>
+    </div>
+</footer>
+{% endblock %}
+

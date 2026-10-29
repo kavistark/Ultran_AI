@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% block title %}Voice & Personal Preferences — AI ULTRAN{% endblock %}
+
+{% block content %}
+<div class="container py-4" style="max-width: 800px;">
+    <div class="mb-4">
+        <h2 class="fw-bold mb-1"><i class="fas fa-sliders text-info me-2"></i>Preferences & Memory Settings</h2>
+        <p class="text-secondary mb-0">Personalize AI ULTRAN's voice playback, response persona, and privacy boundaries.</p>
+    </div>
+
+    <form method="POST">
+        {% csrf_token %}
+        
+        <!-- Personality & Style -->
+        <div class="card mb-4">
+            <div class="card-header d-flex align-items-center gap-2">
+                <i class="fas fa-brain text-primary"></i> Response Personality
+            </div>
+            <div class="card-body p-4">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ form.response_style.id_for_label }}">Response Style</label>
+                        {{ form.response_style }}
+                        <small class="text-muted d-block mt-1">Select whether ULTRAN should be concise, detailed, casual, or formal.</small>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="{{ form.timezone.id_for_label }}">Preferred Timezone</label>
+                        {{ form.timezone }}
+                        <small class="text-muted d-block mt-1">Used by Gemini to compute reminder dates and schedule tasks.</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Voice Interaction Settings -->
+        <div class="card mb-4">
+            <div class="card-header d-flex align-items-center gap-2">
+                <i class="fas fa-volume-high text-info"></i> Speech Synthesis & Voice Settings
+            </div>
+            <div class="card-body p-4">
+                <div class="row g-3 mb-3">
+                    <div class="col-md-4">
+                        <label class="form-label" for="{{ form.voice_preference.id_for_label }}">Voice Accent / Gender</label>
+                        {{ form.voice_preference }}
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label" for="{{ form.voice_rate.id_for_label }}">Voice Rate (Speed: 0.5–2.0)</label>
+                        {{ form.voice_rate }}
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label" for="{{ form.voice_pitch.id_for_label }}">Voice Pitch (0.5–2.0)</label>
+                        {{ form.voice_pitch }}
+                    </div>
+                </div>
+                
+                <div class="form-check form-switch mt-2">
+                    {{ form.tts_enabled }}
+                    <label class="form-check-label ms-2 fw-semibold" for="{{ form.tts_enabled.id_for_label }}">
+                        Enable Automatic Text-to-Speech Output
+                    </label>
+                    <small class="text-muted d-block">When enabled, ULTRAN reads answers aloud through your browser speakers automatically.</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Privacy & Memory Management -->
+        <div class="card mb-4">
+            <div class="card-header d-flex align-items-center gap-2">
+                <i class="fas fa-shield-halved text-success"></i> Privacy & Conversational Memory
+            </div>
+            <div class="card-body p-4">
+                <div class="form-check form-switch mb-3">
+                    {{ form.history_enabled }}
+                    <label class="form-check-label ms-2 fw-semibold" for="{{ form.history_enabled.id_for_label }}">
+                        Preserve Conversation History Context
+                    </label>
+                    <small class="text-muted d-block">Allow Gemini to recall previous exchanges during multi-turn chats.</small>
+                </div>
+
+                <div class="form-check form-switch">
+                    {{ form.notifications_enabled }}
+                    <label class="form-check-label ms-2 fw-semibold" for="{{ form.notifications_enabled.id_for_label }}">
+                        In-App Notifications
+                    </label>
+                    <small class="text-muted d-block">Show reminders and execution updates on your dashboard.</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex align-items-center gap-3 mb-5">
+            <button type="submit" class="btn btn-primary px-4 py-2 fw-bold">
+                <i class="fas fa-floppy-disk me-2"></i>Save Preferences
+            </button>
+            <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary">Cancel</a>
+        </div>
+    </form>
+
+    <!-- Account Danger Zone -->
+    <div class="card border-danger border-opacity-25 mt-4">
+        <div class="card-header text-danger d-flex align-items-center gap-2">
+            <i class="fas fa-triangle-exclamation"></i> Danger Zone
+        </div>
+        <div class="card-body p-4 d-flex align-items-center justify-content-between flex-wrap gap-3">
+            <div>
+                <strong class="d-block text-light">Delete User Account</strong>
+                <small class="text-secondary">Permanently remove your account, history, reminders, and private uploaded files.</small>
+            </div>
+            <a href="{% url 'delete_account' %}" class="btn btn-outline-danger btn-sm">
+                <i class="fas fa-trash me-1"></i>Delete Account
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

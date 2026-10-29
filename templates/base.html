@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}AI ULTRAN — Intelligent Voice Assistant{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0b0f19;
+            --bg-secondary: #111827;
+            --bg-card: #182234;
+            --bg-card-hover: #1f2c42;
+            --bg-input: #131c2e;
+            --accent-blue: #3b82f6;
+            --accent-purple: #8b5cf6;
+            --accent-cyan: #06b6d4;
+            --accent-green: #10b981;
+            --accent-red: #ef4444;
+            --accent-yellow: #f59e0b;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --border-color: #243247;
+            --gradient-primary: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            --gradient-secondary: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+            --gradient-accent: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+            --shadow-glow: 0 0 25px rgba(59, 130, 246, 0.18);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: rgba(17, 24, 39, 0.92) !important;
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 12px 0;
+            z-index: 1030;
+        }
+
+        .navbar-brand {
+            font-size: 1.35rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #fff !important;
+        }
+
+        .brand-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: var(--gradient-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+            font-size: 1.1rem;
+            color: #fff;
+        }
+
+        .brand-text-grad {
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-link {
+            color: var(--text-secondary) !important;
+            font-weight: 600;
+            font-size: 0.92rem;
+            transition: all 0.2s ease;
+            padding: 8px 14px !important;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-link:hover {
+            color: var(--text-primary) !important;
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        .nav-link.active {
+            color: #fff !important;
+            background: rgba(59, 130, 246, 0.18);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 18px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: all 0.25s ease;
+        }
+
+        .card-header {
+            background: transparent;
+            border-bottom: 1px solid var(--border-color);
+            padding: 16px 20px;
+            font-weight: 700;
+            font-size: 1.05rem;
+        }
+
+        /* Buttons */
+        .btn-primary {
+            background: var(--gradient-primary);
+            border: none;
+            font-weight: 600;
+            border-radius: 12px;
+            padding: 10px 22px;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.25);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.45);
+            background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+        }
+
+        .btn-outline-primary {
+            border: 1.5px solid var(--accent-blue);
+            color: var(--accent-blue);
+            border-radius: 12px;
+            font-weight: 600;
+            padding: 9px 20px;
+            transition: all 0.2s;
+        }
+
+        .btn-outline-primary:hover {
+            background: rgba(59, 130, 246, 0.15);
+            color: #fff;
+            border-color: var(--accent-blue);
+        }
+
+        .btn-outline-secondary {
+            border: 1.5px solid var(--border-color);
+            color: var(--text-secondary);
+            border-radius: 12px;
+            font-weight: 600;
+            padding: 9px 20px;
+        }
+
+        .btn-outline-secondary:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+            border-color: var(--text-muted);
+        }
+
+        /* Forms */
+        .form-control, .form-select {
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            border-radius: 12px;
+            padding: 11px 16px;
+            transition: all 0.2s;
+        }
+
+        .form-control:focus, .form-select:focus {
+            background: var(--bg-input);
+            border-color: var(--accent-blue);
+            color: var(--text-primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+
+        .form-label {
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 7px;
+        }
+
+        /* Alerts */
+        .alert {
+            border-radius: 14px;
+            border: none;
+            padding: 14px 18px;
+            font-weight: 500;
+        }
+        .alert-success { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+        .alert-danger  { background: rgba(239, 68, 68, 0.15);  color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+        .alert-info    { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); }
+        .alert-warning { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+
+        /* Priority Badges */
+        .badge {
+            font-weight: 700;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .priority-high { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+        .priority-medium { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+        .priority-low { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+
+        /* Tables */
+        .table { color: var(--text-primary); }
+        .table > :not(caption) > * > * { background: transparent; color: var(--text-primary); border-color: var(--border-color); }
+        .table-hover > tbody > tr:hover > * { background: rgba(59, 130, 246, 0.06); }
+
+        /* Dropdowns */
+        .dropdown-menu {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 8px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+        }
+        .dropdown-item {
+            color: var(--text-secondary);
+            border-radius: 8px;
+            padding: 8px 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .dropdown-item:hover {
+            background: rgba(59, 130, 246, 0.15);
+            color: var(--text-primary);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in { animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-primary); }
+        ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand" href="{% url 'home' %}">
+                <div class="brand-icon"><i class="fas fa-brain"></i></div>
+                <div><span class="brand-text-grad">AI ULTRAN</span><small class="text-secondary ms-2 d-none d-sm-inline" style="font-size:0.75rem;font-weight:600;">· Kavi's Voice AI</small></div>
+            </a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navContent">
+                {% if user.is_authenticated %}
+                <ul class="navbar-nav me-auto ms-3 gap-1">
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'voice_wave' %}active{% endif %}" href="{% url 'voice_wave' %}" style="background: rgba(139, 92, 246, 0.2); border: 1px solid rgba(139, 92, 246, 0.4); color: #c4b5fd !important; border-radius: 10px;">
+                            <i class="fas fa-waveform-lines text-warning"></i>Voice Wave
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}" href="{% url 'dashboard' %}">
+                            <i class="fas fa-grid-2"></i>Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if 'assistant' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'assistant' %}">
+                            <i class="fas fa-microphone-lines"></i>AI Voice Assistant
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if 'reminder' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'reminders_list' %}">
+                            <i class="fas fa-bell"></i>Reminders
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if 'document' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'documents' %}">
+                            <i class="fas fa-file-shield"></i>Documents
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'history' %}active{% endif %}" href="{% url 'history' %}">
+                            <i class="fas fa-clock-rotate-left"></i>History
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'integrations' %}active{% endif %}" href="{% url 'integrations' %}">
+                            <i class="fas fa-shield-halved"></i>Action Controller
+                        </a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                            <div style="width: 28px; height: 28px; border-radius: 50%; background: var(--gradient-secondary); display: inline-flex; align-items: center; justify-content: center; font-size: 0.8rem; margin-right: 6px;">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            {{ user.first_name|default:user.username }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="{% url 'preferences' %}"><i class="fas fa-sliders text-info"></i>Voice & Memory Settings</a></li>
+                            <li><a class="dropdown-item" href="{% url 'integrations' %}"><i class="fas fa-shield-alt text-success"></i>Action Permissions</a></li>
+                            <li><hr class="dropdown-divider" style="border-color: var(--border-color);"></li>
+                            <li><a class="dropdown-item" href="{% url 'logout' %}" style="color: var(--accent-red);"><i class="fas fa-arrow-right-from-bracket"></i>Log Out</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                {% else %}
+                <ul class="navbar-nav ms-auto gap-2">
+                    <li class="nav-item"><a class="nav-link" href="{% url 'login' %}"><i class="fas fa-arrow-right-to-bracket"></i>Sign In</a></li>
+                    <li class="nav-item"><a class="btn btn-primary" href="{% url 'register' %}"><i class="fas fa-bolt me-1"></i>Get Started Free</a></li>
+                </ul>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <!-- System Messages -->
+    {% if messages %}
+    <div class="container-fluid px-4 mt-3">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show fade-in" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Main Content -->
+    <main style="flex: 1;">
+        {% block content %}{% endblock %}
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
+

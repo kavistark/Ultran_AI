@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+{% block title %}Action Controller & Permissions — AI ULTRAN{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="mb-4">
+        <h2 class="fw-bold mb-1"><i class="fas fa-shield-halved text-success me-2"></i>Action Controller & Security Sandbox</h2>
+        <p class="text-secondary mb-0">AI ULTRAN separates reasoning from execution. Sensitive operations require authorization, while dangerous commands are strictly blocked.</p>
+    </div>
+
+    <div class="row g-4">
+        <!-- Permissions Policy -->
+        <div class="col-lg-5">
+            <!-- Permitted Actions -->
+            <div class="card mb-4">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <div><i class="fas fa-check-circle text-success me-2"></i>Permitted Action Allowlist</div>
+                    <span class="badge" style="background: rgba(16, 185, 129, 0.15); color: #34d399;">Active</span>
+                </div>
+                <div class="card-body p-0">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item bg-transparent text-light border-secondary border-opacity-25 py-3 px-4 d-flex align-items-center justify-content-between">
+                            <div>
+                                <strong class="d-block" style="font-size: 0.92rem;"><i class="fas fa-bell text-warning me-2"></i>create_reminder</strong>
+                                <small class="text-secondary">Schedule tasks with date/time validation</small>
+                            </div>
+                            <span class="badge priority-low">Allowed</span>
+                        </li>
+                        <li class="list-group-item bg-transparent text-light border-secondary border-opacity-25 py-3 px-4 d-flex align-items-center justify-content-between">
+                            <div>
+                                <strong class="d-block" style="font-size: 0.92rem;"><i class="fas fa-list-check text-info me-2"></i>list_reminders</strong>
+                                <small class="text-secondary">Retrieve upcoming agenda and tasks</small>
+                            </div>
+                            <span class="badge priority-low">Allowed</span>
+                        </li>
+                        <li class="list-group-item bg-transparent text-light border-secondary border-opacity-25 py-3 px-4 d-flex align-items-center justify-content-between">
+                            <div>
+                                <strong class="d-block" style="font-size: 0.92rem;"><i class="fas fa-file-pdf text-success me-2"></i>summarize_document</strong>
+                                <small class="text-secondary">Process uploaded documents securely</small>
+                            </div>
+                            <span class="badge priority-low">Allowed</span>
+                        </li>
+                        <li class="list-group-item bg-transparent text-light border-secondary border-opacity-25 py-3 px-4 d-flex align-items-center justify-content-between">
+                            <div>
+                                <strong class="d-block" style="font-size: 0.92rem;"><i class="fas fa-comments text-primary me-2"></i>general_chat</strong>
+                                <small class="text-secondary">Conversational reasoning & answers</small>
+                            </div>
+                            <span class="badge priority-low">Allowed</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Blocked / Prohibited Actions -->
+            <div class="card border-danger border-opacity-25">
+                <div class="card-header text-danger d-flex align-items-center justify-content-between">
+                    <div><i class="fas fa-ban me-2"></i>Forbidden Device & OS Commands</div>
+                    <span class="badge" style="background: rgba(239, 68, 68, 0.15); color: #f87171;">Blocked</span>
+                </div>
+                <div class="card-body p-0">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item bg-transparent text-secondary border-secondary border-opacity-25 py-2 px-4 small d-flex align-items-center gap-2">
+                            <i class="fas fa-xmark text-danger"></i> Arbitrary Python code execution (<code>eval</code> / <code>exec</code>)
+                        </li>
+                        <li class="list-group-item bg-transparent text-secondary border-secondary border-opacity-25 py-2 px-4 small d-flex align-items-center gap-2">
+                            <i class="fas fa-xmark text-danger"></i> Operating system command execution (<code>subprocess</code> / shell)
+                        </li>
+                        <li class="list-group-item bg-transparent text-secondary border-secondary border-opacity-25 py-2 px-4 small d-flex align-items-center gap-2">
+                            <i class="fas fa-xmark text-danger"></i> Device hardware control without Android companion authorization
+                        </li>
+                        <li class="list-group-item bg-transparent text-secondary border-secondary border-opacity-25 py-2 px-4 small d-flex align-items-center gap-2">
+                            <i class="fas fa-xmark text-danger"></i> Unauthorized cross-user data queries
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Audit Log -->
+        <div class="col-lg-7">
+            <div class="card h-100">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <div><i class="fas fa-receipt text-info me-2"></i>Action Audit Trail</div>
+                    <small class="text-secondary">Scraped & Logged per User</small>
+                </div>
+                <div class="card-body p-0">
+                    {% if action_logs %}
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0 align-middle">
+                            <thead>
+                                <tr class="text-secondary" style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.8px;">
+                                    <th class="ps-4 py-3">Action Type</th>
+                                    <th class="py-3">Status</th>
+                                    <th class="py-3">Payload Details</th>
+                                    <th class="pe-4 py-3 text-end">Timestamp</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for log in action_logs %}
+                                <tr>
+                                    <td class="ps-4 py-3 font-monospace text-info" style="font-size: 0.88rem;">
+                                        {{ log.action_type }}
+                                    </td>
+                                    <td class="py-3">
+                                        <span class="badge {% if log.status == 'approved' or log.status == 'executed' %}priority-low{% elif log.status == 'rejected' or log.status == 'failed' %}priority-high{% else %}priority-medium{% endif %}">
+                                            {{ log.status }}
+                                        </span>
+                                    </td>
+                                    <td class="py-3 font-monospace text-muted" style="font-size: 0.78rem; max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                        {{ log.details }}
+                                    </td>
+                                    <td class="pe-4 py-3 text-end text-secondary small">
+                                        {{ log.timestamp|timesince }} ago
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="text-center py-5 text-secondary">
+                        <div style="font-size: 3rem; margin-bottom: 12px; opacity: 0.5;">📜</div>
+                        <h5 class="fw-bold mb-1">No action logs recorded yet</h5>
+                        <p class="small text-muted mb-0">When ULTRAN executes reminders or productivity actions, an immutable log appears here.</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

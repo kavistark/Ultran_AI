@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% block title %}Document Intelligence — AI ULTRAN{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-3">
+        <div>
+            <h2 class="fw-bold mb-1"><i class="fas fa-file-shield text-success me-2"></i>Document Intelligence</h2>
+            <p class="text-secondary mb-0">Upload documents (PDF, TXT, MD) to extract insights, generate summaries, and ask questions.</p>
+        </div>
+    </div>
+
+    <!-- Upload Zone -->
+    <div class="card mb-4" style="border: 2px dashed var(--border-color); background: rgba(17, 24, 39, 0.4);">
+        <div class="card-body p-5 text-center">
+            <form method="POST" action="{% url 'upload_document' %}" enctype="multipart/form-data" id="docUploadForm">
+                {% csrf_token %}
+                <div style="font-size: 3rem; margin-bottom: 12px; color: var(--accent-green);">
+                    <i class="fas fa-cloud-arrow-up"></i>
+                </div>
+                <h4 class="fw-bold mb-2">Upload a File for AI Analysis</h4>
+                <p class="text-secondary mb-4" style="max-width: 500px; margin: 0 auto 20px;">
+                    Supports <strong>PDF</strong>, <strong>Plain Text (.txt)</strong>, and <strong>Markdown (.md)</strong> documents up to 10 MB. Files are stored securely and privately.
+                </p>
+
+                <label class="btn btn-primary px-4 py-2 fw-bold" style="cursor: pointer;">
+                    <i class="fas fa-file-import me-2"></i>Choose File to Analyze
+                    <input type="file" name="document" accept=".pdf,.txt,.md" style="display: none;" onchange="document.getElementById('docUploadForm').submit();">
+                </label>
+            </form>
+        </div>
+    </div>
+
+    <!-- Uploaded Documents Library -->
+    <h5 class="fw-bold mb-3 d-flex align-items-center gap-2">
+        <i class="fas fa-folder-open text-primary"></i> Your Document Library ({{ documents.count }})
+    </h5>
+
+    {% if documents %}
+    <div class="row g-3">
+        {% for doc in documents %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100">
+                <div class="card-body p-4 d-flex flex-column justify-content-between">
+                    <div>
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <div style="width: 44px; height: 44px; border-radius: 12px; background: rgba(16, 185, 129, 0.15); display: flex; align-items: center; justify-content: center; color: var(--accent-green); font-size: 1.2rem;">
+                                {% if 'pdf' in doc.file_type %}
+                                <i class="fas fa-file-pdf"></i>
+                                {% else %}
+                                <i class="fas fa-file-lines"></i>
+                                {% endif %}
+                            </div>
+                            <span class="badge" style="background: rgba(255, 255, 255, 0.08); color: var(--text-secondary); font-size: 0.75rem;">
+                                {{ doc.file_size|filesizeformat }}
+                            </span>
+                        </div>
+
+                        <h6 class="fw-bold text-truncate mb-2" title="{{ doc.name }}">{{ doc.name }}</h6>
+                        <small class="text-muted d-block mb-3">
+                            <i class="fas fa-calendar-day me-1"></i>Uploaded {{ doc.uploaded_at|timesince }} ago
+                        </small>
+                    </div>
+
+                    <div class="d-flex gap-2 pt-3 border-top" style="border-color: var(--border-color) !important;">
+                        <a href="{% url 'document_analyze' doc.id %}" class="btn btn-outline-success btn-sm flex-grow-1 fw-bold">
+                            <i class="fas fa-robot me-1"></i>Ask Questions
+                        </a>
+                        <form method="POST" action="{% url 'document_delete' doc.id %}" class="d-inline" onsubmit="return confirm('Delete this document?');">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete document">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="card p-5 text-center text-secondary">
+        <div style="font-size: 3rem; margin-bottom: 12px; opacity: 0.5;">📁</div>
+        <h5 class="fw-bold mb-1">No documents uploaded yet</h5>
+        <p class="small text-muted mb-0">Use the upload box above to add your first document and summarize it with Gemini.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
