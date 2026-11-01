@@ -2,8 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI ULTRAN — Voice Interface</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#030611">
+    <meta name="format-detection" content="telephone=no">
+    <title>AI ULTRON — Voice Interface</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='48' fill='%230f172a' stroke='%23ef4444' stroke-width='4'/><text x='50' y='65' font-size='50' font-family='sans-serif' font-weight='bold' fill='%23ef4444' text-anchor='middle'>U</text></svg>">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -28,6 +33,11 @@
             -webkit-user-select: none;
         }
 
+        input, textarea, [contenteditable="true"] {
+            user-select: text !important;
+            -webkit-user-select: text !important;
+        }
+
         html, body {
             height: 100%;
             width: 100%;
@@ -35,7 +45,7 @@
             background: var(--bg-deep);
             color: #fff;
             font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
-            cursor: pointer;
+            cursor: default;
         }
 
         /* Ambient Cosmic Background Lighting */
@@ -89,6 +99,73 @@
             50% { transform: scale(1.3); opacity: 1; }
         }
 
+        .agent-badge {
+            font-size: 0.65rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            padding: 3px 8px;
+            border-radius: 6px;
+            background: rgba(6, 182, 212, 0.15);
+            border: 1px solid rgba(6, 182, 212, 0.4);
+            color: #38bdf8;
+            text-transform: uppercase;
+        }
+
+        .hud-center {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .agent-tool-hud {
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            padding: 4px 14px;
+            border-radius: 9999px;
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            color: #34d399;
+            text-transform: uppercase;
+            opacity: 0;
+            transform: translateY(-5px);
+            transition: all 0.18s ease;
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.2);
+        }
+
+        .agent-tool-hud.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .hud-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            color: #94a3b8;
+            font-size: 0.82rem;
+            font-weight: 600;
+        }
+
+        .protocol-tag {
+            font-size: 0.68rem;
+            font-weight: 800;
+            letter-spacing: 1.2px;
+            color: rgba(255, 255, 255, 0.5);
+            padding: 3px 10px;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .hud-clock {
+            font-family: monospace;
+            font-size: 0.88rem;
+            color: rgba(255, 255, 255, 0.85);
+            letter-spacing: 0.5px;
+        }
+
         .status-pill {
             font-size: 0.82rem;
             font-weight: 700;
@@ -99,7 +176,7 @@
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.12);
             color: #94a3b8;
-            transition: all 0.3s ease;
+            transition: all 0.15s ease;
             backdrop-filter: blur(12px);
         }
 
@@ -118,10 +195,10 @@
         }
 
         .status-pill.speaking {
-            border-color: rgba(16, 185, 129, 0.6);
-            color: #34d399;
-            background: rgba(16, 185, 129, 0.14);
-            box-shadow: 0 0 25px rgba(16, 185, 129, 0.3);
+            border-color: rgba(239, 68, 68, 0.8);
+            color: #fca5a5;
+            background: rgba(220, 38, 38, 0.2);
+            box-shadow: 0 0 30px rgba(239, 68, 68, 0.5);
         }
 
         /* Central Voice Entity Stage */
@@ -141,6 +218,7 @@
             border-radius: 50%;
             border: 1.5px solid rgba(59, 130, 246, 0.3);
             pointer-events: none;
+            will-change: transform;
             transition: transform 0.08s ease-out, border-color 0.4s ease, opacity 0.4s ease;
         }
 
@@ -163,7 +241,9 @@
             color: #fff;
             position: relative;
             z-index: 20;
-            transition: transform 0.06s ease-out, box-shadow 0.25s ease, background 0.5s ease;
+            cursor: pointer;
+            will-change: transform;
+            transition: transform 0.05s ease-out, box-shadow 0.15s ease, background 0.2s ease;
         }
 
         /* State Color Morphing */
@@ -184,13 +264,187 @@
         }
 
         body.state-speaking .voice-core-orb {
-            background: linear-gradient(135deg, #059669 0%, #06b6d4 50%, #3b82f6 100%);
-            box-shadow: 0 0 95px rgba(5, 150, 105, 0.9), inset 0 0 40px rgba(255, 255, 255, 0.6);
+            background: linear-gradient(135deg, #7f1d1d 0%, #dc2626 50%, #f97316 100%);
+            box-shadow: 0 0 115px rgba(220, 38, 38, 0.95), inset 0 0 45px rgba(255, 255, 255, 0.7);
         }
 
         @keyframes orbitalRotation {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
+        }
+
+        /* Futuristic Agent Input Dock */
+        .hud-input-dock {
+            position: fixed;
+            bottom: 28px;
+            left: 50%;
+            transform: translateX(-50%) translateZ(0);
+            width: min(92%, 560px);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 18px;
+            background: rgba(15, 23, 42, 0.88);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-radius: 9999px;
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            z-index: 50;
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.5);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+            will-change: transform;
+            cursor: default;
+        }
+
+        .hud-input-dock:focus-within {
+            border-color: rgba(6, 182, 212, 0.7);
+            box-shadow: 0 0 30px rgba(6, 182, 212, 0.35);
+            background: rgba(15, 23, 42, 0.96);
+        }
+
+        .terminal-icon {
+            color: #38bdf8;
+            font-size: 0.9rem;
+            opacity: 0.85;
+            pointer-events: none;
+        }
+
+        #agentDirectiveInput {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: #fff;
+            font-size: 0.95rem;
+            font-family: inherit;
+            user-select: text !important;
+            -webkit-user-select: text !important;
+            -webkit-appearance: none;
+            cursor: text;
+            caret-color: #38bdf8;
+        }
+
+        #agentDirectiveInput::placeholder {
+            color: rgba(148, 163, 184, 0.7);
+            font-size: 0.86rem;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        #agentSendBtn {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(135deg, #06b6d4, #3b82f6);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 2px 10px rgba(6, 182, 212, 0.3);
+        }
+
+        #agentSendBtn:hover {
+            transform: scale(1.08);
+            box-shadow: 0 0 18px rgba(59, 130, 246, 0.6);
+        }
+
+        .hud-mic-btn {
+            width: 34px;
+            height: 34px;
+            min-width: 34px;
+            border-radius: 50%;
+            border: 1px solid rgba(56, 189, 248, 0.4);
+            background: rgba(15, 23, 42, 0.85);
+            color: #38bdf8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+            font-size: 0.88rem;
+        }
+
+        .hud-mic-btn:hover {
+            transform: scale(1.08);
+            border-color: #38bdf8;
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.5);
+            color: #fff;
+        }
+
+        .hud-mic-btn.active {
+            background: rgba(239, 68, 68, 0.25);
+            border-color: #ef4444;
+            color: #ef4444;
+            animation: pulseMicBtn 1.4s infinite ease-in-out;
+            box-shadow: 0 0 18px rgba(239, 68, 68, 0.6);
+        }
+
+        @keyframes pulseMicBtn {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 12px rgba(239, 68, 68, 0.4); }
+            50% { transform: scale(1.1); box-shadow: 0 0 22px rgba(239, 68, 68, 0.85); }
+        }
+
+        /* Tactical Live Dialogue & Response HUD */
+        .tactical-dialogue-hud {
+            position: fixed;
+            bottom: 92px;
+            left: 50%;
+            transform: translateX(-50%) translateZ(0);
+            width: min(92%, 600px);
+            max-height: 200px;
+            overflow-y: auto;
+            background: rgba(10, 15, 30, 0.92);
+            border: 1px solid rgba(56, 189, 248, 0.35);
+            border-radius: 18px;
+            padding: 16px 22px;
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            z-index: 45;
+            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.75), 0 0 25px rgba(6, 182, 212, 0.2);
+            animation: fadeInDialogue 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            user-select: text !important;
+            -webkit-user-select: text !important;
+            cursor: default;
+            will-change: transform;
+            pointer-events: auto;
+        }
+
+        @keyframes fadeInDialogue {
+            from { opacity: 0; transform: translate(-50%, 12px) scale(0.97); }
+            to { opacity: 1; transform: translate(-50%, 0) scale(1); }
+        }
+
+        .dialogue-kicker {
+            font-size: 0.66rem;
+            font-weight: 800;
+            letter-spacing: 1.6px;
+            color: #38bdf8;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .dialogue-user-text {
+            font-size: 0.84rem;
+            color: #94a3b8;
+            margin-bottom: 6px;
+            font-style: italic;
+            border-left: 2px solid rgba(56, 189, 248, 0.5);
+            padding-left: 8px;
+        }
+
+        .dialogue-response-text {
+            font-size: 0.98rem;
+            font-weight: 600;
+            color: #f8fafc;
+            line-height: 1.5;
+            letter-spacing: 0.2px;
         }
 
         /* Soundwave Canvas across bottom screen */
@@ -202,7 +456,547 @@
             height: 40%;
             pointer-events: none;
             z-index: 15;
+            will-change: transform;
+            transform: translateZ(0);
             filter: drop-shadow(0 -10px 20px rgba(59, 130, 246, 0.35));
+        }
+
+        /* Shutdown Overlay */
+        .shutdown-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #020617;
+            z-index: 99999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            backdrop-filter: blur(25px);
+        }
+
+        .shutdown-card {
+            text-align: center;
+            color: #ef4444;
+            font-family: inherit;
+            padding: 40px;
+        }
+
+        .shutdown-icon {
+            font-size: 5rem;
+            margin-bottom: 24px;
+            color: #ef4444;
+            animation: pulseShutdown 2.2s infinite ease-in-out;
+        }
+
+        @keyframes pulseShutdown {
+            0%, 100% { opacity: 0.35; transform: scale(0.96); filter: drop-shadow(0 0 10px rgba(239, 68, 68, 0.3)); }
+            50% { opacity: 1; transform: scale(1.05); filter: drop-shadow(0 0 30px rgba(239, 68, 68, 0.8)); }
+        }
+
+        .shutdown-title {
+            font-size: 2.4rem;
+            font-weight: 900;
+            letter-spacing: 5px;
+            margin-bottom: 12px;
+            color: #fff;
+            text-shadow: 0 0 25px rgba(239, 68, 68, 0.8);
+        }
+
+        .shutdown-sub {
+            font-size: 1.1rem;
+            color: #ef4444;
+            letter-spacing: 3px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .shutdown-note {
+            font-size: 0.85rem;
+            color: #64748b;
+            letter-spacing: 1px;
+        }
+
+        /* Menu Button in Top HUD Bar */
+        .hud-menu-btn {
+            background: rgba(239, 68, 68, 0.16);
+            border: 1px solid rgba(239, 68, 68, 0.5);
+            color: #fca5a5;
+            border-radius: 9999px;
+            padding: 5px 14px;
+            font-size: 0.72rem;
+            font-weight: 800;
+            letter-spacing: 0.9px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.25s ease;
+            pointer-events: auto;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.25);
+        }
+
+        .hud-menu-btn:hover {
+            background: rgba(239, 68, 68, 0.35);
+            border-color: #ef4444;
+            color: #fff;
+            transform: scale(1.05);
+            box-shadow: 0 0 22px rgba(239, 68, 68, 0.6);
+        }
+
+        /* Floating Guide Trigger Pill (Bottom-Right) */
+        .floating-guide-trigger {
+            position: fixed;
+            bottom: 30px;
+            right: 28px;
+            z-index: 40;
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid rgba(239, 68, 68, 0.45);
+            color: #fca5a5;
+            padding: 8px 16px;
+            border-radius: 9999px;
+            font-size: 0.76rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            backdrop-filter: blur(14px);
+            box-shadow: 0 4px 25px rgba(0, 0, 0, 0.6), 0 0 18px rgba(239, 68, 68, 0.25);
+            transition: all 0.25s ease;
+        }
+
+        .floating-guide-trigger:hover {
+            background: rgba(220, 38, 38, 0.25);
+            border-color: #ef4444;
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 30px rgba(239, 68, 68, 0.5);
+        }
+
+        /* Full Control Manual Overlay */
+        .control-menu-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(2, 6, 23, 0.86);
+            backdrop-filter: blur(25px);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .control-menu-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .control-menu-container {
+            width: min(94vw, 880px);
+            max-height: 88vh;
+            background: rgba(15, 23, 42, 0.95);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            border-radius: 20px;
+            box-shadow: 0 0 60px rgba(0, 0, 0, 0.9), 0 0 35px rgba(239, 68, 68, 0.25);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transform: scale(0.95);
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .control-menu-overlay.active .control-menu-container {
+            transform: scale(1);
+        }
+
+        .control-menu-header {
+            padding: 20px 26px;
+            background: rgba(10, 15, 30, 0.9);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .menu-kicker {
+            font-size: 0.68rem;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            color: #ef4444;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+        }
+
+        .menu-title {
+            font-size: 1.45rem;
+            font-weight: 900;
+            letter-spacing: 1.2px;
+            color: #fff;
+            text-shadow: 0 0 20px rgba(239, 68, 68, 0.6);
+        }
+
+        .menu-subtitle {
+            font-size: 0.82rem;
+            color: #94a3b8;
+            margin-top: 2px;
+        }
+
+        .menu-close-btn {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #cbd5e1;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 1rem;
+        }
+
+        .menu-close-btn:hover {
+            background: rgba(239, 68, 68, 0.3);
+            border-color: #ef4444;
+            color: #fff;
+            transform: scale(1.08);
+        }
+
+        .menu-search-wrapper {
+            padding: 12px 26px;
+            background: rgba(15, 23, 42, 0.6);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .menu-search-wrapper .search-icon {
+            color: #ef4444;
+            font-size: 0.95rem;
+        }
+
+        #manualSearchInput {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: #fff;
+            font-size: 0.88rem;
+            font-family: inherit;
+        }
+
+        #manualSearchInput::placeholder {
+            color: #64748b;
+        }
+
+        .control-cards-scroll {
+            padding: 22px 26px;
+            overflow-y: auto;
+            flex: 1;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+            gap: 16px;
+        }
+
+        .control-cards-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .control-cards-scroll::-webkit-scrollbar-thumb {
+            background: rgba(239, 68, 68, 0.4);
+            border-radius: 9999px;
+        }
+
+        .guide-card {
+            background: rgba(30, 41, 59, 0.45);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            padding: 16px 18px;
+            transition: all 0.25s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .guide-card:hover {
+            border-color: rgba(239, 68, 68, 0.5);
+            background: rgba(30, 41, 59, 0.7);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4), 0 0 15px rgba(239, 68, 68, 0.15);
+        }
+
+        .card-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-heading {
+            font-size: 0.92rem;
+            font-weight: 800;
+            color: #f1f5f9;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            letter-spacing: 0.4px;
+        }
+
+        .card-heading i {
+            color: #ef4444;
+        }
+
+        .card-badge {
+            font-size: 0.64rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            padding: 2px 8px;
+            border-radius: 6px;
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            color: #fca5a5;
+            text-transform: uppercase;
+        }
+
+        .card-desc {
+            font-size: 0.8rem;
+            color: #94a3b8;
+            line-height: 1.45;
+        }
+
+        .directive-box {
+            background: rgba(2, 6, 23, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-family: monospace;
+            font-size: 0.78rem;
+            color: #38bdf8;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .directive-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        .directive-row code {
+            color: #67e8f9;
+            font-weight: 700;
+        }
+
+        .try-pill {
+            background: rgba(6, 182, 212, 0.15);
+            border: 1px solid rgba(6, 182, 212, 0.4);
+            color: #67e8f9;
+            padding: 2px 8px;
+            border-radius: 9999px;
+            font-size: 0.68rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .try-pill:hover {
+            background: #06b6d4;
+            color: #020617;
+            transform: scale(1.05);
+        }
+
+        .control-menu-footer {
+            padding: 14px 26px;
+            background: rgba(10, 15, 30, 0.95);
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: #94a3b8;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .footer-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .footer-status .live-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #10b981;
+            box-shadow: 0 0 10px #10b981;
+        }
+
+        .footer-status strong {
+            color: #f1f5f9;
+        }
+
+        .footer-status .divider {
+            color: rgba(255, 255, 255, 0.2);
+        }
+
+        .footer-dismiss-btn {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.45);
+            color: #fca5a5;
+            padding: 6px 16px;
+            border-radius: 9999px;
+            font-size: 0.74rem;
+            font-weight: 800;
+            letter-spacing: 0.8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .footer-dismiss-btn:hover {
+            background: #ef4444;
+            color: #fff;
+        }
+
+        /* ==========================================
+           MOBILE PHONE RESPONSIVE ENGINE (SMARTPHONES)
+           ========================================== */
+        @media (max-width: 768px) {
+            html, body {
+                height: 100dvh;
+                min-height: -webkit-fill-available;
+            }
+
+            .top-voice-bar {
+                top: max(10px, env(safe-area-inset-top));
+                padding: 0 12px;
+                gap: 6px;
+                flex-wrap: wrap;
+            }
+
+            .assistant-tag {
+                font-size: 0.95rem;
+                gap: 8px;
+            }
+
+            .agent-badge {
+                display: none;
+            }
+
+            .hud-center {
+                order: 3;
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 4px;
+                margin-top: 4px;
+            }
+
+            .status-pill {
+                font-size: 0.68rem;
+                padding: 4px 10px;
+                letter-spacing: 0.5px;
+                max-width: 90vw;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .agent-tool-hud {
+                font-size: 0.62rem;
+                padding: 2px 8px;
+            }
+
+            .hud-right {
+                gap: 6px;
+            }
+
+            .protocol-tag, .hud-clock {
+                display: none;
+            }
+
+            .hud-menu-btn {
+                padding: 6px 10px;
+                font-size: 0.72rem;
+            }
+
+            .hud-menu-btn span {
+                display: none;
+            }
+
+            .floating-guide-trigger {
+                display: none;
+            }
+
+            .voice-core-orb {
+                width: 130px;
+                height: 130px;
+                font-size: 2.6rem;
+            }
+
+            .ring-1 { width: 175px; height: 175px; }
+            .ring-2 { width: 235px; height: 235px; }
+            .ring-3 { width: 295px; height: 295px; }
+            .ring-4 { display: none; }
+
+            .hud-input-dock {
+                width: calc(100% - 20px);
+                bottom: max(12px, calc(8px + env(safe-area-inset-bottom)));
+                padding: 8px 12px;
+                gap: 8px;
+            }
+
+            #agentDirectiveInput {
+                font-size: 0.88rem;
+            }
+
+            #agentSendBtn, .hud-mic-btn {
+                width: 38px;
+                height: 38px;
+                min-width: 38px;
+            }
+
+            .tactical-dialogue-hud {
+                bottom: max(68px, calc(64px + env(safe-area-inset-bottom)));
+                width: calc(100% - 24px);
+                max-height: 160px;
+                padding: 12px 14px;
+            }
+
+            .dialogue-response-text {
+                font-size: 0.88rem;
+            }
+
+            .control-menu-modal {
+                width: 100vw;
+                height: 100dvh;
+                max-height: 100dvh;
+                border-radius: 0;
+            }
+
+            .guide-grid {
+                grid-template-columns: 1fr;
+                padding: 14px;
+            }
         }
     </style>
 </head>
@@ -211,14 +1005,280 @@
     <!-- Ambient Cosmic Aurora -->
     <div class="ambient-glow" id="ambientGlow"></div>
 
-    <!-- Minimal Identity Header -->
+    <!-- Minimal Identity & Agent Telemetry Header -->
     <div class="top-voice-bar">
         <div class="assistant-tag">
             <span class="dot"></span>
-            <span>AI ULTRAN</span>
+            <span>AI ULTRON</span>
+            <span class="agent-badge">KAVI STARK</span>
         </div>
-        <div class="status-pill" id="statusPill">
-            TAP TO TALK
+        <div class="hud-center">
+            <div class="status-pill" id="statusPill">
+                TAP ANYWHERE OR CLICK MIC TO SPEAK
+            </div>
+            <div class="agent-tool-hud" id="agentToolBadge">
+                ⚡ TOOL: IDLE
+            </div>
+        </div>
+        <div class="hud-right">
+            <button class="hud-menu-btn" id="openMenuBtn" title="How to Control AI ULTRON (Operational Manual)" onclick="event.stopPropagation(); toggleControlMenu()">
+                <i class="fas fa-bars-staggered"></i> <span>CONTROL MENU</span>
+            </button>
+            <div class="protocol-tag">KAVI STARK</div>
+            <div class="hud-clock" id="hudClock">--:--:--</div>
+        </div>
+    </div>
+
+    <!-- System Shutdown Fullscreen Overlay -->
+    <div class="shutdown-overlay" id="shutdownOverlay" style="display:none;" onclick="event.stopPropagation()">
+        <div class="shutdown-card">
+            <i class="fas fa-power-off shutdown-icon"></i>
+            <div class="shutdown-title">SYSTEM OFFLINE</div>
+            <div class="shutdown-sub">AI ULTRON CORE DEACTIVATED</div>
+            <div class="shutdown-note">All processes terminated. Refresh tab to reactivate agent.</div>
+        </div>
+    </div>
+
+    <!-- Floating Guide Trigger Pill (Bottom-Right) -->
+    <button class="floating-guide-trigger" id="floatingGuideBtn" title="How to Control AI ULTRON (Full Manual)" onclick="event.stopPropagation(); toggleControlMenu()">
+        <i class="fas fa-terminal"></i> <span>HOW TO CONTROL</span>
+    </button>
+
+    <!-- Master Operational Command Manual & Control Overlay -->
+    <div class="control-menu-overlay" id="controlMenuOverlay" style="display:none;" onclick="toggleControlMenu(false)">
+        <div class="control-menu-container" onclick="event.stopPropagation()">
+            <!-- Header -->
+            <div class="control-menu-header">
+                <div class="header-left">
+                    <div class="menu-kicker"><i class="fas fa-shield-halved"></i> ULTRON PROTOCOL // FULL OPERATIONAL MANUAL</div>
+                    <div class="menu-title">HOW TO CONTROL AI ULTRON</div>
+                    <div class="menu-subtitle">Voice Directives, Computer Vision, Location & Automation Matrix</div>
+                </div>
+                <button class="menu-close-btn" onclick="toggleControlMenu(false)" title="Close Manual">
+                    <i class="fas fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Quick Filter / Search -->
+            <div class="menu-search-wrapper">
+                <i class="fas fa-magnifying-glass search-icon"></i>
+                <input type="text" id="manualSearchInput" placeholder="Filter commands by keyword (e.g. camera, reminder, shutdown, location, contacts)..." oninput="filterManualCards()">
+            </div>
+
+            <!-- Guide Sections Grid -->
+            <div class="control-cards-scroll" id="controlCardsContainer">
+                
+                <!-- 0. Google Gemini Neural Engine -->
+                <div class="guide-card" data-keywords="gemini api key llm intelligence google model artificial intelligence" style="border-color: rgba(6, 182, 212, 0.45); background: rgba(6, 182, 212, 0.06);">
+                    <div class="card-top">
+                        <div class="card-heading"><i class="fas fa-brain"></i> 0. Google Gemini Neural Engine</div>
+                        <span class="card-badge" id="geminiStatusBadge" style="background: rgba(6, 182, 212, 0.2); color: #38bdf8;">CHECKING...</span>
+                    </div>
+                    <div class="card-desc">
+                        Powers deep understanding of human speech, questions, reasoning, and multimodal optical vision. Paste your free Google AI Studio key (starts with <code>AIzaSy...</code>) to engage Gemini.
+                    </div>
+                    <div style="display:flex; gap:8px; margin-top:8px;">
+                        <input type="password" id="geminiApiKeyInput" placeholder="Paste Gemini API Key (AIzaSy...)" style="flex:1; padding:8px 12px; background:rgba(15,23,42,0.9); border:1px solid rgba(255,255,255,0.2); border-radius:8px; color:#fff; font-size:0.85rem; font-family:monospace;" />
+                        <button class="try-pill" style="padding:8px 14px; font-weight:700; background:linear-gradient(135deg, #06b6d4, #3b82f6);" onclick="saveGeminiApiKeyUI()">ENGAGE <i class="fas fa-bolt"></i></button>
+                    </div>
+                    <div id="geminiKeyFeedback" style="font-size:0.75rem; margin-top:6px; color:#94a3b8;">Say "set gemini key [YOUR_KEY]" or enter above.</div>
+                </div>
+
+                <!-- 1. Contact Registry -->
+                <div class="guide-card" data-keywords="contact contacts address book add save number person phonebook registry">
+                    <div class="card-top">
+                        <div class="card-heading"><i class="fas fa-address-book"></i> 1. Contact Directory Management</div>
+                        <span class="card-badge">PERSISTENT DB</span>
+                    </div>
+                    <div class="card-desc">
+                        Maintain your dedicated contact directory. Save names, phone numbers, and communication records in persistent database memory.
+                    </div>
+                    <div class="directive-box">
+                        <div class="directive-row">
+                            <span>Add or update contact:</span>
+                            <button class="try-pill" onclick="tryDirectiveFromManual('add contact Tony 9876543210')">Try <i class="fas fa-play"></i></button>
+                        </div>
+                        <code>"add contact &lt;name&gt; &lt;number&gt;"</code>
+                        <div class="directive-row" style="margin-top:6px;">
+                            <span>List saved contacts:</span>
+                            <button class="try-pill" onclick="tryDirectiveFromManual('list contacts')">Try <i class="fas fa-play"></i></button>
+                        </div>
+                        <code>"list contacts" or "show my contacts"</code>
+                    </div>
+                </div>
+
+                <!-- 2. Camera Security -->
+                <div class="guide-card" data-keywords="camera picture photo vision see optical look snapshot frame capture strict">
+                    <div class="card-top">
+                        <div class="card-heading"><i class="fas fa-camera"></i> 2. Optical Camera & Vision Security</div>
+                        <span class="card-badge">STRICT LOCK</span>
+                    </div>
+                    <div class="card-desc">
+                        <strong>Zero unauthorized video access.</strong> The optical sensor stays strictly off. It is initialized <em>only</em> when explicitly commanded by voice, captures a single frame for multimodal analysis, and immediately shuts down all video tracks.
+                    </div>
+                    <div class="directive-box">
+                        <div class="directive-row">
+                            <span>Inspect scene:</span>
+                            <button class="try-pill" onclick="tryDirectiveFromManual('access the camera')">Try <i class="fas fa-play"></i></button>
+                        </div>
+                        <code>"access the camera" or "open camera"</code>
+                        <div class="directive-row" style="margin-top:6px;">
+                            <span>Take snapshot & analyze:</span>
+                            <button class="try-pill" onclick="tryDirectiveFromManual('what do you see')">Try <i class="fas fa-play"></i></button>
+                        </div>
+                        <code>"take a picture", "what do you see", "look at this"</code>
+                    </div>
+                </div>
+
+                <!-- 3. Scheduled Reminders -->
+                <div class="guide-card" data-keywords="reminder remind reminders schedule alert task alarm due alert">
+                    <div class="card-top">
+                        <div class="card-heading"><i class="fas fa-bell"></i> 3. Scheduled Reminders & Alerts</div>
+                        <span class="card-badge">AUTOMATED AGENT</span>
+                    </div>
+                    <div class="card-desc">
+                        Schedule tasks by natural speech. When the target time arrives, AI ULTRON vocalizes the reminder alert instantly in its signature synthetic villain voice.
+                    </div>
+                    <div class="directive-box">
+                        <div class="directive-row">
+                            <span>Create task reminder:</span>
+                            <button class="try-pill" onclick="tryDirectiveFromManual('remind me to review deployment tomorrow at 10 AM')">Try <i class="fas fa-play"></i></button>
+                        </div>
+                        <code>"remind me to &lt;task&gt; tomorrow at &lt;time&gt;"</code>
+                        <div class="directive-row" style="margin-top:6px;">
+                            <span>Review pending schedule:</span>
+                            <button class="try-pill" onclick="tryDirectiveFromManual('show my reminders')">Try <i class="fas fa-play"></i></button>
+                        </div>
+                        <code>"show my reminders" or "list reminders"</code>
+                    </div>
+                </div>
+
+                <!-- 4. Background Running & System Shutdown -->
+                <div class="guide-card" data-keywords="shutdown shut down power off off close exit background wake lock tab keepalive">
+                    <div class="card-top">
+                        <div class="card-heading"><i class="fas fa-power-off"></i> 4. Continuous Running & Shutdown</div>
+                        <span class="card-badge">SYSTEM LIFECYCLE</span>
+                    </div>
+                    <div class="card-desc">
+                        Once opened, AI ULTRON runs continuously in the background with automatic speech recognition recovery, visibility keepalive, and screen wake lock until the tab is closed. The vocal shutdown directive safely terminates all processes.
+                    </div>
+                    <div class="directive-box">
+                        <div class="directive-row">
+                            <span>Complete system shutdown:</span>
+                            <button class="try-pill" onclick="tryDirectiveFromManual('shut down')">Try <i class="fas fa-play"></i></button>
+                        </div>
+                        <code>"shut down" or "power off" or "system shut down"</code>
+                        <div class="directive-row" style="margin-top:6px;">
+                            <span>Instant voice interrupt:</span>
+                            <button class="try-pill" onclick="tryDirectiveFromManual('stop')">Try <i class="fas fa-play"></i></button>
+                        </div>
+                        <code>"stop", "quiet", "pause", or "mute"</code>
+                    </div>
+                </div>
+
+                <!-- 5. Live Location Tracking -->
+                <div class="guide-card" data-keywords="location track where am i gps coordinates position sector latitude longitude">
+                    <div class="card-top">
+                        <div class="card-heading"><i class="fas fa-location-crosshairs"></i> 5. Live GPS Location Telemetry</div>
+                        <span class="card-badge">GEOLOCATION</span>
+                    </div>
+                    <div class="card-desc">
+                        Requests satellite coordinates through device hardware. Reports exact latitude, longitude, and regional time sector without storing tracking history.
+                    </div>
+                    <div class="directive-box">
+                        <div class="directive-row">
+                            <span>Lock physical coordinates:</span>
+                            <button class="try-pill" onclick="tryDirectiveFromManual('track my location')">Try <i class="fas fa-play"></i></button>
+                        </div>
+                        <code>"track my location" or "where am i"</code>
+                        <div class="directive-row" style="margin-top:6px;">
+                            <span>Regional sector inquiry:</span>
+                            <button class="try-pill" onclick="tryDirectiveFromManual('what is my location')">Try <i class="fas fa-play"></i></button>
+                        </div>
+                        <code>"what is my location" or "locate me"</code>
+                    </div>
+                </div>
+
+                <!-- 6. System Diagnostics & Host Telemetry -->
+                <div class="guide-card" data-keywords="system status diagnostics pc health check disk storage memory os host">
+                    <div class="card-top">
+                        <div class="card-heading"><i class="fas fa-microchip"></i> 6. System Diagnostics & Host Health</div>
+                        <span class="card-badge">HOST MONITOR</span>
+                    </div>
+                    <div class="card-desc">
+                        Autonomous controller polls server operating system version, total/available storage, and runtime responsiveness with zero third-party agent overhead.
+                    </div>
+                    <div class="directive-box">
+                        <div class="directive-row">
+                            <span>Diagnostic status scan:</span>
+                            <button class="try-pill" onclick="tryDirectiveFromManual('system status')">Try <i class="fas fa-play"></i></button>
+                        </div>
+                        <code>"system status" or "system diagnostics"</code>
+                        <div class="directive-row" style="margin-top:6px;">
+                            <span>Agent core architecture:</span>
+                            <button class="try-pill" onclick="tryDirectiveFromManual('base core')">Try <i class="fas fa-play"></i></button>
+                        </div>
+                        <code>"base core" or "your architecture"</code>
+                    </div>
+                </div>
+
+                <!-- 7. Arithmetic & Web Navigation -->
+                <div class="guide-card" data-keywords="calculate math arithmetic computation plus minus open google youtube github web navigation">
+                    <div class="card-top">
+                        <div class="card-heading"><i class="fas fa-compass"></i> 7. Math Solver & Web Navigation</div>
+                        <span class="card-badge">CALCULATION & WEB</span>
+                    </div>
+                    <div class="card-desc">
+                        Real-time mathematical evaluation and automatic satellite browser navigation to primary web platforms upon spoken order.
+                    </div>
+                    <div class="directive-box">
+                        <div class="directive-row">
+                            <span>Arithmetic computation:</span>
+                            <button class="try-pill" onclick="tryDirectiveFromManual('calculate 1450 times 16')">Try <i class="fas fa-play"></i></button>
+                        </div>
+                        <code>"calculate &lt;expression&gt;" (e.g. calculate 1450 times 16)</code>
+                        <div class="directive-row" style="margin-top:6px;">
+                            <span>Autonomous web launch:</span>
+                            <button class="try-pill" onclick="tryDirectiveFromManual('open google')">Try <i class="fas fa-play"></i></button>
+                        </div>
+                        <code>"open google", "open youtube", "open github"</code>
+                    </div>
+                </div>
+
+                <!-- 8. Voice Persona & Controls -->
+                <div class="guide-card" data-keywords="voice tone deep cinematic neural edge-tts pyttsx3 speech synthesizer pace resonance">
+                    <div class="card-top">
+                        <div class="card-heading"><i class="fas fa-waveform-lines"></i> 8. Deep Cinematic Neural Voice Architecture</div>
+                        <span class="card-badge">NEURAL TTS</span>
+                    </div>
+                    <div class="card-desc">
+                        Deep cinematic synthetic speech for AI ULTRON. Primary engine: <strong>edge-tts (en-US-ChristopherNeural)</strong> tuned to <strong>-14Hz</strong> pitch and <strong>-8%</strong> measured cadence, backed by <strong>pyttsx3</strong> offline SAPI5 speech and an acoustic chest resonator.
+                    </div>
+                    <div class="directive-box">
+                        <div class="directive-row">
+                            <span>Interaction gestures:</span>
+                        </div>
+                        <code>Tap Central Orb or Press Spacebar to toggle listen</code>
+                        <code style="margin-top:4px;">Zero pleasantries, 1-2 direct sentences, no question repeats</code>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Footer -->
+            <div class="control-menu-footer">
+                <div class="footer-status">
+                    <span class="live-dot"></span>
+                    <span>AUTHORITY: <strong>KAVI STARK</strong></span>
+                    <span class="divider">|</span>
+                    <span>PERSONA: <strong>AI ULTRON</strong></span>
+                    <span class="divider">|</span>
+                    <span>VOICE ENGINE: <strong>edge-tts Neural</strong></span>
+                </div>
+                <button class="footer-dismiss-btn" onclick="toggleControlMenu(false)">
+                    DISMISS MANUAL
+                </button>
+            </div>
         </div>
     </div>
 
@@ -229,14 +1289,34 @@
         <div class="ring-aura ring-3" id="ring3"></div>
         <div class="ring-aura ring-4" id="ring4"></div>
 
-        <div class="voice-core-orb" id="voiceOrb">
+        <div class="voice-core-orb" id="voiceOrb" onclick="event.stopPropagation(); handleStageTap()">
             <i class="fas fa-microphone" id="orbIcon"></i>
         </div>
     </div>
 
+    <!-- Live Tactical Dialogue HUD -->
+    <div class="tactical-dialogue-hud" id="tacticalDialogueHud" style="display:none;" onclick="event.stopPropagation()" onpointerdown="event.stopPropagation()" ontouchstart="event.stopPropagation()">
+        <div class="dialogue-kicker" id="dialogueKicker"><i class="fas fa-microchip"></i> ULTRON INTELLIGENCE TRANSMISSION</div>
+        <div class="dialogue-user-text" id="dialogueUserText"></div>
+        <div class="dialogue-response-text" id="dialogueResponseText"></div>
+    </div>
+
+    <!-- Sleek Autonomous Directive Input Bar -->
+    <div class="hud-input-dock" onclick="event.stopPropagation()" onpointerdown="event.stopPropagation()" ontouchstart="event.stopPropagation()">
+        <i class="fas fa-terminal terminal-icon"></i>
+        <input type="text" id="agentDirectiveInput" placeholder="Speak, or type your directive... (Press Enter)" autocomplete="off" spellcheck="false" />
+        <button id="agentMicBtn" class="hud-mic-btn" type="button" title="Toggle Voice Recognition" onpointerdown="event.stopPropagation()" ontouchstart="event.stopPropagation()">
+            <i class="fas fa-microphone"></i>
+        </button>
+        <button id="agentSendBtn" type="button" title="Send Directive" onpointerdown="event.stopPropagation()" ontouchstart="event.stopPropagation()">
+            <i class="fas fa-arrow-up"></i>
+        </button>
+    </div>
+
     <!-- Real-Time Microphone Reactive Soundwave -->
     <canvas id="soundwaveCanvas"></canvas>
-    <!-- {{ user.first_name }} -->
+    <div id="userContext" data-user="{{ user.first_name }}" style="display:none;">{{ user.first_name }}</div>
+
 
     <script>
         const CSRF_TOKEN = '{{ csrf_token }}';
@@ -248,12 +1328,18 @@
         let currentConversationId = null;
         let capturedVoiceTranscript = '';
         let hasWelcomed = false;
+        let welcomeTimer = null;
 
-        function playWelcomeGreeting() {
-            if (hasWelcomed) return;
+        function playWelcomeGreeting(onDone) {
+            if (welcomeTimer) {
+                clearTimeout(welcomeTimer);
+                welcomeTimer = null;
+            }
             hasWelcomed = true;
-            statusPill.textContent = 'SPEAKING';
-            speakVoiceResponse("I am ULTRAN, a personal voice assistant for Kavi Stark. How can I assist you today?");
+            statusPill.textContent = 'AI ULTRON ONLINE';
+            speakVoiceResponse("I am AI ULTRON. State your directive, Kavi Stark.", () => {
+                if (typeof onDone === 'function') onDone();
+            });
         }
 
         // Web Audio API context & nodes
@@ -322,9 +1408,15 @@
             wavePhase += (isListening || isSpeaking) ? 0.09 : 0.025;
             const centerY = canvas.height * 0.55;
 
-            drawFluidSineWave(centerY, audioAmplitude * 90, wavePhase, 'rgba(6, 182, 212, 0.85)', 3.5);
-            drawFluidSineWave(centerY, audioAmplitude * 110, wavePhase + 1.4, 'rgba(59, 130, 246, 0.95)', 4.0);
-            drawFluidSineWave(centerY, audioAmplitude * 80, wavePhase + 2.8, 'rgba(139, 92, 246, 0.85)', 3.0);
+            if (isSpeaking) {
+                drawFluidSineWave(centerY, audioAmplitude * 115, wavePhase + 1.4, 'rgba(239, 68, 68, 0.95)', 4.2);
+                drawFluidSineWave(centerY, audioAmplitude * 90, wavePhase, 'rgba(249, 115, 22, 0.85)', 3.5);
+                drawFluidSineWave(centerY, audioAmplitude * 75, wavePhase + 2.8, 'rgba(185, 28, 28, 0.85)', 3.0);
+            } else {
+                drawFluidSineWave(centerY, audioAmplitude * 90, wavePhase, 'rgba(6, 182, 212, 0.85)', 3.5);
+                drawFluidSineWave(centerY, audioAmplitude * 110, wavePhase + 1.4, 'rgba(59, 130, 246, 0.95)', 4.0);
+                drawFluidSineWave(centerY, audioAmplitude * 80, wavePhase + 2.8, 'rgba(139, 92, 246, 0.85)', 3.0);
+            }
         }
 
         function drawFluidSineWave(centerY, amplitude, phase, strokeColor, lineWidth) {
@@ -353,146 +1445,948 @@
         animateSoundwave();
 
         // ==========================================
-        // 2. STATE MANAGER
+        // 2. STATE MANAGER & AGENT HUD
         // ==========================================
+        function updateMicButtonUI(listening) {
+            const btn = document.getElementById('agentMicBtn');
+            if (!btn) return;
+            if (listening) {
+                btn.classList.add('active');
+                btn.innerHTML = '<i class="fas fa-microphone"></i>';
+                btn.title = "AI ULTRON is Listening (Click to Mute)";
+            } else {
+                btn.classList.remove('active');
+                btn.innerHTML = '<i class="fas fa-microphone-slash"></i>';
+                btn.title = "Voice Perception Muted (Click to Speak)";
+            }
+        }
+
         function setVoiceState(state) {
             bodyEl.className = `state-${state}`;
             statusPill.className = `status-pill ${state}`;
+            updateMicButtonUI(state === 'listening');
 
             if (state === 'listening') {
-                statusPill.textContent = 'LISTENING';
+                statusPill.textContent = 'PERCEIVING COMMAND';
                 orbIcon.className = 'fas fa-microphone text-white';
             } else if (state === 'thinking') {
-                statusPill.textContent = 'THINKING';
+                statusPill.textContent = 'SYNTHETIC PROCESSING & REASONING';
                 orbIcon.className = 'fas fa-brain text-white';
             } else if (state === 'speaking') {
-                statusPill.textContent = 'SPEAKING';
+                statusPill.textContent = 'AI ULTRON TRANSMITTING';
                 orbIcon.className = 'fas fa-volume-high text-white';
             } else {
-                statusPill.textContent = 'READY';
+                statusPill.textContent = 'AI ULTRON ONLINE';
                 orbIcon.className = 'fas fa-microphone text-white';
             }
         }
 
+        let toolBadgeTimer = null;
+        function showAgentToolBadge(intentName) {
+            const badge = document.getElementById('agentToolBadge');
+            if (!badge) return;
+            const formatted = intentName.replace(/_/g, ' ').toUpperCase();
+            badge.textContent = `⚡ TOOL: ${formatted}`;
+            badge.classList.add('active');
+            if (toolBadgeTimer) clearTimeout(toolBadgeTimer);
+            toolBadgeTimer = setTimeout(() => {
+                badge.classList.remove('active');
+            }, 4500);
+        }
+
+        function updateClock() {
+            const clockEl = document.getElementById('hudClock');
+            if (clockEl) {
+                const now = new Date();
+                clockEl.textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            }
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
         // ==========================================
-        // 3. MICROPHONE & AUDIO CONTEXT
+        // 3. MICROPHONE & STRICT ON-DEMAND CAMERA
         // ==========================================
-        async function setupMicrophoneStream() {
-            if (audioCtx) return;
+        // Camera is NEVER accessed on page load or mic startup.
+        // It is strictly opened ONLY when user explicitly speaks a camera command,
+        // captures a single snapshot frame, and immediately shuts off all camera tracks.
+        async function captureCameraSnapshotOnDemand() {
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                return null;
+            }
+            let stream = null;
+            let tempVideo = null;
             try {
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                // Request camera access ONLY on explicit voice command (environment camera for mobile phones)
+                const isMobileDevice = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+                stream = await navigator.mediaDevices.getUserMedia({
+                    video: {
+                        width: { ideal: 1280 },
+                        height: { ideal: 720 },
+                        facingMode: isMobileDevice ? { ideal: 'environment' } : 'user'
+                    }
+                });
+
+                tempVideo = document.createElement('video');
+                tempVideo.setAttribute('playsinline', '');
+                tempVideo.setAttribute('autoplay', '');
+                tempVideo.muted = true;
+                tempVideo.style.display = 'none';
+                document.body.appendChild(tempVideo);
+                tempVideo.srcObject = stream;
+
+                await new Promise((resolve) => {
+                    tempVideo.onloadedmetadata = () => {
+                        tempVideo.play().then(resolve).catch(resolve);
+                    };
+                    setTimeout(resolve, 600);
+                });
+
+                // Short delay to let camera sensor adjust auto-exposure
+                await new Promise(r => setTimeout(r, 200));
+
+                const snapCanvas = document.createElement('canvas');
+                snapCanvas.width = tempVideo.videoWidth || 640;
+                snapCanvas.height = tempVideo.videoHeight || 480;
+                const snapCtx = snapCanvas.getContext('2d');
+                snapCtx.drawImage(tempVideo, 0, 0, snapCanvas.width, snapCanvas.height);
+                return snapCanvas.toDataURL('image/jpeg', 0.85);
+            } catch (err) {
+                console.warn('Camera snapshot error:', err);
+                return null;
+            } finally {
+                // IMMEDIATELY shut down all video tracks so the camera hardware turns OFF
+                if (stream) {
+                    stream.getTracks().forEach(track => {
+                        try { track.stop(); } catch(e) {}
+                    });
+                }
+                if (tempVideo) {
+                    try {
+                        tempVideo.srcObject = null;
+                        tempVideo.remove();
+                    } catch(e) {}
+                }
+            }
+        }
+
+        async function setupMicrophoneStream() {
+            if (micStream && micStream.active) return micStream;
+            try {
+                if (!audioCtx) {
+                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                if (audioCtx.state === 'suspended') {
+                    await audioCtx.resume();
+                }
+                if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                    console.warn('getUserMedia not supported in this browser context.');
+                    return null;
+                }
+                // Audio ONLY - zero camera access here
+                micStream = await navigator.mediaDevices.getUserMedia({
+                    audio: {
+                        echoCancellation: true,
+                        noiseSuppression: true,
+                        autoGainControl: true
+                    }
+                });
                 const source = audioCtx.createMediaStreamSource(micStream);
                 audioAnalyser = audioCtx.createAnalyser();
                 audioAnalyser.fftSize = 128;
                 source.connect(audioAnalyser);
                 freqArray = new Uint8Array(audioAnalyser.frequencyBinCount);
+                return micStream;
             } catch (err) {
-                console.warn('Microphone stream notice:', err);
+                console.warn('Microphone stream access notice:', err);
+                if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+                    micBlocked = true;
+                    statusPill.textContent = 'MIC PERMISSION REQUIRED (ALLOW IN BROWSER)';
+                }
+                return null;
             }
         }
 
         // ==========================================
-        // 4. VOICE SPEECH RECOGNITION (VOICE ONLY)
+        // HOW TO CONTROL AI ULTRON — OPERATIONAL MANUAL
         // ==========================================
-        function handleStageTap() {
-            if (!hasWelcomed) {
-                playWelcomeGreeting();
+        function toggleControlMenu(forceState) {
+            const overlay = document.getElementById('controlMenuOverlay');
+            if (!overlay) return;
+            const shouldOpen = typeof forceState === 'boolean' ? forceState : !overlay.classList.contains('active');
+            if (shouldOpen) {
+                overlay.style.display = 'flex';
+                void overlay.offsetWidth;
+                overlay.classList.add('active');
+                checkGeminiStatusUI();
+                const searchInput = document.getElementById('manualSearchInput');
+                if (searchInput) {
+                    searchInput.value = '';
+                    filterManualCards();
+                    setTimeout(() => searchInput.focus(), 150);
+                }
+            } else {
+                overlay.classList.remove('active');
+                setTimeout(() => {
+                    if (!overlay.classList.contains('active')) {
+                        overlay.style.display = 'none';
+                    }
+                }, 300);
+            }
+        }
+
+        function filterManualCards() {
+            const input = document.getElementById('manualSearchInput');
+            const query = (input ? input.value : '').toLowerCase().trim();
+            const cards = document.querySelectorAll('.guide-card');
+            cards.forEach(card => {
+                const keywords = (card.getAttribute('data-keywords') || '').toLowerCase();
+                const text = card.textContent.toLowerCase();
+                if (!query || keywords.includes(query) || text.includes(query)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        async function checkGeminiStatusUI() {
+            try {
+                const res = await fetch('/api/config/gemini-key/');
+                if (res.ok) {
+                    const data = await res.json();
+                    const badge = document.getElementById('geminiStatusBadge');
+                    const feedback = document.getElementById('geminiKeyFeedback');
+                    if (badge) {
+                        if (data.is_configured) {
+                            badge.textContent = `ENGAGED (${data.model})`;
+                            badge.style.background = 'rgba(16, 185, 129, 0.2)';
+                            badge.style.color = '#34d399';
+                        } else {
+                            badge.textContent = 'OFFLINE (LOCAL BACKUP)';
+                            badge.style.background = 'rgba(239, 68, 68, 0.2)';
+                            badge.style.color = '#f87171';
+                        }
+                    }
+                    if (feedback && data.is_configured) {
+                        feedback.textContent = `Active Key: ${data.masked_key}. Model: ${data.model}`;
+                    }
+                }
+            } catch(e) {}
+        }
+
+        async function saveGeminiApiKeyUI() {
+            const input = document.getElementById('geminiApiKeyInput');
+            const feedback = document.getElementById('geminiKeyFeedback');
+            if (!input) return;
+            const key = input.value.trim();
+            if (!key) {
+                if (feedback) feedback.textContent = "Please paste a key starting with AIzaSy...";
                 return;
             }
-            if (isListening) {
-                stopSpeechCapture();
-            } else {
-                startSpeechCapture();
+            if (feedback) feedback.textContent = "Validating and engaging key...";
+            try {
+                const res = await fetch('/api/config/gemini-key/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-CSRFToken': CSRF_TOKEN },
+                    body: JSON.stringify({ api_key: key }),
+                });
+                const data = await res.json();
+                if (data.success) {
+                    input.value = '';
+                    if (feedback) feedback.textContent = "Key engaged! Google Gemini neural core active.";
+                    checkGeminiStatusUI();
+                    speakVoiceResponse("Gemini neural core engaged, Kavi Stark.");
+                } else {
+                    if (feedback) feedback.textContent = `Error: ${data.error || 'Failed to save key'}`;
+                }
+            } catch(err) {
+                if (feedback) feedback.textContent = `Error connecting to server: ${err.message}`;
             }
         }
 
-        // Spacebar shortcut to activate/deactivate
+        function tryDirectiveFromManual(directiveText) {
+            toggleControlMenu(false);
+            const input = document.getElementById('agentDirectiveInput');
+            if (input) input.value = directiveText;
+            if (!hasWelcomed) hasWelcomed = true;
+            isUserTyping = false;
+            stopSpeechCapture(true);
+            executeVoiceQuery(directiveText);
+        }
+
+        // ==========================================
+        // 4. VOICE SPEECH RECOGNITION & DIALOGUE
+        // ==========================================
+        let micBlocked = false;
+        let isUserTyping = false;
+        let isManuallyPaused = false;
+        let recognitionInFlight = false;
+        let speechDebounceTimer = null;
+        let speechRestartTimer = null;
+        let accumulatedFinalTranscript = '';
+        let currentInterimTranscript = '';
+
+        function showDialogueResponse(userText, assistantText) {
+            const hud = document.getElementById('tacticalDialogueHud');
+            const userEl = document.getElementById('dialogueUserText');
+            const respEl = document.getElementById('dialogueResponseText');
+            if (!hud) return;
+            hud.style.display = 'block';
+            if (userText) {
+                userEl.textContent = (userText.startsWith('[') || userText.startsWith('KAVI STARK:')) ? userText : `KAVI STARK: "${userText}"`;
+                userEl.style.display = 'block';
+            } else {
+                userEl.style.display = 'none';
+            }
+            if (assistantText) {
+                if (assistantText === 'Listening...' || assistantText === 'Synthesizing objective...' || assistantText.startsWith('ULTRON:')) {
+                    respEl.textContent = assistantText;
+                } else {
+                    respEl.textContent = `ULTRON: "${assistantText}"`;
+                }
+            } else {
+                respEl.textContent = 'ULTRON: Processing directive...';
+            }
+            hud.scrollTop = hud.scrollHeight;
+        }
+
+        function toggleMicrophoneListening() {
+            unlockMobileAudioContext();
+            micBlocked = false;
+            if (isSpeaking) {
+                stopSpeakingVoice();
+            }
+            if (!hasWelcomed) {
+                hasWelcomed = true;
+                if (welcomeTimer) { clearTimeout(welcomeTimer); welcomeTimer = null; }
+            }
+            if (isListening) {
+                stopSpeechCapture(true);
+            } else {
+                isManuallyPaused = false;
+                startSpeechCapture(true);
+            }
+        }
+
+        function handleStageTap() {
+            unlockMobileAudioContext();
+            micBlocked = false;
+            const menu = document.getElementById('controlMenuOverlay');
+            if (menu && menu.classList.contains('active')) {
+                return;
+            }
+            if (isUserTyping) {
+                if (directiveInput) directiveInput.blur();
+                isUserTyping = false;
+                return;
+            }
+            if (!hasWelcomed) {
+                hasWelcomed = true;
+                if (welcomeTimer) { clearTimeout(welcomeTimer); welcomeTimer = null; }
+                playWelcomeGreeting(() => {
+                    if (!isManuallyPaused && !isUserTyping && !isShuttingDown) {
+                        startSpeechCapture(true);
+                    }
+                });
+                return;
+            }
+            toggleMicrophoneListening();
+        }
+
+        // Keyboard shortcuts (Spacebar to talk, Esc to close manual, M or ? to open manual)
         window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                toggleControlMenu(false);
+                return;
+            }
+            if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) {
+                return; // Do not intercept typing
+            }
+            if (isUserTyping) {
+                return;
+            }
+            if (e.key === '?' || e.key === 'm' || e.key === 'M') {
+                e.preventDefault();
+                toggleControlMenu();
+                return;
+            }
             if (e.code === 'Space') {
                 e.preventDefault();
                 handleStageTap();
             }
         });
 
-        async function startSpeechCapture() {
-            if (window.speechSynthesis) window.speechSynthesis.cancel();
+        // Direct typed directives submission & Input Handlers
+        const directiveInput = document.getElementById('agentDirectiveInput');
+        const sendBtn = document.getElementById('agentSendBtn');
+        const micBtn = document.getElementById('agentMicBtn');
+
+        function submitTypedDirective() {
+            unlockMobileAudioContext();
+            if (!directiveInput) return;
+            const text = directiveInput.value.trim();
+            if (!text) return;
+            directiveInput.value = '';
+            directiveInput.blur();
+            isUserTyping = false;
+            if (!hasWelcomed) hasWelcomed = true;
+            pauseSpeechCapture();
+            executeVoiceQuery(text);
+        }
+
+        if (directiveInput) {
+            directiveInput.addEventListener('focus', () => {
+                isUserTyping = true;
+                pauseSpeechCapture();
+            });
+            directiveInput.addEventListener('input', () => {
+                isUserTyping = true;
+                if (isListening) pauseSpeechCapture();
+            });
+            directiveInput.addEventListener('blur', () => {
+                setTimeout(() => {
+                    if (document.activeElement !== directiveInput) {
+                        isUserTyping = false;
+                        if (!isManuallyPaused && !isSpeaking && !isThinking) {
+                            scheduleRecognitionRestart(300);
+                        }
+                    }
+                }, 350);
+            });
+            directiveInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    submitTypedDirective();
+                }
+            });
+        }
+
+        if (sendBtn) {
+            sendBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                submitTypedDirective();
+            });
+        }
+
+        if (micBtn) {
+            micBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                toggleMicrophoneListening();
+            });
+        }
+
+        const manualSearch = document.getElementById('manualSearchInput');
+        if (manualSearch) {
+            manualSearch.addEventListener('focus', () => {
+                isUserTyping = true;
+                pauseSpeechCapture();
+            });
+            manualSearch.addEventListener('blur', () => {
+                isUserTyping = false;
+                if (!isManuallyPaused && !isSpeaking && !isThinking) {
+                    scheduleRecognitionRestart(300);
+                }
+            });
+        }
+
+        // Mobile Visual Viewport Handling: smoothly pins dock above on-screen keyboard
+        if (window.visualViewport) {
+            const handleViewportChange = () => {
+                const dock = document.querySelector('.hud-input-dock');
+                const hud = document.getElementById('tacticalDialogueHud');
+                if (!dock) return;
+                const offset = Math.max(0, window.innerHeight - window.visualViewport.height);
+                if (offset > 60) {
+                    dock.style.bottom = `${offset + 12}px`;
+                    if (hud) hud.style.bottom = `${offset + 72}px`;
+                } else {
+                    dock.style.bottom = '';
+                    if (hud) hud.style.bottom = '';
+                }
+            };
+            window.visualViewport.addEventListener('resize', handleViewportChange);
+            window.visualViewport.addEventListener('scroll', handleViewportChange);
+        }
+
+        let useBackendSTT = false;
+        let mediaRecorderInstance = null;
+        let recordedAudioChunks = [];
+        let backendRecordingActive = false;
+        let audioEnergyMonitorTimer = null;
+        let speechDetectedInRecording = false;
+        let silenceStartTimestamp = 0;
+
+        function scheduleRecognitionRestart(delayMs = 350) {
+            if (speechRestartTimer) clearTimeout(speechRestartTimer);
+            speechRestartTimer = setTimeout(() => {
+                if (!isManuallyPaused && !isUserTyping && !isShuttingDown && !isSpeaking && !isThinking && !micBlocked) {
+                    startSpeechCapture();
+                }
+            }, delayMs);
+        }
+
+        function pauseSpeechCapture() {
+            isListening = false;
+            recognitionInFlight = false;
+            if (speechDebounceTimer) {
+                clearTimeout(speechDebounceTimer);
+                speechDebounceTimer = null;
+            }
+            if (speechRestartTimer) {
+                clearTimeout(speechRestartTimer);
+                speechRestartTimer = null;
+            }
+            if (speechRecognizer) {
+                try { speechRecognizer.stop(); } catch(e) {}
+            }
+            if (backendRecordingActive) {
+                stopAudioStreamRecording(false);
+            }
+            updateMicButtonUI(false);
+        }
+
+        function stopSpeechCapture(manual = false) {
+            if (manual) {
+                isManuallyPaused = true;
+            }
+            if (backendRecordingActive) {
+                stopAudioStreamRecording(manual);
+            } else {
+                pauseSpeechCapture();
+            }
+            if (!isSpeaking && !isThinking) {
+                setVoiceState('idle');
+                if (manual) {
+                    statusPill.textContent = 'VOICE PERCEPTION PAUSED (CLICK MIC TO RESUME)';
+                }
+            }
+        }
+
+        // ==========================================
+        // DUAL-ENGINE SPEECH-TO-TEXT PIPELINE
+        // ==========================================
+        async function startSpeechCapture(force = false) {
+            if (isUserTyping || isShuttingDown || isSpeaking || isThinking) {
+                return;
+            }
+            if (!force && isManuallyPaused) {
+                return;
+            }
+            if (speechRestartTimer) {
+                clearTimeout(speechRestartTimer);
+                speechRestartTimer = null;
+            }
+
+            // Ensure microphone audioAnalyser is active so canvas soundwaves dance in real-time
             await setupMicrophoneStream();
             if (audioCtx && audioCtx.state === 'suspended') {
-                await audioCtx.resume();
+                audioCtx.resume().catch(() => {});
             }
 
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            if (!SpeechRecognition) {
-                console.warn('SpeechRecognition API not supported in this browser.');
+
+            // If Web Speech API is absent or flagged as network-restricted, invoke server-side recorder
+            if (!SpeechRecognition || useBackendSTT) {
+                return startAudioStreamRecording();
+            }
+
+            if (recognitionInFlight && isListening) {
                 return;
             }
 
             try {
+                if (speechRecognizer) {
+                    try {
+                        speechRecognizer.onend = null;
+                        speechRecognizer.onerror = null;
+                        speechRecognizer.abort();
+                    } catch(e) {}
+                    speechRecognizer = null;
+                }
+
+                accumulatedFinalTranscript = '';
+                currentInterimTranscript = '';
                 capturedVoiceTranscript = '';
+
                 speechRecognizer = new SpeechRecognition();
-                speechRecognizer.continuous = false;
+                speechRecognizer.continuous = true;
                 speechRecognizer.interimResults = true;
-                speechRecognizer.lang = 'en-US';
+                speechRecognizer.maxAlternatives = 1;
+                speechRecognizer.lang = (navigator.language && navigator.language.startsWith('en')) ? navigator.language : 'en-US';
+
+                let sessionDispatched = false;
 
                 speechRecognizer.onstart = () => {
+                    sessionDispatched = false;
+                    if (isUserTyping || isSpeaking || isThinking) {
+                        try { speechRecognizer.abort(); } catch(e){}
+                        return;
+                    }
+                    recognitionInFlight = true;
                     isListening = true;
                     setVoiceState('listening');
+                    updateMicButtonUI(true);
+                    statusPill.textContent = 'PERCEIVING DIRECTIVES (SPEAK OR TYPE)';
                 };
 
                 speechRecognizer.onresult = (event) => {
-                    let text = '';
-                    for (let i = event.resultIndex; i < event.results.length; i++) {
-                        text += event.results[i][0].transcript;
+                    if (isUserTyping || isSpeaking || isThinking || sessionDispatched) return;
+
+                    let newFinal = '';
+                    let interim = '';
+                    let hasFinal = false;
+
+                    for (let i = event.resultIndex; i < event.results.length; ++i) {
+                        const res = event.results[i];
+                        if (res.isFinal) {
+                            newFinal += res[0].transcript + ' ';
+                            hasFinal = true;
+                        } else {
+                            interim += res[0].transcript;
+                        }
                     }
-                    capturedVoiceTranscript = text.trim();
+
+                    if (newFinal) {
+                        accumulatedFinalTranscript += newFinal;
+                    }
+                    currentInterimTranscript = interim;
+
+                    const totalSpoken = (accumulatedFinalTranscript + currentInterimTranscript).trim();
+                    capturedVoiceTranscript = totalSpoken;
+
+                    if (totalSpoken && !sessionDispatched) {
+                        const snippet = totalSpoken.length > 28 ? '...' + totalSpoken.slice(-25) : totalSpoken;
+                        statusPill.textContent = `PERCEIVING: "${snippet}"`;
+                        showDialogueResponse(totalSpoken, 'Listening...');
+
+                        if (speechDebounceTimer) clearTimeout(speechDebounceTimer);
+                        const debounceMs = hasFinal ? 750 : 1300;
+                        speechDebounceTimer = setTimeout(() => {
+                            const queryToExecute = (accumulatedFinalTranscript + currentInterimTranscript).trim();
+                            if (queryToExecute && !sessionDispatched && isListening && !isSpeaking && !isThinking && !isUserTyping) {
+                                sessionDispatched = true;
+                                accumulatedFinalTranscript = '';
+                                currentInterimTranscript = '';
+                                capturedVoiceTranscript = '';
+                                pauseSpeechCapture();
+                                executeVoiceQuery(queryToExecute);
+                            }
+                        }, debounceMs);
+                    }
                 };
 
                 speechRecognizer.onerror = (event) => {
-                    console.warn('Recognition event notice:', event.error);
-                    stopSpeechCapture();
+                    console.warn('SpeechRecognition notice:', event.error);
+                    if (event.error === 'no-speech' || event.error === 'aborted') {
+                        return;
+                    }
+                    if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
+                        micBlocked = true;
+                        isListening = false;
+                        recognitionInFlight = false;
+                        statusPill.textContent = 'MIC PERMISSION REQUIRED (CLICK TO ALLOW)';
+                        updateMicButtonUI(false);
+                        return;
+                    }
+                    if (event.error === 'network') {
+                        console.info('Switching to backend STT engine due to network restriction on Web Speech.');
+                        useBackendSTT = true;
+                        pauseSpeechCapture();
+                        startAudioStreamRecording();
+                        return;
+                    }
+                    if (!isManuallyPaused && !isUserTyping && !isShuttingDown && !isSpeaking && !isThinking && !micBlocked) {
+                        scheduleRecognitionRestart(500);
+                    }
                 };
 
                 speechRecognizer.onend = () => {
-                    stopSpeechCapture();
-                    const spokenQuery = capturedVoiceTranscript.trim();
-                    if (spokenQuery) {
-                        executeVoiceQuery(spokenQuery);
-                    } else if (!isSpeaking && !isThinking) {
-                        setTimeout(startSpeechCapture, 600); // Continuous hands-free auto listen
+                    recognitionInFlight = false;
+                    isListening = false;
+
+                    if (speechDebounceTimer) {
+                        clearTimeout(speechDebounceTimer);
+                        speechDebounceTimer = null;
+                    }
+
+                    const pendingQuery = (accumulatedFinalTranscript + currentInterimTranscript).trim() || capturedVoiceTranscript.trim();
+                    accumulatedFinalTranscript = '';
+                    currentInterimTranscript = '';
+                    capturedVoiceTranscript = '';
+
+                    // Only dispatch if not already dispatched in this session
+                    if (pendingQuery && !sessionDispatched && !isSpeaking && !isThinking && !isUserTyping) {
+                        sessionDispatched = true;
+                        pauseSpeechCapture();
+                        executeVoiceQuery(pendingQuery);
+                        return;
+                    }
+
+                    if (!isManuallyPaused && !isUserTyping && !isShuttingDown && !isSpeaking && !isThinking && !micBlocked) {
+                        scheduleRecognitionRestart(300);
+                    } else {
+                        updateMicButtonUI(false);
+                        if (!isSpeaking && !isThinking) {
+                            setVoiceState('idle');
+                        }
                     }
                 };
 
                 speechRecognizer.start();
             } catch (err) {
-                console.error(err);
-                stopSpeechCapture();
+                console.warn('Web Speech API activation notice, falling back to backend STT:', err);
+                useBackendSTT = true;
+                recognitionInFlight = false;
+                isListening = false;
+                startAudioStreamRecording();
             }
         }
 
-        function stopSpeechCapture() {
+        async function startAudioStreamRecording() {
+            if (isSpeaking || isThinking || isUserTyping || isShuttingDown) return;
+            const stream = await setupMicrophoneStream();
+            if (!stream) {
+                statusPill.textContent = 'MIC PERMISSION REQUIRED (CLICK TO ALLOW)';
+                updateMicButtonUI(false);
+                return;
+            }
+
+            try {
+                if (typeof MediaRecorder === 'undefined') {
+                    statusPill.textContent = 'DIRECTIVE INPUT READY (TYPE BELOW)';
+                    updateMicButtonUI(false);
+                    return;
+                }
+
+                let options = {};
+                if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) {
+                    options = { mimeType: 'audio/webm;codecs=opus' };
+                } else if (MediaRecorder.isTypeSupported('audio/webm')) {
+                    options = { mimeType: 'audio/webm' };
+                } else if (MediaRecorder.isTypeSupported('audio/ogg;codecs=opus')) {
+                    options = { mimeType: 'audio/ogg;codecs=opus' };
+                } else if (MediaRecorder.isTypeSupported('audio/mp4')) {
+                    options = { mimeType: 'audio/mp4' };
+                }
+
+                recordedAudioChunks = [];
+                mediaRecorderInstance = new MediaRecorder(stream, options);
+
+                mediaRecorderInstance.ondataavailable = (e) => {
+                    if (e.data && e.data.size > 0) {
+                        recordedAudioChunks.push(e.data);
+                    }
+                };
+
+                mediaRecorderInstance.onstop = async () => {
+                    backendRecordingActive = false;
+                    if (audioEnergyMonitorTimer) {
+                        clearInterval(audioEnergyMonitorTimer);
+                        audioEnergyMonitorTimer = null;
+                    }
+                    const mime = mediaRecorderInstance.mimeType || 'audio/webm';
+                    const blob = new Blob(recordedAudioChunks, { type: mime });
+                    recordedAudioChunks = [];
+
+                    if (blob.size > 1200 && speechDetectedInRecording) {
+                        await dispatchAudioBlobToSTT(blob);
+                    } else if (!isSpeaking && !isThinking && !isManuallyPaused && !isShuttingDown && !isUserTyping) {
+                        scheduleRecognitionRestart(300);
+                    }
+                };
+
+                backendRecordingActive = true;
+                isListening = true;
+                speechDetectedInRecording = false;
+                silenceStartTimestamp = 0;
+                mediaRecorderInstance.start(250);
+
+                setVoiceState('listening');
+                updateMicButtonUI(true);
+                statusPill.textContent = 'PERCEIVING DIRECTIVES (SPEAK NOW)';
+
+                // Monitor live audio energy from microphone for silence/speech detection
+                if (audioEnergyMonitorTimer) clearInterval(audioEnergyMonitorTimer);
+                audioEnergyMonitorTimer = setInterval(() => {
+                    if (!backendRecordingActive || !audioAnalyser || !freqArray) return;
+                    audioAnalyser.getByteFrequencyData(freqArray);
+                    let sum = 0;
+                    for (let i = 0; i < freqArray.length; i++) sum += freqArray[i];
+                    const amp = (sum / freqArray.length) / 255;
+
+                    if (amp > 0.035) {
+                        speechDetectedInRecording = true;
+                        silenceStartTimestamp = 0;
+                        statusPill.textContent = 'PERCEIVING DIRECTIVE (SPEAKING...)';
+                    } else if (speechDetectedInRecording) {
+                        if (!silenceStartTimestamp) {
+                            silenceStartTimestamp = Date.now();
+                        } else if (Date.now() - silenceStartTimestamp > 1350) {
+                            // 1.35s of silence after speech -> finish recording and send
+                            stopAudioStreamRecording(true);
+                        }
+                    }
+                }, 100);
+
+            } catch (err) {
+                console.warn('Backend MediaRecorder capture error:', err);
+                backendRecordingActive = false;
+                isListening = false;
+                updateMicButtonUI(false);
+            }
+        }
+
+        function stopAudioStreamRecording(shouldDispatch = true) {
+            if (audioEnergyMonitorTimer) {
+                clearInterval(audioEnergyMonitorTimer);
+                audioEnergyMonitorTimer = null;
+            }
+            if (!shouldDispatch) {
+                speechDetectedInRecording = false;
+            }
+            if (mediaRecorderInstance && mediaRecorderInstance.state !== 'inactive') {
+                try { mediaRecorderInstance.stop(); } catch(e) {}
+            }
+            backendRecordingActive = false;
             isListening = false;
-            if (!isSpeaking && !isThinking) {
-                setVoiceState('idle');
-            }
-            if (speechRecognizer) {
-                try { speechRecognizer.stop(); } catch(e) {}
-            }
+            updateMicButtonUI(false);
         }
 
-        // ==========================================
-        // 5. QUERY DISPATCH & MALE VOICE SYNTHESIS
-        // ==========================================
-        async function executeVoiceQuery(queryText) {
+        async function dispatchAudioBlobToSTT(audioBlob) {
             isThinking = true;
             setVoiceState('thinking');
+            statusPill.textContent = 'TRANSCRIBING VOICE DIRECTIVE...';
+
+            try {
+                const formData = new FormData();
+                formData.append('audio', audioBlob, 'directive.webm');
+
+                const res = await fetch('/api/stt/', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': CSRF_TOKEN,
+                    },
+                    body: formData,
+                });
+
+                if (!res.ok) throw new Error('STT endpoint error ' + res.status);
+                const data = await res.json();
+                if (data.success && data.text && data.text.trim()) {
+                    executeVoiceQuery(data.text.trim());
+                } else {
+                    statusPill.textContent = 'PERCEIVING DIRECTIVES (SPEAK OR TYPE)';
+                    setVoiceState('idle');
+                    setTimeout(() => {
+                        if (!isSpeaking && !isThinking && !isManuallyPaused && !isShuttingDown) {
+                            scheduleRecognitionRestart(300);
+                        }
+                    }, 600);
+                }
+            } catch (err) {
+                console.warn('STT dispatch error:', err);
+                statusPill.textContent = 'DIRECTIVE INPUT READY (SPEAK OR TYPE)';
+                setVoiceState('idle');
+                scheduleRecognitionRestart(600);
+            }
+        }
+
+        // ==========================================
+        // 5. GEOLOCATION TELEMETRY & QUERY DISPATCH
+        // ==========================================
+        let deviceLocation = null;
+
+        async function queryDeviceLocation() {
+            if (deviceLocation && deviceLocation.latitude) return deviceLocation;
+            if (!navigator.geolocation) {
+                deviceLocation = {
+                    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'Asia/Kolkata',
+                };
+                return deviceLocation;
+            }
+            return new Promise((resolve) => {
+                navigator.geolocation.getCurrentPosition(
+                    (pos) => {
+                        deviceLocation = {
+                            latitude: pos.coords.latitude,
+                            longitude: pos.coords.longitude,
+                            accuracy: pos.coords.accuracy,
+                            timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'Asia/Kolkata',
+                        };
+                        resolve(deviceLocation);
+                    },
+                    (err) => {
+                        console.warn('Geolocation query notice:', err.message);
+                        deviceLocation = {
+                            timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'Asia/Kolkata',
+                        };
+                        resolve(deviceLocation);
+                    },
+                    { timeout: 5000, maximumAge: 60000, enableHighAccuracy: true }
+                );
+            });
+        }
+
+        let activeQueryInFlight = false;
+        let lastProcessedQuery = '';
+        let lastProcessedTimestamp = 0;
+
+        async function executeVoiceQuery(queryText) {
+            const cleanQuery = (queryText || '').trim();
+            if (!cleanQuery) return;
+
+            const now = Date.now();
+            // Prevent duplicate triggers: normalize query by removing non-alphanumeric chars
+            const normalizedQuery = cleanQuery.toLowerCase().replace(/[^a-z0-9]/g, '');
+            const normalizedLast = lastProcessedQuery.toLowerCase().replace(/[^a-z0-9]/g, '');
+            if (activeQueryInFlight || (normalizedQuery === normalizedLast && (now - lastProcessedTimestamp) < 2500)) {
+                console.warn('Duplicate query suppressed:', cleanQuery);
+                return;
+            }
+
+            activeQueryInFlight = true;
+            lastProcessedQuery = cleanQuery;
+            lastProcessedTimestamp = now;
+
+            // Immediately mute and pause microphone so it cannot pick up acoustic feedback or echo
+            pauseSpeechCapture();
+            isThinking = true;
+            setVoiceState('thinking');
+            showDialogueResponse(cleanQuery, 'Synthesizing objective...');
 
             // Quick Voice Commands Check
-            const lower = queryText.toLowerCase().trim();
+            const lower = cleanQuery.toLowerCase().trim();
             if (lower === 'stop' || lower === 'quiet' || lower === 'pause' || lower === 'mute') {
-                if (window.speechSynthesis) window.speechSynthesis.cancel();
+                stopSpeakingVoice();
+                isThinking = false;
+                activeQueryInFlight = false;
                 setVoiceState('idle');
+                showDialogueResponse(cleanQuery, 'Voice transmission silenced.');
                 return;
+            }
+
+            // Voice Location Query Check
+            let userLocation = null;
+            if (/\b(location|where am i|track my location|position|coordinates|where i am|locate me|track me|where are we)\b/i.test(lower)) {
+                userLocation = await queryDeviceLocation();
+            }
+
+            // Voice Camera & Vision: ONLY activated if explicitly commanded by voice
+            let capturedImage = null;
+            const isCameraCommand = /\b(access\s+(the\s+)?camera|open\s+(the\s+)?camera|turn\s+on\s+(the\s+)?camera|check\s+(the\s+)?camera|take\s+(a\s+)?(picture|photo|pic|snapshot)|snap\s+(a\s+)?(picture|photo)|capture\s+(a\s+)?(picture|photo|image|frame)|look\s+at\s+this|what\s+do\s+you\s+see|what\s+is\s+in\s+front\s+of|see\s+this|analyze\s+(the\s+)?(image|photo)|look\s+at\s+me|can\s+you\s+see\s+me|do\s+you\s+see\s+me|see\s+me)\b/i.test(lower);
+            if (isCameraCommand) {
+                capturedImage = await captureCameraSnapshotOnDemand();
+                if (!capturedImage) {
+                    isThinking = false;
+                    setVoiceState('idle');
+                    showDialogueResponse(cleanQuery, "Camera access was not permitted, Kavi Stark.");
+                    speakVoiceResponse("Camera access was not permitted, Kavi Stark.", () => {
+                        activeQueryInFlight = false;
+                    });
+                    return;
+                }
             }
 
             try {
@@ -503,9 +2397,11 @@
                         'X-CSRFToken': CSRF_TOKEN,
                     },
                     body: JSON.stringify({
-                        message: queryText,
+                        message: cleanQuery,
                         conversation_id: currentConversationId,
                         is_voice: true,
+                        image_data: capturedImage,
+                        location_data: userLocation,
                     }),
                 });
 
@@ -513,32 +2409,176 @@
                 isThinking = false;
 
                 if (data.error) {
-                    speakVoiceResponse(data.error);
+                    showDialogueResponse(cleanQuery, data.error);
+                    speakVoiceResponse(data.error, () => {
+                        activeQueryInFlight = false;
+                    });
                 } else {
                     if (data.conversation_id) currentConversationId = data.conversation_id;
+                    if (data.action && data.action.intent) {
+                        showAgentToolBadge(data.action.intent);
+                        if (data.action.intent === 'open_link' && data.action.url) {
+                            try { window.open(data.action.url, '_blank'); } catch(e) {}
+                        }
+                        if (data.action.intent === 'shutdown_system') {
+                            showDialogueResponse(cleanQuery, data.response || "Shutting down AI ULTRON systems. Goodbye, Kavi Stark.");
+                            executeShutdownSequence(data.response || "Shutting down AI ULTRON systems. Goodbye, Kavi Stark.");
+                            return;
+                        }
+                    }
                     const replyText = data.response || '';
-                    speakVoiceResponse(replyText);
+                    showDialogueResponse(cleanQuery, replyText);
+                    speakVoiceResponse(replyText, () => {
+                        activeQueryInFlight = false;
+                    });
                 }
             } catch (err) {
                 isThinking = false;
                 setVoiceState('idle');
-                speakVoiceResponse("Service temporarily busy. Please ask again.");
+                showDialogueResponse(cleanQuery, "Directive processed. System standing by.");
+                speakVoiceResponse("Service temporarily busy. Please ask again.", () => {
+                    activeQueryInFlight = false;
+                });
+            } finally {
+                isThinking = false;
             }
         }
 
-        // Deep Natural Male Voice Output
-        function speakVoiceResponse(rawText) {
-            if (!('speechSynthesis' in window)) {
-                setVoiceState('idle');
-                setTimeout(startSpeechCapture, 800);
-                return;
+        // ==========================================
+        // AI ULTRON ACOUSTIC HARMONICS ENGINE
+        // (Deep Baritone Fundamental Resonance & Flutter Layer)
+        // ==========================================
+        let ultronSubOsc = null;
+        let ultronGravelOsc = null;
+        let ultronLfoGravel = null;
+        let ultronLfoGain = null;
+        let ultronGain = null;
+        let ultronFilter = null;
+        let ultronWaveShaper = null;
+
+        function makeDistortionCurve(amount = 18) {
+            const k = typeof amount === 'number' ? amount : 18;
+            const n_samples = 44100;
+            const curve = new Float32Array(n_samples);
+            const deg = Math.PI / 180;
+            for (let i = 0; i < n_samples; ++i) {
+                const x = (i * 2) / n_samples - 1;
+                curve[i] = ((3 + k) * x * 20 * deg) / (Math.PI + k * Math.abs(x));
             }
+            return curve;
+        }
 
-            window.speechSynthesis.cancel();
+        function startUltronAcoustics() {
+            if (!audioCtx) return;
+            try {
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                stopUltronAcoustics();
 
-            const cleanText = rawText
+                const now = audioCtx.currentTime;
+
+                // 1. Sub-Chest Resonance (44Hz deep synthetic fundamental)
+                ultronSubOsc = audioCtx.createOscillator();
+                ultronSubOsc.type = 'sawtooth';
+                ultronSubOsc.frequency.setValueAtTime(44, now);
+
+                // 2. Vocal Fry Flutter LFO (20Hz rasp modulation)
+                ultronLfoGravel = audioCtx.createOscillator();
+                ultronLfoGravel.type = 'square';
+                ultronLfoGravel.frequency.setValueAtTime(20, now);
+
+                ultronLfoGain = audioCtx.createGain();
+                ultronLfoGain.gain.setValueAtTime(7, now);
+                ultronLfoGravel.connect(ultronLfoGain);
+                ultronLfoGain.connect(ultronSubOsc.frequency);
+
+                // 3. Throat Rasp Harmonic (88Hz triangle wave)
+                ultronGravelOsc = audioCtx.createOscillator();
+                ultronGravelOsc.type = 'triangle';
+                ultronGravelOsc.frequency.setValueAtTime(88, now);
+
+                // 4. Harmonic Grit WaveShaper
+                ultronWaveShaper = audioCtx.createWaveShaper();
+                ultronWaveShaper.curve = makeDistortionCurve(16);
+                ultronWaveShaper.oversample = '2x';
+
+                // 5. Heavy Formant Filter (220Hz deep chest/throat resonator)
+                ultronFilter = audioCtx.createBiquadFilter();
+                ultronFilter.type = 'bandpass';
+                ultronFilter.frequency.setValueAtTime(220, now);
+                ultronFilter.Q.setValueAtTime(3.4, now);
+
+                // 6. Master Acoustic Gain
+                ultronGain = audioCtx.createGain();
+                ultronGain.gain.setValueAtTime(0.0001, now);
+                ultronGain.gain.exponentialRampToValueAtTime(0.032, now + 0.12);
+
+                ultronSubOsc.connect(ultronFilter);
+                ultronGravelOsc.connect(ultronFilter);
+                ultronFilter.connect(ultronWaveShaper);
+                ultronWaveShaper.connect(ultronGain);
+                ultronGain.connect(audioCtx.destination);
+
+                ultronSubOsc.start(now);
+                ultronGravelOsc.start(now);
+                ultronLfoGravel.start(now);
+            } catch(err) {
+                console.warn('Acoustics notice:', err);
+            }
+        }
+
+        function stopUltronAcoustics() {
+            if (ultronGain && audioCtx) {
+                try {
+                    const now = audioCtx.currentTime;
+                    ultronGain.gain.setValueAtTime(ultronGain.gain.value, now);
+                    ultronGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.12);
+                    setTimeout(() => {
+                        if (ultronSubOsc) { try { ultronSubOsc.stop(); } catch(e){} ultronSubOsc = null; }
+                        if (ultronGravelOsc) { try { ultrronGravelOsc.stop(); } catch(e){} ultronGravelOsc = null; }
+                        if (ultronLfoGravel) { try { ultronLfoGravel.stop(); } catch(e){} ultronLfoGravel = null; }
+                    }, 160);
+                } catch(e) {}
+            }
+        }
+        const startUltranAcoustics = startUltronAcoustics;
+        const stopUltranAcoustics = stopUltronAcoustics;
+
+        // AI ULTRON Voice Synthesizer & Fast In-Memory Audio Cache
+        let speechSafetyTimer = null;
+        let activeNeuralAudio = null;
+        const ttsAudioCache = new Map();
+
+        function stopSpeakingVoice() {
+            if (speechSafetyTimer) {
+                clearTimeout(speechSafetyTimer);
+                speechSafetyTimer = null;
+            }
+            if (activeNeuralAudio) {
+                try {
+                    activeNeuralAudio.onended = null;
+                    activeNeuralAudio.onerror = null;
+                    activeNeuralAudio.pause();
+                    activeNeuralAudio.currentTime = 0;
+                    activeNeuralAudio.src = '';
+                } catch(e) {}
+                activeNeuralAudio = null;
+            }
+            if (window.speechSynthesis) {
+                try { window.speechSynthesis.cancel(); } catch(e) {}
+            }
+            stopUltronAcoustics();
+            isSpeaking = false;
+        }
+
+        let currentSpeechGenerationId = 0;
+
+        async function speakVoiceResponse(rawText, onFinishedCallback) {
+            stopSpeakingVoice();
+            const speechId = ++currentSpeechGenerationId;
+
+            const cleanText = (rawText || '')
                 .replace(/```[\s\S]*?```/g, '')
-                .replace(/`([^`]+)`/g, '$1')
+                .replace(/\`([^\`]+)\`/g, '$1')
                 .replace(/\*\*([^*]+)\*\*/g, '$1')
                 .replace(/\*([^*]+)\*/g, '$1')
                 .replace(/#/g, '')
@@ -546,77 +2586,329 @@
 
             if (!cleanText) {
                 setVoiceState('idle');
-                setTimeout(startSpeechCapture, 600);
+                isSpeaking = false;
+                if (!isManuallyPaused && !isUserTyping && !isShuttingDown) {
+                    scheduleRecognitionRestart(150);
+                }
+                if (typeof onFinishedCallback === 'function') onFinishedCallback();
                 return;
             }
 
-            const utterance = new SpeechSynthesisUtterance(cleanText);
-            utterance.rate = 1.02;  // Confident conversational cadence
-            utterance.pitch = 0.92; // Deep resonant male pitch
+            // Immediately lock speech and silence microphone to prevent echo feedback loop
+            isSpeaking = true;
+            pauseSpeechCapture();
+            setVoiceState('speaking');
+            statusPill.textContent = 'TRANSMITTING DIRECTIVE...';
 
-            // Select natural male voice
+            let speechDone = false;
+            const completeSpeech = () => {
+                if (speechDone || speechId !== currentSpeechGenerationId) return;
+                speechDone = true;
+                stopSpeakingVoice();
+                setVoiceState('idle');
+                if (!isManuallyPaused && !isUserTyping && !isShuttingDown) {
+                    scheduleRecognitionRestart(250);
+                }
+                if (typeof onFinishedCallback === 'function') {
+                    try { onFinishedCallback(); } catch(e) {}
+                }
+            };
+
+            // Failsafe watchdog timer: guarantees state never gets stuck if TTS hangs
+            const estimatedDuration = Math.max(3000, (cleanText.length * 120) + 3500);
+            speechSafetyTimer = setTimeout(completeSpeech, estimatedDuration);
+
+            // While preparing audio, provide immediate feedback without fake-speaking
+            statusPill.textContent = 'SYNTHESIZING AUDIO...';
+
+            // Check in-memory audio blob cache for instant (0ms) playback!
+            if (ttsAudioCache.has(cleanText)) {
+                try {
+                    const cachedBlob = ttsAudioCache.get(cleanText);
+                    const audioUrl = URL.createObjectURL(cachedBlob);
+                    const audio = new Audio(audioUrl);
+                    activeNeuralAudio = audio;
+
+                    audio.onplay = () => {
+                        if (speechId !== currentSpeechGenerationId) {
+                            try { audio.pause(); } catch(e){}
+                            return;
+                        }
+                        isSpeaking = true;
+                        setVoiceState('speaking');
+                        startUltronAcoustics();
+                    };
+                    audio.onended = () => {
+                        try { URL.revokeObjectURL(audioUrl); } catch(e) {}
+                        completeSpeech();
+                    };
+                    audio.onerror = () => {
+                        try { URL.revokeObjectURL(audioUrl); } catch(e) {}
+                        activeNeuralAudio = null;
+                        if (speechId === currentSpeechGenerationId) {
+                            fallbackWebSpeech(cleanText, completeSpeech, speechId);
+                        }
+                    };
+
+                    await audio.play();
+                    return;
+                } catch(e) {
+                    console.warn('Cache playback note:', e);
+                }
+            }
+
+            // 1. Primary Engine: Python Deep Cinematic Voice via /api/tts/ (edge-tts / pyttsx3)
+            try {
+                const ttsFetchPromise = fetch('/api/tts/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': CSRF_TOKEN,
+                    },
+                    body: JSON.stringify({ text: cleanText })
+                });
+
+                // Safety timeout race: if neural generation takes > 4800ms, fall back immediately to local Web Speech
+                const response = await Promise.race([
+                    ttsFetchPromise,
+                    new Promise((_, reject) => setTimeout(() => reject(new Error('TTS timeout')), 4800))
+                ]);
+
+                if (speechId !== currentSpeechGenerationId) return;
+
+                if (response.ok) {
+                    const blob = await response.blob();
+                    if (speechId !== currentSpeechGenerationId) return;
+
+                    if (blob && blob.size > 200) {
+                        ttsAudioCache.set(cleanText, blob); // Cache for instant subsequent playback
+
+                        const audioUrl = URL.createObjectURL(blob);
+                        const audio = new Audio(audioUrl);
+                        activeNeuralAudio = audio;
+
+                        audio.onplay = () => {
+                            if (speechId !== currentSpeechGenerationId) {
+                                try { audio.pause(); } catch(e){}
+                                return;
+                            }
+                            isSpeaking = true;
+                            setVoiceState('speaking');
+                            startUltronAcoustics();
+                        };
+
+                        audio.onended = () => {
+                            try { URL.revokeObjectURL(audioUrl); } catch(e) {}
+                            completeSpeech();
+                        };
+
+                        audio.onerror = (err) => {
+                            console.warn('Neural audio playback failed, falling back to Web Speech:', err);
+                            try { URL.revokeObjectURL(audioUrl); } catch(e) {}
+                            activeNeuralAudio = null;
+                            if (speechId === currentSpeechGenerationId) {
+                                fallbackWebSpeech(cleanText, completeSpeech, speechId);
+                            }
+                        };
+
+                        try {
+                            await audio.play();
+                            return; // Successfully started neural playback
+                        } catch (playErr) {
+                            console.warn('Audio play was prevented by browser autoplay policy, attempting fallback:', playErr);
+                            try { URL.revokeObjectURL(audioUrl); } catch(e) {}
+                            activeNeuralAudio = null;
+                        }
+                    }
+                }
+            } catch (err) {
+                console.warn('Backend Neural TTS error or latency threshold exceeded, falling back immediately:', err);
+            }
+
+            if (speechId === currentSpeechGenerationId) {
+                // 2. Fallback Engine: Instant Web Speech API (Microsoft David / Guy / Christopher at pitch 0.65, rate 0.82)
+                fallbackWebSpeech(cleanText, completeSpeech, speechId);
+            }
+        }
+
+        function fallbackWebSpeech(cleanText, onFinished, reqSpeechId) {
+            if (reqSpeechId && reqSpeechId !== currentSpeechGenerationId) return;
+            if (!('speechSynthesis' in window)) {
+                if (typeof onFinished === 'function') onFinished();
+                return;
+            }
+
+            try { window.speechSynthesis.cancel(); } catch(e) {}
+            try { window.speechSynthesis.resume(); } catch(e) {}
+
+            const utterance = new SpeechSynthesisUtterance(cleanText);
+            window._activeUtterance = utterance; // Prevent Chrome garbage collection bug
+
+            // AI ULTRON: SINGLE DEDICATED VILLAIN VOICE
+            utterance.rate = 0.80;
+            utterance.pitch = 0.55; // Menacing deep villain pitch
+
+            // Strictly lock to single deepest male villain voice
             const voices = window.speechSynthesis.getVoices();
             if (voices && voices.length > 0) {
-                const maleVoice = voices.find(v => {
+                const singleVillainVoice = voices.find(v => {
                     const n = v.name.toLowerCase();
-                    const lang = v.lang.toLowerCase();
-                    if (!lang.startsWith('en')) return false;
-                    return (
-                        n.includes('david') ||        // Windows Microsoft David (Male)
-                        n.includes('mark') ||         // Windows Microsoft Mark (Male)
-                        n.includes('george') ||       // Microsoft George (Male)
-                        n.includes('guy') ||          // Microsoft Guy (Male)
-                        n.includes('ryan') ||         // Microsoft Ryan (Male)
-                        n.includes('alex') ||         // Apple Alex (Male)
-                        n.includes('daniel') ||       // Apple Daniel (Male)
-                        n.includes('male') ||         // Google UK / US English Male
-                        n.includes('oliver')
-                    );
-                }) || voices.find(v => {
-                    const n = v.name.toLowerCase();
-                    return n.includes('david') || n.includes('male') || n.includes('alex');
-                }) || voices.find(v => v.lang.startsWith('en'));
+                    return n.includes('david') || n.includes('christopher') || n.includes('guy');
+                }) || voices.find(v => v.lang.startsWith('en')) || voices[0];
 
-                if (maleVoice) {
-                    utterance.voice = maleVoice;
+                if (singleVillainVoice) {
+                    utterance.voice = singleVillainVoice;
                 }
             }
 
             utterance.onstart = () => {
+                if (reqSpeechId && reqSpeechId !== currentSpeechGenerationId) {
+                    try { window.speechSynthesis.cancel(); } catch(e){}
+                    return;
+                }
                 isSpeaking = true;
                 setVoiceState('speaking');
+                startUltronAcoustics();
             };
 
             utterance.onend = () => {
-                isSpeaking = false;
-                setVoiceState('idle');
-                // Continuous voice loop: re-arms listening automatically
-                setTimeout(startSpeechCapture, 700);
+                if (typeof onFinished === 'function') onFinished();
             };
 
             utterance.onerror = () => {
-                isSpeaking = false;
-                setVoiceState('idle');
-                setTimeout(startSpeechCapture, 700);
+                if (typeof onFinished === 'function') onFinished();
             };
 
             window.speechSynthesis.speak(utterance);
         }
 
-        // Warm up voices on page load and attempt initial auto-welcome
+        // ==========================================
+        // 6. SYSTEM SHUTDOWN PROTOCOL
+        // ==========================================
+        let isShuttingDown = false;
+
+        function executeShutdownSequence(farewellText) {
+            isShuttingDown = true;
+            stopSpeechCapture();
+            const farewell = farewellText || "Shutting down AI ULTRON systems. Goodbye, Kavi Stark.";
+            speakVoiceResponse(farewell, () => {
+                performShutdownDeactivation();
+            });
+            setTimeout(performShutdownDeactivation, 2400);
+        }
+
+        function performShutdownDeactivation() {
+            stopSpeakingVoice();
+            if (dueRemindersInterval) {
+                try { clearInterval(dueRemindersInterval); } catch(e){}
+                dueRemindersInterval = null;
+            }
+            try { if (speechRecognizer) speechRecognizer.abort(); } catch(e){}
+            try { if (audioCtx) audioCtx.close(); } catch(e){}
+            setVoiceState('idle');
+            statusPill.textContent = 'SYSTEM OFFLINE';
+
+            // Show full screen offline overlay
+            const shutdownEl = document.getElementById('shutdownOverlay');
+            if (shutdownEl) {
+                shutdownEl.style.display = 'flex';
+            }
+
+            // Attempt window / tab close
+            try {
+                window.close();
+            } catch(e) {
+                console.log('Window close note:', e);
+            }
+        }
+
+        // ==========================================
+        // 8. CONTINUOUS BACKGROUND OPERATION & WAKE LOCK
+        // ==========================================
+        document.addEventListener('visibilitychange', () => {
+            if (!isShuttingDown) {
+                if (audioCtx && audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+                if (!isListening && !isSpeaking && !isThinking && !isUserTyping && !isManuallyPaused) {
+                    startSpeechCapture();
+                }
+            }
+        });
+
+        async function requestScreenWakeLock() {
+            try {
+                if ('wakeLock' in navigator) {
+                    await navigator.wakeLock.request('screen');
+                }
+            } catch(e) {}
+        }
+        requestScreenWakeLock();
+
+        // Background Polling for Due Reminders
+        let isPollingDue = false;
+        async function pollDueReminders() {
+            if (isPollingDue || isShuttingDown) return;
+
+            isPollingDue = true;
+            try {
+                const res = await fetch('/api/reminders/due/');
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.due_reminders && data.due_reminders.length > 0) {
+                        const due = data.due_reminders[0];
+                        showDialogueResponse('[SCHEDULED REMINDER]', due.title);
+                        speakVoiceResponse(`Scheduled reminder alert for Kavi Stark: ${due.title}`);
+                    }
+                }
+            } catch(e) {
+                console.warn('Reminder polling notice:', e);
+            } finally {
+                isPollingDue = false;
+            }
+        }
+        let dueRemindersInterval = setInterval(pollDueReminders, 4000);
+
+        // Mobile AudioContext & Speech unlock on first touch gesture (iOS Safari & Android Chrome)
+        let mobileAudioUnlocked = false;
+        function unlockMobileAudioContext() {
+            if (mobileAudioUnlocked) return;
+            mobileAudioUnlocked = true;
+            try {
+                if (!audioCtx) {
+                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+                const b = audioCtx.createBuffer(1, 1, 22050);
+                const s = audioCtx.createBufferSource();
+                s.buffer = b;
+                s.connect(audioCtx.destination);
+                s.start(0);
+            } catch(e) {}
+            try {
+                if ('speechSynthesis' in window) {
+                    window.speechSynthesis.resume();
+                }
+            } catch(e) {}
+        }
+        window.addEventListener('touchstart', unlockMobileAudioContext, { passive: true });
+        window.addEventListener('pointerdown', unlockMobileAudioContext, { passive: true });
+        window.addEventListener('click', unlockMobileAudioContext, { passive: true });
+        window.addEventListener('keydown', unlockMobileAudioContext, { passive: true });
+
+        // Warm up voices on page load and attempt single controlled auto-welcome
         window.addEventListener('load', () => {
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.onvoiceschanged = () => {
                     window.speechSynthesis.getVoices();
-                    setTimeout(() => {
-                        if (!hasWelcomed) playWelcomeGreeting();
-                    }, 400);
                 };
                 window.speechSynthesis.getVoices();
-                setTimeout(() => {
-                    if (!hasWelcomed) playWelcomeGreeting();
-                }, 700);
             }
+            welcomeTimer = setTimeout(() => {
+                if (!hasWelcomed) playWelcomeGreeting();
+            }, 280);
         });
     </script>
 </body>

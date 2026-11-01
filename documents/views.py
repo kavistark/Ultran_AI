@@ -1,13 +1,9 @@
 import os
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.conf import settings
-from django.http import JsonResponse
-from django.views.decorators.http import require_http_methods
 from .models import UploadedDocument
-from assistant.services import analyze_document_with_gemini
-import json
 
 
 ALLOWED_TYPES = {
@@ -28,9 +24,10 @@ def upload_document_view(request):
         uploaded_file = request.FILES['document']
 
         # Validate size
-        if uploaded_file.size > settings.MAX_UPLOAD_SIZE:
+        max_size = getattr(settings, 'MAX_UPLOAD_SIZE', 10 * 1024 * 1024)
+        if uploaded_file.size > max_size:
             messages.error(request, 'File too large. Maximum size is 10 MB.')
-            return redirect('documents')
+            return redirect('home')
 
         # Validate type (check content-type and extension)
         content_type = uploaded_file.content_type
@@ -38,7 +35,7 @@ def upload_document_view(request):
         allowed_exts = {'.pdf', '.txt', '.md'}
         if ext not in allowed_exts and content_type not in ALLOWED_TYPES:
             messages.error(request, 'File type not supported. Use PDF, TXT, or Markdown files.')
-            return redirect('documents')
+            return redirect('home')
 
         file_type = 'application/pdf' if ext == '.pdf' else 'text/plain'
 
@@ -46,13 +43,13 @@ def upload_document_view(request):
             user=request.user,
             name=uploaded_file.name,
             file=uploaded_file,
-            file_type=content_type,
+            file_type=file_type,
             file_size=uploaded_file.size,
         )
         messages.success(request, f'"{doc.name}" uploaded successfully.')
-        return redirect('document_analyze', doc_id=doc.id)
+        return redirect('home')
 
-    return redirect('documents')
+    return redirect('home')
 
 
 @login_required
@@ -64,8 +61,12 @@ def document_analyze_view(request, doc_id):
 def document_delete_view(request, doc_id):
     doc = get_object_or_404(UploadedDocument, id=doc_id, user=request.user)
     if request.method == 'POST':
-        if doc.file and os.path.exists(doc.file.path):
-            os.remove(doc.file.path)
+        if doc.file:
+            try:
+                if os.path.exists(doc.file.path):
+                    os.remove(doc.file.path)
+            except Exception:
+                pass
         doc.delete()
         messages.success(request, 'Document deleted.')
-    return redirect('documents')
+    return redirect('home')

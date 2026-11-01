@@ -55,3 +55,20 @@ class ActionLog(models.Model):
 
     def __str__(self):
         return f"{self.user.username}: {self.action_type} [{self.status}]"
+
+
+class Contact(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='contacts')
+    name = models.CharField(max_length=100)
+    phone_number = models.CharField(max_length=30)
+    email = models.EmailField(blank=True, default='')
+    relationship = models.CharField(max_length=50, blank=True, default='')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['name']
+        unique_together = ('user', 'name')
+
+    def __str__(self):
+        return f"{self.name} ({self.phone_number})"

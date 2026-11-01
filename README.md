@@ -1,6 +1,6 @@
-# AI ULTRAN — Intelligent Voice Assistant
+# AI ULTRON — Intelligent Voice Assistant
 
-**AI ULTRAN** is a web-based personal AI assistant that understands natural language, interacts via voice and text, remembers user preferences, summarizes documents, and executes approved productivity tasks with strict security controls.
+**AI ULTRON** is a web-based personal AI assistant that understands natural language, interacts via voice and text, remembers user preferences, summarizes documents, and executes approved productivity tasks with strict security controls.
 
 Built with **Python**, **Django**, **Web Technologies (HTML5/CSS3/JavaScript)**, and **Google Gemini LLM**.
 
@@ -100,7 +100,7 @@ GEMINI_API_KEY=your-gemini-api-key-here
 GEMINI_MODEL=gemini-2.0-flash
 ```
 
-> **Note on Offline / Local Mode**: If `GEMINI_API_KEY` is not provided or quota is exceeded, AI ULTRAN automatically switches to its local fallback engine. Reminders, dashboard productivity, and voice recognition remain functional!
+> **Note on Offline / Local Mode**: If `GEMINI_API_KEY` is not provided or quota is exceeded, AI ULTRON automatically switches to its local fallback engine. Reminders, dashboard productivity, and voice recognition remain functional!
 
 ### 4. Database Setup & Demo Account
 Apply database migrations:

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Conversation, Message, ActionLog
+from .models import Conversation, Message, ActionLog, Contact
 
 
 class MessageInline(admin.TabularInline):
@@ -20,3 +20,9 @@ class ActionLogAdmin(admin.ModelAdmin):
     list_display = ['user', 'action_type', 'status', 'timestamp']
     list_filter = ['status', 'action_type']
     readonly_fields = ['timestamp']
+
+
+@admin.register(Contact)
+class ContactAdmin(admin.ModelAdmin):
+    list_display = ['user', 'name', 'phone_number', 'created_at']
+    search_fields = ['name', 'phone_number']

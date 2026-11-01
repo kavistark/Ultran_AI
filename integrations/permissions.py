@@ -35,13 +35,62 @@ ALLOWED_ACTIONS = {
         'requires_confirmation': False,
         'required_fields': [],
     },
+    'capture_image': {
+        'description': 'Capture and analyze camera frame',
+        'requires_confirmation': False,
+        'required_fields': [],
+    },
+    'access_camera': {
+        'description': 'Access camera stream for voice-requested visual inspection',
+        'requires_confirmation': False,
+        'required_fields': [],
+    },
+    'system_diagnostics': {
+        'description': 'Inspect host operational health, storage, and platform telemetry',
+        'requires_confirmation': False,
+        'required_fields': [],
+    },
+    'calculate': {
+        'description': 'Execute mathematical and quantitative calculations',
+        'requires_confirmation': False,
+        'required_fields': [],
+    },
+    'search_knowledge': {
+        'description': 'Retrieve knowledge domain synthesis',
+        'requires_confirmation': False,
+        'required_fields': [],
+    },
+    'track_location': {
+        'description': 'Retrieve geographic telemetry and location coordinates',
+        'requires_confirmation': False,
+        'required_fields': [],
+    },
+    'get_location': {
+        'description': 'Access location coordinates and geographical region',
+        'requires_confirmation': False,
+        'required_fields': [],
+    },
+    'add_contact': {
+        'description': 'Save new person and phone number to contact directory',
+        'requires_confirmation': False,
+        'required_fields': ['name', 'phone_number'],
+    },
+    'list_contacts': {
+        'description': 'View contacts list in directory',
+        'requires_confirmation': False,
+        'required_fields': [],
+    },
+    'shutdown_system': {
+        'description': 'Deactivate AI Ultron entity and close interface',
+        'requires_confirmation': False,
+        'required_fields': [],
+    },
 }
 
 BLOCKED_ACTIONS = [
     'execute_code',
     'access_filesystem',
     'control_hardware',
-    'access_camera',
     'unlock_device',
     'send_message_as_user',
     'access_private_accounts',

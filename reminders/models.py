@@ -20,6 +20,9 @@ class Reminder(models.Model):
     due_time = models.DateTimeField()
     priority = models.CharField(max_length=10, choices=PRIORITY_CHOICES, default='medium')
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    call_on_due = models.BooleanField(default=True)
+    phone_number = models.CharField(max_length=30, default='', blank=True)
+    called = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
