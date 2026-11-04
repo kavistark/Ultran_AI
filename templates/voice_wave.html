@@ -418,6 +418,68 @@
             to { opacity: 1; transform: translate(-50%, 0) scale(1); }
         }
 
+        .neural-bus-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            padding: 5px 12px;
+            margin-bottom: 10px;
+            background: rgba(15, 23, 42, 0.75);
+            border: 1px solid rgba(56, 189, 248, 0.25);
+            border-radius: 10px;
+            font-size: 0.65rem;
+            font-family: 'JetBrains Mono', monospace;
+            letter-spacing: 0.8px;
+        }
+
+        .bus-node-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            color: #64748b;
+            font-weight: 700;
+            transition: all 0.25s ease;
+        }
+
+        .bus-node-item.active-input {
+            color: #06b6d4 !important;
+            text-shadow: 0 0 10px rgba(6, 182, 212, 0.9);
+            animation: pulseBusIn 0.8s infinite alternate;
+        }
+
+        .bus-node-item.active-think {
+            color: #fbbf24 !important;
+            text-shadow: 0 0 10px rgba(251, 191, 36, 0.9);
+            animation: pulseBusThink 0.8s infinite alternate;
+        }
+
+        .bus-node-item.active-output {
+            color: #ef4444 !important;
+            text-shadow: 0 0 12px rgba(239, 68, 68, 0.95);
+            animation: pulseBusOut 0.8s infinite alternate;
+        }
+
+        .bus-divider {
+            flex: 1;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.12);
+            position: relative;
+        }
+
+        @keyframes pulseBusIn {
+            0% { transform: scale(0.98); opacity: 0.85; }
+            100% { transform: scale(1.05); opacity: 1; filter: drop-shadow(0 0 6px #06b6d4); }
+        }
+        @keyframes pulseBusThink {
+            0% { transform: scale(0.98); opacity: 0.85; }
+            100% { transform: scale(1.05); opacity: 1; filter: drop-shadow(0 0 6px #fbbf24); }
+        }
+        @keyframes pulseBusOut {
+            0% { transform: scale(0.98); opacity: 0.85; }
+            100% { transform: scale(1.05); opacity: 1; filter: drop-shadow(0 0 8px #ef4444); }
+        }
+
         .dialogue-kicker {
             font-size: 0.66rem;
             font-weight: 800;
@@ -1622,6 +1684,13 @@
 
     <!-- Live Tactical Dialogue HUD -->
     <div class="tactical-dialogue-hud" id="tacticalDialogueHud" style="display:none;" onclick="event.stopPropagation()" onpointerdown="event.stopPropagation()" ontouchstart="event.stopPropagation()">
+        <div class="neural-bus-bar" id="neuralBusBar">
+            <span class="bus-node-item" id="busNodeInput"><i class="fas fa-satellite-dish"></i> INPUT RECEPTORS</span>
+            <span class="bus-divider"></span>
+            <span class="bus-node-item" id="busNodeThink"><i class="fas fa-brain"></i> COGNITIVE MATRIX</span>
+            <span class="bus-divider"></span>
+            <span class="bus-node-item" id="busNodeOutput"><i class="fas fa-bolt"></i> DIRECTIVE EMITTER</span>
+        </div>
         <div class="dialogue-kicker" id="dialogueKicker"><i class="fas fa-microchip"></i> ULTRON INTELLIGENCE TRANSMISSION</div>
         <div class="dialogue-user-text" id="dialogueUserText"></div>
         <div class="dialogue-response-text" id="dialogueResponseText"></div>
@@ -1684,12 +1753,13 @@
         const ring4 = document.getElementById('ring4');
 
         // ==========================================
-        // 1. DYNAMIC SYNAPTIC NEURAL NETWORK & REACTIVE ACOUSTIC ENGINE
+        // 1. ADVANCED LIVING NEURAL NETWORK MATRIX & ACOUSTIC HARMONICS
         // ==========================================
         const canvas = document.getElementById('soundwaveCanvas');
         const ctx = canvas.getContext('2d');
 
         let neurons = [];
+        let connections = [];
         let synapsePulses = [];
         let shockwaves = [];
         let pointer = { x: -1000, y: -1000, active: false };
@@ -1710,119 +1780,197 @@
         }
 
         class NeuronNode {
-            constructor(id, layer, x, y) {
+            constructor(id, layer, role, name, label, x, y) {
                 this.id = id;
-                this.layer = layer; // 'receptor' (input), 'hidden' (cognitive), 'actuator' (output/speech), 'core'
+                this.layer = layer; // 'input', 'hidden1', 'core', 'hidden2', 'output'
+                this.role = role;   // 'sensor', 'tensor', 'nucleus', 'reasoning', 'actuator'
+                this.name = name;
+                this.label = label;
                 this.x = x;
                 this.y = y;
                 this.originX = x;
                 this.originY = y;
-                this.vx = (Math.random() - 0.5) * 0.45;
-                this.vy = (Math.random() - 0.5) * 0.45;
-                this.baseRadius = layer === 'core' ? 6.0 : (layer === 'receptor' ? 3.8 : 3.0);
+                this.vx = (Math.random() - 0.5) * 0.35;
+                this.vy = (Math.random() - 0.5) * 0.35;
+
+                if (layer === 'input' || layer === 'output') {
+                    this.baseRadius = 14;
+                } else if (layer === 'core') {
+                    this.baseRadius = 10;
+                } else {
+                    this.baseRadius = 8;
+                }
+
                 this.currentRadius = this.baseRadius;
-                this.energy = 0; // Electrical excitation 0..1
+                this.activation = 0.08;
+                this.energy = 0;
                 this.pulsePhase = Math.random() * Math.PI * 2;
-                this.connections = [];
+                this.outConnections = [];
+                this.inConnections = [];
             }
 
             update(amplitude, state) {
-                this.pulsePhase += 0.035;
+                this.pulsePhase += 0.04;
 
-                // Subtle smooth drift around original position
-                this.x += this.vx;
-                this.y += this.vy;
+                // Subtle smooth drift for hidden/core nodes
+                if (this.layer !== 'input' && this.layer !== 'output') {
+                    this.x += this.vx;
+                    this.y += this.vy;
 
-                const dxFromOrigin = this.x - this.originX;
-                const dyFromOrigin = this.y - this.originY;
-                const maxDrift = 45;
-                if (dxFromOrigin > maxDrift) this.vx = -Math.abs(this.vx);
-                if (dxFromOrigin < -maxDrift) this.vx = Math.abs(this.vx);
-                if (dyFromOrigin > maxDrift) this.vy = -Math.abs(this.vy);
-                if (dyFromOrigin < -maxDrift) this.vy = Math.abs(this.vy);
+                    const dx = this.x - this.originX;
+                    const dy = this.y - this.originY;
+                    const maxDrift = 16;
+                    if (dx > maxDrift) this.vx = -Math.abs(this.vx);
+                    if (dx < -maxDrift) this.vx = Math.abs(this.vx);
+                    if (dy > maxDrift) this.vy = -Math.abs(this.vy);
+                    if (dy < -maxDrift) this.vy = Math.abs(this.vy);
+                }
 
-                // Pointer magnetic interaction
+                // Pointer magnetism
                 if (pointer.active) {
                     const pdx = pointer.x - this.x;
                     const pdy = pointer.y - this.y;
                     const distSq = pdx * pdx + pdy * pdy;
-                    if (distSq < 25600) { // 160px attraction field
+                    if (distSq < 25600) { // 160px
                         const dist = Math.sqrt(distSq);
-                        const force = (1 - dist / 160) * 0.045;
+                        const force = (1 - dist / 160) * 0.05;
                         this.x += pdx * force;
                         this.y += pdy * force;
-                        this.energy = Math.max(this.energy, (1 - dist / 160) * 0.85);
+                        this.energy = Math.max(this.energy, (1 - dist / 160) * 0.9);
                     }
                 }
 
-                // Smooth decay of electrical energy
-                this.energy *= 0.94;
+                // Energy decay
+                this.energy *= 0.93;
                 if (this.energy < 0.005) this.energy = 0;
 
-                // State-driven neural excitation
-                if (state === 'input' && this.layer === 'receptor') {
-                    this.energy = Math.max(this.energy, 0.45 + amplitude * 1.6);
-                } else if (state === 'thinking' && (this.layer === 'hidden' || this.layer === 'core')) {
-                    this.energy = Math.max(this.energy, 0.35 + Math.sin(this.pulsePhase * 3.5) * 0.35);
-                } else if (state === 'output' && (this.layer === 'actuator' || this.layer === 'core')) {
-                    this.energy = Math.max(this.energy, 0.5 + amplitude * 1.9);
+                // State-driven continuous excitation
+                if (state === 'input' && this.layer === 'input') {
+                    this.energy = Math.max(this.energy, 0.75 + amplitude * 1.5);
+                    this.activation = Math.min(1, Math.max(this.activation, 0.85 + amplitude));
+                } else if (state === 'thinking' && (this.layer === 'hidden1' || this.layer === 'hidden2' || this.layer === 'core')) {
+                    this.energy = Math.max(this.energy, 0.65 + Math.sin(this.pulsePhase * 3) * 0.35);
+                    this.activation = Math.min(1, Math.max(this.activation, 0.80));
+                } else if (state === 'output' && (this.layer === 'output' || this.layer === 'core')) {
+                    this.energy = Math.max(this.energy, 0.85 + amplitude * 1.8);
+                    this.activation = Math.min(1, Math.max(this.activation, 0.90 + amplitude));
+                } else {
+                    this.activation *= 0.96;
+                    if (this.activation < 0.08) this.activation = 0.06 + Math.sin(this.pulsePhase) * 0.03;
                 }
 
-                // Dynamic node radius expansion
-                const energyBoost = this.energy * (this.layer === 'core' ? 6 : 4.5);
-                const voiceBoost = (state === 'output' || state === 'input') ? amplitude * 5.5 : 0;
-                this.currentRadius = this.baseRadius + energyBoost + voiceBoost;
+                // Radius expansion
+                const boost = this.energy * 6.0 + amplitude * 4.5;
+                this.currentRadius = this.baseRadius + boost;
             }
 
             draw(ctx, state) {
                 ctx.save();
 
-                let r = 56, g = 189, b = 248; // default cyan
-                if (state === 'output') {
-                    // Deep villain crimson & flame orange
-                    r = 239; g = Math.floor(68 + (1 - this.energy) * 35); b = 68;
-                } else if (state === 'input') {
-                    // High-energy electric cyan / aqua
-                    r = 6; g = 210; b = 240;
-                } else if (state === 'thinking') {
-                    // Violet & amber computational synapse storm
-                    if (this.layer === 'core') { r = 245; g = 158; b = 11; }
-                    else { r = 168; g = 85; b = 247; }
+                let primaryR, primaryG, primaryB;
+                if (this.layer === 'input') {
+                    primaryR = 6; primaryG = 210; primaryB = 240; // Electric Cyan
+                } else if (this.layer === 'output') {
+                    primaryR = 239; primaryG = 68; primaryB = 68; // Villain Crimson
+                } else if (this.layer === 'core') {
+                    if (state === 'output') { primaryR = 239; primaryG = 68; primaryB = 68; }
+                    else if (state === 'thinking') { primaryR = 245; primaryG = 158; primaryB = 11; }
+                    else if (state === 'input') { primaryR = 6; primaryG = 210; primaryB = 240; }
+                    else { primaryR = 56; primaryG = 189; primaryB = 248; }
+                } else if (this.layer === 'hidden1') {
+                    primaryR = 168; primaryG = 85; primaryB = 247; // Violet
                 } else {
-                    // Ambient calm constellation
-                    if (this.layer === 'receptor') { r = 56; g = 189; b = 248; }
-                    else if (this.layer === 'actuator') { r = 248; g = 113; b = 113; }
-                    else { r = 148; g = 163; b = 184; }
+                    primaryR = 245; primaryG = 158; primaryB = 11; // Amber
                 }
 
-                const alpha = Math.min(1, 0.35 + this.energy * 0.65);
+                const alpha = Math.min(1, 0.45 + this.energy * 0.55);
+                const glowR = this.currentRadius * 2.8;
 
-                // Synaptic glow aura
-                if (this.energy > 0.12 || state !== 'idle') {
-                    const glowRadius = this.currentRadius * 2.8;
-                    const grad = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, glowRadius);
-                    grad.addColorStop(0, `rgba(${r}, ${g}, ${b}, ${alpha * 0.75})`);
-                    grad.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`);
-                    ctx.fillStyle = grad;
-                    ctx.beginPath();
-                    ctx.arc(this.x, this.y, glowRadius, 0, Math.PI * 2);
-                    ctx.fill();
-                }
-
-                // Core neuron sphere
-                ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${alpha})`;
+                // 1. Outer Synaptic Glow Aura
+                const grad = ctx.createRadialGradient(this.x, this.y, this.currentRadius * 0.3, this.x, this.y, glowR);
+                grad.addColorStop(0, `rgba(${primaryR}, ${primaryG}, ${primaryB}, ${alpha * 0.7})`);
+                grad.addColorStop(1, `rgba(${primaryR}, ${primaryG}, ${primaryB}, 0)`);
+                ctx.fillStyle = grad;
                 ctx.beginPath();
-                ctx.arc(this.x, this.y, Math.max(1, this.currentRadius), 0, Math.PI * 2);
+                ctx.arc(this.x, this.y, glowR, 0, Math.PI * 2);
                 ctx.fill();
 
-                // High-intensity white nucleus when firing
-                if (this.energy > 0.3) {
+                // 2. Outer Cyber Ring with ticks
+                ctx.strokeStyle = `rgba(${primaryR}, ${primaryG}, ${primaryB}, ${Math.min(1, alpha + 0.3)})`;
+                ctx.lineWidth = 1.8;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.currentRadius, 0, Math.PI * 2);
+                ctx.stroke();
+
+                // 3. Inner Core Nucleus
+                ctx.fillStyle = `rgba(${primaryR}, ${primaryG}, ${primaryB}, ${Math.min(1, alpha + 0.4)})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.currentRadius * 0.55, 0, Math.PI * 2);
+                ctx.fill();
+
+                // 4. White Center Filament when energized
+                if (this.energy > 0.25 || this.activation > 0.4) {
                     ctx.fillStyle = '#ffffff';
                     ctx.beginPath();
-                    ctx.arc(this.x, this.y, this.currentRadius * 0.4, 0, Math.PI * 2);
+                    ctx.arc(this.x, this.y, this.currentRadius * 0.28, 0, Math.PI * 2);
                     ctx.fill();
                 }
 
+                // 5. Node ID / HUD Label
+                if (this.layer === 'input' || this.layer === 'output') {
+                    ctx.font = '700 10px "JetBrains Mono", monospace';
+                    ctx.fillStyle = `rgba(${primaryR}, ${primaryG}, ${primaryB}, ${Math.max(0.65, alpha)})`;
+
+                    const textY = this.y + 4;
+                    const percent = Math.floor(Math.min(100, Math.max(5, this.activation * 100)));
+                    const badgeText = `${this.label} [${percent}%]`;
+
+                    if (this.layer === 'input') {
+                        ctx.textAlign = 'left';
+                        ctx.fillText(badgeText, this.x + this.currentRadius + 10, textY);
+                    } else {
+                        ctx.textAlign = 'right';
+                        ctx.fillText(badgeText, this.x - this.currentRadius - 10, textY);
+                    }
+                }
+
+                ctx.restore();
+            }
+        }
+
+        class SynapseConnection {
+            constructor(fromNode, toNode, weight) {
+                this.from = fromNode;
+                this.to = toNode;
+                this.weight = weight || (0.4 + Math.random() * 0.6);
+            }
+
+            draw(ctx, state) {
+                const combinedEnergy = (this.from.energy + this.to.energy) / 2;
+                let r = 56, g = 189, b = 248; // default cyan-blue
+                let baseAlpha = 0.25;
+
+                if (state === 'input' && (this.from.layer === 'input' || this.to.layer === 'input' || this.to.layer === 'hidden1')) {
+                    r = 6; g = 210; b = 240;
+                    baseAlpha = 0.55;
+                } else if (state === 'output' && (this.from.layer === 'core' || this.to.layer === 'output' || this.from.layer === 'hidden2')) {
+                    r = 239; g = 68; b = 68;
+                    baseAlpha = 0.60;
+                } else if (state === 'thinking') {
+                    r = 168; g = 85; b = 247;
+                    baseAlpha = 0.50;
+                }
+
+                const alpha = Math.min(0.95, baseAlpha + combinedEnergy * 0.7);
+                const width = 1.3 + combinedEnergy * 2.5;
+
+                ctx.save();
+                ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${alpha})`;
+                ctx.lineWidth = width;
+                ctx.beginPath();
+                ctx.moveTo(this.from.x, this.from.y);
+                ctx.lineTo(this.to.x, this.to.y);
+                ctx.stroke();
                 ctx.restore();
             }
         }
@@ -1832,9 +1980,9 @@
                 this.from = fromNode;
                 this.to = toNode;
                 this.progress = 0;
-                this.speed = speed || 0.035;
-                this.color = color || 'rgba(56, 189, 248, 0.95)';
-                this.size = size || 3.4;
+                this.speed = speed || 0.045;
+                this.color = color || 'rgba(6, 210, 240, 0.95)';
+                this.size = size || 4.8;
                 this.alive = true;
             }
 
@@ -1842,7 +1990,8 @@
                 this.progress += this.speed;
                 if (this.progress >= 1) {
                     this.alive = false;
-                    this.to.energy = Math.min(1, this.to.energy + 0.65);
+                    this.to.energy = Math.min(1, this.to.energy + 0.85);
+                    this.to.activation = Math.min(1, this.to.activation + 0.50);
                     return false;
                 }
                 return true;
@@ -1854,18 +2003,18 @@
 
                 ctx.save();
                 ctx.shadowColor = this.color;
-                ctx.shadowBlur = 10;
+                ctx.shadowBlur = 12;
                 ctx.fillStyle = this.color;
                 ctx.beginPath();
                 ctx.arc(px, py, this.size, 0, Math.PI * 2);
                 ctx.fill();
 
                 // Trailing electrical spark
-                const tailProgress = Math.max(0, this.progress - 0.14);
+                const tailProgress = Math.max(0, this.progress - 0.16);
                 const tx = this.from.x + (this.to.x - this.from.x) * tailProgress;
                 const ty = this.from.y + (this.to.y - this.from.y) * tailProgress;
                 ctx.strokeStyle = this.color;
-                ctx.lineWidth = this.size * 0.65;
+                ctx.lineWidth = this.size * 0.7;
                 ctx.beginPath();
                 ctx.moveTo(tx, ty);
                 ctx.lineTo(px, py);
@@ -1880,9 +2029,9 @@
                 this.x = x;
                 this.y = y;
                 this.radius = 12;
-                this.maxRadius = 280;
-                this.speed = 10;
-                this.color = color || 'rgba(6, 182, 212, 0.85)';
+                this.maxRadius = 320;
+                this.speed = 12;
+                this.color = color || 'rgba(6, 210, 240, 0.9)';
                 this.alive = true;
             }
 
@@ -1893,13 +2042,13 @@
                     return false;
                 }
 
-                // Excite neurons intersected by the wavefront
                 for (let n of neurons) {
                     const dx = n.x - this.x;
                     const dy = n.y - this.y;
                     const dist = Math.sqrt(dx * dx + dy * dy);
-                    if (Math.abs(dist - this.radius) < 24) {
-                        n.energy = Math.min(1, n.energy + 0.6);
+                    if (Math.abs(dist - this.radius) < 28) {
+                        n.energy = Math.min(1, n.energy + 0.65);
+                        n.activation = Math.min(1, n.activation + 0.35);
                     }
                 }
                 return true;
@@ -1908,8 +2057,8 @@
             draw(ctx) {
                 ctx.save();
                 const alpha = Math.max(0, 1 - (this.radius / this.maxRadius));
-                ctx.strokeStyle = this.color.replace('0.85', `${alpha * 0.8}`);
-                ctx.lineWidth = 2.5;
+                ctx.strokeStyle = this.color.replace(/[\d\.]+\)$/, `${alpha * 0.85})`);
+                ctx.lineWidth = 2.8;
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
                 ctx.stroke();
@@ -1919,184 +2068,323 @@
 
         function initNeuralNetwork() {
             neurons = [];
+            connections = [];
             synapsePulses = [];
             updateOrbCenter();
 
             const width = canvas.width;
             const height = canvas.height;
+            const isMobile = width < 768;
 
-            // 1. Core Neurons orbiting the central Ultron Orb (6 nodes)
-            const coreCount = 6;
-            const coreRadius = 88;
+            const inputX = isMobile ? width * 0.08 : width * 0.12;
+            const hidden1X = isMobile ? width * 0.28 : width * 0.28;
+            const coreCenterX = orbCenterX;
+            const coreCenterY = orbCenterY;
+            const hidden2X = isMobile ? width * 0.72 : width * 0.72;
+            const outputX = isMobile ? width * 0.92 : width * 0.88;
+
+            const inputLayerNodes = [];
+            const hidden1Nodes = [];
+            const coreNodes = [];
+            const hidden2Nodes = [];
+            const outputLayerNodes = [];
+
+            // 1. INPUT LAYER (5 Nodes)
+            const inputDefs = [
+                { id: 'in_voice', name: 'IN_VOICE', label: 'IN 01: ACOUSTIC STREAM' },
+                { id: 'in_text',  name: 'IN_TEXT',  label: 'IN 02: DIRECTIVE INGRESS' },
+                { id: 'in_sem',   name: 'IN_SEM',   label: 'IN 03: SEMANTIC ENCODER' },
+                { id: 'in_ctx',   name: 'IN_CTX',   label: 'IN 04: KAVI STARK AUTH' },
+                { id: 'in_sys',   name: 'IN_SYS',   label: 'IN 05: WORKSTATION SENSOR' }
+            ];
+            const inTopY = height * 0.20;
+            const inSpacing = (height * 0.58) / (inputDefs.length - 1);
+            for (let i = 0; i < inputDefs.length; i++) {
+                const node = new NeuronNode(inputDefs[i].id, 'input', 'sensor', inputDefs[i].name, inputDefs[i].label, inputX, inTopY + i * inSpacing);
+                inputLayerNodes.push(node);
+                neurons.push(node);
+            }
+
+            // 2. HIDDEN LAYER 1 (6 Nodes)
+            const h1Count = 6;
+            const h1TopY = height * 0.16;
+            const h1Spacing = (height * 0.66) / (h1Count - 1);
+            for (let i = 0; i < h1Count; i++) {
+                const node = new NeuronNode(`h1_${i}`, 'hidden1', 'tensor', `H1_${i}`, `[TENSOR ${i}]`, hidden1X, h1TopY + i * h1Spacing);
+                hidden1Nodes.push(node);
+                neurons.push(node);
+            }
+
+            // 3. CENTRAL CORE NUCLEUS (8 Nodes orbiting the central Ultron orb)
+            const coreCount = 8;
+            const coreOrbitRadius = isMobile ? 95 : 130;
             for (let i = 0; i < coreCount; i++) {
                 const angle = (i / coreCount) * Math.PI * 2;
-                const nx = orbCenterX + Math.cos(angle) * coreRadius;
-                const ny = orbCenterY + Math.sin(angle) * coreRadius;
-                neurons.push(new NeuronNode(`core_${i}`, 'core', nx, ny));
+                const cx = coreCenterX + Math.cos(angle) * coreOrbitRadius;
+                const cy = coreCenterY + Math.sin(angle) * coreOrbitRadius;
+                const node = new NeuronNode(`core_${i}`, 'core', 'nucleus', `CORE_${i}`, `[NUCLEUS ${i}]`, cx, cy);
+                coreNodes.push(node);
+                neurons.push(node);
             }
 
-            // 2. Input Receptor Neurons (18 nodes distributed along bottom dock & flanks)
-            const receptorCount = 18;
-            for (let i = 0; i < receptorCount; i++) {
-                let rx, ry;
-                if (i < 12) {
-                    rx = (width * 0.08) + (width * 0.84) * (i / 12) + (Math.random() - 0.5) * 40;
-                    ry = height * 0.80 + (Math.random() - 0.5) * (height * 0.12);
-                } else {
-                    const side = i % 2 === 0 ? 0.06 : 0.94;
-                    rx = width * side + (Math.random() - 0.5) * (width * 0.05);
-                    ry = height * 0.28 + (Math.random() * (height * 0.50));
+            // 4. HIDDEN LAYER 2 (6 Nodes)
+            const h2Count = 6;
+            const h2TopY = height * 0.16;
+            const h2Spacing = (height * 0.66) / (h2Count - 1);
+            for (let i = 0; i < h2Count; i++) {
+                const node = new NeuronNode(`h2_${i}`, 'hidden2', 'reasoning', `H2_${i}`, `[LLM ${i}]`, hidden2X, h2TopY + i * h2Spacing);
+                hidden2Nodes.push(node);
+                neurons.push(node);
+            }
+
+            // 5. OUTPUT LAYER (5 Nodes)
+            const outputDefs = [
+                { id: 'out_tts',  name: 'OUT_TTS',  label: 'OUT 01: NEURAL SPEECH TTS' },
+                { id: 'out_hud',  name: 'OUT_HUD',  label: 'OUT 02: TACTICAL HUD EMIT' },
+                { id: 'out_rpa',  name: 'OUT_RPA',  label: 'OUT 03: WORKSTATION RPA' },
+                { id: 'out_call', name: 'OUT_CALL', label: 'OUT 04: CELLULAR GATEWAY' },
+                { id: 'out_mem',  name: 'OUT_MEM',  label: 'OUT 05: PERSISTENT STATE' }
+            ];
+            const outTopY = height * 0.20;
+            const outSpacing = (height * 0.58) / (outputDefs.length - 1);
+            for (let i = 0; i < outputDefs.length; i++) {
+                const node = new NeuronNode(outputDefs[i].id, 'output', 'actuator', outputDefs[i].name, outputDefs[i].label, outputX, outTopY + i * outSpacing);
+                outputLayerNodes.push(node);
+                neurons.push(node);
+            }
+
+            // ==========================================
+            // BUILD SYNAPTIC AXONS
+            // ==========================================
+            // Input -> Hidden 1
+            for (let inNode of inputLayerNodes) {
+                for (let h1 of hidden1Nodes) {
+                    const conn = new SynapseConnection(inNode, h1);
+                    connections.push(conn);
+                    inNode.outConnections.push(h1);
+                    h1.inConnections.push(inNode);
                 }
-                neurons.push(new NeuronNode(`rec_${i}`, 'receptor', rx, ry));
             }
 
-            // 3. Actuator & Output Neurons (16 nodes around upper and lateral sectors)
-            const actuatorCount = 16;
-            for (let i = 0; i < actuatorCount; i++) {
-                const angle = (i / actuatorCount) * Math.PI * 2;
-                const dist = 180 + Math.random() * 150;
-                const ax = orbCenterX + Math.cos(angle) * (dist * 1.3);
-                const ay = orbCenterY + Math.sin(angle) * (dist * 0.85);
-                neurons.push(new NeuronNode(`act_${i}`, 'actuator', Math.max(30, Math.min(width - 30, ax)), Math.max(60, Math.min(height - 80, ay))));
+            // Hidden 1 -> Core
+            for (let h1 of hidden1Nodes) {
+                for (let c of coreNodes) {
+                    const conn = new SynapseConnection(h1, c);
+                    connections.push(conn);
+                    h1.outConnections.push(c);
+                    c.inConnections.push(h1);
+                }
             }
 
-            // 4. Cognitive Hidden Layer Neurons (30 nodes floating throughout middle brain matrix)
-            const hiddenCount = 30;
-            for (let i = 0; i < hiddenCount; i++) {
-                const hx = width * 0.14 + Math.random() * (width * 0.72);
-                const hy = height * 0.14 + Math.random() * (height * 0.72);
-                neurons.push(new NeuronNode(`hid_${i}`, 'hidden', hx, hy));
+            // Core closed octagonal ring & cross chords
+            for (let i = 0; i < coreNodes.length; i++) {
+                const nextNode = coreNodes[(i + 1) % coreNodes.length];
+                connections.push(new SynapseConnection(coreNodes[i], nextNode, 0.9));
+                coreNodes[i].outConnections.push(nextNode);
+
+                const crossNode = coreNodes[(i + 4) % coreNodes.length];
+                connections.push(new SynapseConnection(coreNodes[i], crossNode, 0.7));
+                coreNodes[i].outConnections.push(crossNode);
             }
 
-            buildSynapticConnections();
+            // Core -> Hidden 2
+            for (let c of coreNodes) {
+                for (let h2 of hidden2Nodes) {
+                    const conn = new SynapseConnection(c, h2);
+                    connections.push(conn);
+                    c.outConnections.push(h2);
+                    h2.inConnections.push(c);
+                }
+            }
+
+            // Hidden 2 -> Output
+            for (let h2 of hidden2Nodes) {
+                for (let outNode of outputLayerNodes) {
+                    const conn = new SynapseConnection(h2, outNode);
+                    connections.push(conn);
+                    h2.outConnections.push(outNode);
+                    outNode.inConnections.push(h2);
+                }
+            }
+
+            // High-speed direct bypass conduits
+            const inText = inputLayerNodes.find(n => n.id === 'in_text');
+            const inVoice = inputLayerNodes.find(n => n.id === 'in_voice');
+            const outHud = outputLayerNodes.find(n => n.id === 'out_hud');
+            const outTts = outputLayerNodes.find(n => n.id === 'out_tts');
+
+            if (inText && coreNodes[0]) connections.push(new SynapseConnection(inText, coreNodes[0], 0.95));
+            if (inVoice && coreNodes[7]) connections.push(new SynapseConnection(inVoice, coreNodes[7], 0.95));
+            if (outHud && coreNodes[3]) connections.push(new SynapseConnection(coreNodes[3], outHud, 0.95));
+            if (outTts && coreNodes[4]) connections.push(new SynapseConnection(coreNodes[4], outTts, 0.95));
         }
 
-        function buildSynapticConnections() {
-            const maxDistSq = 175 * 175;
-            for (let i = 0; i < neurons.length; i++) {
-                neurons[i].connections = [];
-                for (let j = i + 1; j < neurons.length; j++) {
-                    const dx = neurons[i].x - neurons[j].x;
-                    const dy = neurons[i].y - neurons[j].y;
-                    const dSq = dx * dx + dy * dy;
-                    if (dSq < maxDistSq) {
-                        neurons[i].connections.push(neurons[j]);
+        function triggerInputReaction(text) {
+            const inputNodes = neurons.filter(n => n.layer === 'input');
+            const hidden1Nodes = neurons.filter(n => n.layer === 'hidden1');
+            const coreNodes = neurons.filter(n => n.layer === 'core');
+
+            // 1. Excite input nodes to full voltage
+            for (let n of inputNodes) {
+                n.energy = 1.0;
+                n.activation = 1.0;
+            }
+
+            // 2. Cascade cyan action potentials across input axons to hidden1 and core
+            for (let inNode of inputNodes) {
+                for (let h1 of inNode.outConnections) {
+                    synapsePulses.push(new SynapsePulse(inNode, h1, 'rgba(6, 210, 240, 0.98)', 0.065, 5.0));
+                }
+            }
+
+            for (let h1 of hidden1Nodes) {
+                if (h1.outConnections.length > 0) {
+                    const c = h1.outConnections[Math.floor(Math.random() * h1.outConnections.length)];
+                    synapsePulses.push(new SynapsePulse(h1, c, 'rgba(6, 210, 240, 0.95)', 0.055, 4.2));
+                }
+            }
+
+            // 3. Shockwave ripple from input layer
+            if (inputNodes.length > 0) {
+                const targetNode = inputNodes[1] || inputNodes[0];
+                shockwaves.push(new SynapticShockwave(targetNode.x, targetNode.y, 'rgba(6, 210, 240, 0.9)'));
+            }
+
+            // 4. Update Dialogue HUD Neural Bus UI
+            const busIn = document.getElementById('busNodeInput');
+            const busThink = document.getElementById('busNodeThink');
+            const busOut = document.getElementById('busNodeOutput');
+            if (busIn) { busIn.classList.add('active-input'); }
+            if (busThink) { busThink.classList.remove('active-think'); }
+            if (busOut) { busOut.classList.remove('active-output'); }
+        }
+
+        function triggerThinkingReaction() {
+            const hidden1Nodes = neurons.filter(n => n.layer === 'hidden1');
+            const coreNodes = neurons.filter(n => n.layer === 'core');
+            const hidden2Nodes = neurons.filter(n => n.layer === 'hidden2');
+
+            for (let n of coreNodes) {
+                n.energy = 1.0;
+                n.activation = 0.95;
+            }
+
+            for (let i = 0; i < 8; i++) {
+                const c = coreNodes[Math.floor(Math.random() * coreNodes.length)];
+                if (c && c.outConnections.length > 0) {
+                    const target = c.outConnections[Math.floor(Math.random() * c.outConnections.length)];
+                    const color = Math.random() > 0.5 ? 'rgba(245, 158, 11, 0.95)' : 'rgba(168, 85, 247, 0.95)';
+                    synapsePulses.push(new SynapsePulse(c, target, color, 0.07, 4.2));
+                }
+            }
+
+            const busIn = document.getElementById('busNodeInput');
+            const busThink = document.getElementById('busNodeThink');
+            const busOut = document.getElementById('busNodeOutput');
+            if (busIn) { busIn.classList.remove('active-input'); }
+            if (busThink) { busThink.classList.add('active-think'); }
+            if (busOut) { busOut.classList.remove('active-output'); }
+        }
+
+        function triggerOutputReaction(text) {
+            const coreNodes = neurons.filter(n => n.layer === 'core');
+            const hidden2Nodes = neurons.filter(n => n.layer === 'hidden2');
+            const outputNodes = neurons.filter(n => n.layer === 'output');
+
+            // 1. Excite output nodes and core to maximum voltage
+            for (let n of outputNodes) {
+                n.energy = 1.0;
+                n.activation = 1.0;
+            }
+            for (let n of coreNodes) {
+                n.energy = 1.0;
+            }
+
+            // 2. Outward detonation: Crimson action potentials flooding to output layer
+            for (let c of coreNodes) {
+                for (let h2 of c.outConnections) {
+                    if (h2.layer === 'hidden2') {
+                        synapsePulses.push(new SynapsePulse(c, h2, 'rgba(239, 68, 68, 0.98)', 0.065, 4.8));
                     }
                 }
             }
+
+            for (let h2 of hidden2Nodes) {
+                for (let outNode of h2.outConnections) {
+                    synapsePulses.push(new SynapsePulse(h2, outNode, 'rgba(255, 60, 0, 0.98)', 0.075, 5.2));
+                }
+            }
+
+            // 3. Shockwave detonating from the central Ultron core
+            shockwaves.push(new SynapticShockwave(orbCenterX, orbCenterY, 'rgba(239, 68, 68, 0.95)'));
+
+            // 4. Update Dialogue HUD Neural Bus UI
+            const busIn = document.getElementById('busNodeInput');
+            const busThink = document.getElementById('busNodeThink');
+            const busOut = document.getElementById('busNodeOutput');
+            if (busIn) { busIn.classList.remove('active-input'); }
+            if (busThink) { busThink.classList.remove('active-think'); }
+            if (busOut) { busOut.classList.add('active-output'); }
         }
 
-        function renderAxons(ctx, state) {
+        function triggerInputSynapticBurst() {
+            triggerInputReaction('Keystroke');
+        }
+
+        function renderLayerHeaders(ctx) {
+            const width = canvas.width;
+            const isMobile = width < 768;
+            if (isMobile) return;
+
             ctx.save();
-            const maxDist = 175;
+            ctx.font = '800 11px "JetBrains Mono", monospace';
 
-            for (let n of neurons) {
-                for (let target of n.connections) {
-                    const dx = target.x - n.x;
-                    const dy = target.y - n.y;
-                    const dist = Math.sqrt(dx * dx + dy * dy);
-                    if (dist > maxDist) continue;
+            const headers = [
+                { x: width * 0.12, text: '[01 // INPUT LAYER]', color: '#06b6d4', align: 'left' },
+                { x: width * 0.28, text: '[02 // TENSOR MATRIX]', color: '#a855f7', align: 'center' },
+                { x: width * 0.50, text: '[03 // ULTRON NUCLEUS]', color: '#ef4444', align: 'center' },
+                { x: width * 0.72, text: '[04 // GEMINI COGNITION]', color: '#f59e0b', align: 'center' },
+                { x: width * 0.88, text: '[05 // OUTPUT ACTUATORS]', color: '#ef4444', align: 'right' }
+            ];
 
-                    const baseAlpha = (1 - dist / maxDist) * 0.16;
-                    const energyAlpha = (n.energy + target.energy) * 0.42;
-                    const alpha = Math.min(0.85, baseAlpha + energyAlpha);
-
-                    let strokeColor;
-                    if (state === 'output') {
-                        strokeColor = `rgba(239, 68, 68, ${alpha})`;
-                    } else if (state === 'input') {
-                        strokeColor = `rgba(6, 182, 212, ${alpha})`;
-                    } else if (state === 'thinking') {
-                        strokeColor = `rgba(168, 85, 247, ${alpha})`;
-                    } else {
-                        strokeColor = `rgba(56, 189, 248, ${alpha})`;
-                    }
-
-                    ctx.strokeStyle = strokeColor;
-                    ctx.lineWidth = 1.0 + (n.energy + target.energy) * 1.6;
-                    ctx.beginPath();
-                    ctx.moveTo(n.x, n.y);
-                    ctx.lineTo(target.x, target.y);
-                    ctx.stroke();
-                }
+            const topY = 74;
+            for (let h of headers) {
+                ctx.fillStyle = h.color;
+                ctx.textAlign = h.align;
+                ctx.fillText(h.text, h.x, topY);
             }
             ctx.restore();
         }
 
-        function fireNeuralPulses(state, amplitude) {
-            const now = Date.now();
-            let interval = 450;
-            if (state === 'input') interval = Math.max(35, 200 - amplitude * 500);
-            else if (state === 'thinking') interval = 70;
-            else if (state === 'output') interval = Math.max(45, 170 - amplitude * 400);
+        function drawDialogueConduits(ctx, state) {
+            const hud = document.getElementById('tacticalDialogueHud');
+            if (!hud || hud.style.display === 'none') return;
 
-            if (now - lastPulseTime < interval) return;
-            lastPulseTime = now;
+            const rect = hud.getBoundingClientRect();
+            const hudLeft = rect.left;
+            const hudRight = rect.right;
+            const hudTop = rect.top;
 
-            if (state === 'input') {
-                // INWARD FLOW: From receptor nodes inward toward core
-                const receptors = neurons.filter(n => n.layer === 'receptor');
-                if (receptors.length > 0) {
-                    const startNode = receptors[Math.floor(Math.random() * receptors.length)];
-                    if (startNode.connections.length > 0) {
-                        const nextNode = startNode.connections.reduce((closest, curr) => {
-                            const d1 = Math.hypot(curr.x - orbCenterX, curr.y - orbCenterY);
-                            const d2 = Math.hypot(closest.x - orbCenterX, closest.y - orbCenterY);
-                            return d1 < d2 ? curr : closest;
-                        }, startNode.connections[0]);
+            const outHudNode = neurons.find(n => n.id === 'out_hud');
+            const inTextNode = neurons.find(n => n.id === 'in_text');
 
-                        const pulseSpeed = 0.045 + amplitude * 0.055;
-                        synapsePulses.push(new SynapsePulse(startNode, nextNode, 'rgba(6, 182, 212, 0.95)', pulseSpeed, 3.8));
-                    }
-                }
-            } else if (state === 'thinking') {
-                // COGNITIVE LOOP: Rapid cross-firing in hidden & core matrix
-                const hiddens = neurons.filter(n => n.layer === 'hidden' || n.layer === 'core');
-                if (hiddens.length > 1) {
-                    const n1 = hiddens[Math.floor(Math.random() * hiddens.length)];
-                    if (n1.connections.length > 0) {
-                        const n2 = n1.connections[Math.floor(Math.random() * n1.connections.length)];
-                        const color = Math.random() > 0.5 ? 'rgba(245, 158, 11, 0.95)' : 'rgba(168, 85, 247, 0.95)';
-                        synapsePulses.push(new SynapsePulse(n1, n2, color, 0.055, 3.4));
-                    }
-                }
-            } else if (state === 'output') {
-                // OUTWARD FLOW: From core neurons detonating outwards to actuator & edge nodes
-                const cores = neurons.filter(n => n.layer === 'core');
-                if (cores.length > 0) {
-                    const coreNode = cores[Math.floor(Math.random() * cores.length)];
-                    if (coreNode.connections.length > 0) {
-                        const nextNode = coreNode.connections.reduce((furthest, curr) => {
-                            const d1 = Math.hypot(curr.x - orbCenterX, curr.y - orbCenterY);
-                            const d2 = Math.hypot(furthest.x - orbCenterX, furthest.y - orbCenterY);
-                            return d1 > d2 ? curr : furthest;
-                        }, coreNode.connections[0]);
-
-                        const pulseSpeed = 0.048 + amplitude * 0.06;
-                        synapsePulses.push(new SynapsePulse(coreNode, nextNode, 'rgba(239, 68, 68, 0.95)', pulseSpeed, 4.2));
-                    }
-                }
-            } else {
-                // IDLE: Calm ambient resting pulse
-                const randomNode = neurons[Math.floor(Math.random() * neurons.length)];
-                if (randomNode && randomNode.connections.length > 0) {
-                    const target = randomNode.connections[Math.floor(Math.random() * randomNode.connections.length)];
-                    synapsePulses.push(new SynapsePulse(randomNode, target, 'rgba(56, 189, 248, 0.75)', 0.02, 2.8));
-                }
+            ctx.save();
+            if (state === 'output' && outHudNode) {
+                ctx.strokeStyle = 'rgba(239, 68, 68, 0.75)';
+                ctx.lineWidth = 2.2;
+                ctx.beginPath();
+                ctx.moveTo(outHudNode.x, outHudNode.y);
+                ctx.bezierCurveTo(outHudNode.x - 40, hudTop - 20, hudRight + 40, hudTop - 20, hudRight - 20, hudTop);
+                ctx.stroke();
+            } else if (state === 'input' && inTextNode) {
+                ctx.strokeStyle = 'rgba(6, 210, 240, 0.75)';
+                ctx.lineWidth = 2.2;
+                ctx.beginPath();
+                ctx.moveTo(inTextNode.x, inTextNode.y);
+                ctx.bezierCurveTo(inTextNode.x + 40, hudTop - 20, hudLeft - 40, hudTop - 20, hudLeft + 20, hudTop);
+                ctx.stroke();
             }
-        }
-
-        function triggerInputSynapticBurst() {
-            // Emits instant inward synaptic pulses from bottom receptors to core on keystroke/input
-            const bottomNodes = neurons.filter(n => n.layer === 'receptor');
-            const coreNodes = neurons.filter(n => n.layer === 'core');
-            if (bottomNodes.length > 0 && coreNodes.length > 0) {
-                for (let k = 0; k < 2; k++) {
-                    const startNode = bottomNodes[Math.floor(Math.random() * bottomNodes.length)];
-                    const coreNode = coreNodes[Math.floor(Math.random() * coreNodes.length)];
-                    synapsePulses.push(new SynapsePulse(startNode, coreNode, 'rgba(6, 182, 212, 0.95)', 0.075, 4.0));
-                }
-            }
+            ctx.restore();
         }
 
         function resizeCanvas() {
@@ -2107,7 +2395,7 @@
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
 
-        // Interactive Pointer Tracking & Tactile Shockwaves
+        // Pointer tracking
         window.addEventListener('pointermove', (e) => {
             pointer.x = e.clientX;
             pointer.y = e.clientY;
@@ -2119,25 +2407,69 @@
         });
 
         window.addEventListener('click', (e) => {
-            let color = 'rgba(6, 182, 212, 0.85)';
-            if (isSpeaking) color = 'rgba(239, 68, 68, 0.85)';
-            else if (isThinking) color = 'rgba(168, 85, 247, 0.85)';
+            let color = 'rgba(6, 210, 240, 0.9)';
+            if (isSpeaking) color = 'rgba(239, 68, 68, 0.95)';
+            else if (isThinking) color = 'rgba(245, 158, 11, 0.95)';
             shockwaves.push(new SynapticShockwave(e.clientX, e.clientY, color));
         }, { passive: true });
+
+        function fireAmbientPulses(state, amplitude) {
+            const now = Date.now();
+            let interval = 400;
+            if (state === 'input') interval = 70;
+            else if (state === 'thinking') interval = 60;
+            else if (state === 'output') interval = 80;
+
+            if (now - lastPulseTime < interval) return;
+            lastPulseTime = now;
+
+            if (state === 'input') {
+                const inNodes = neurons.filter(n => n.layer === 'input');
+                if (inNodes.length > 0) {
+                    const start = inNodes[Math.floor(Math.random() * inNodes.length)];
+                    if (start.outConnections.length > 0) {
+                        const next = start.outConnections[Math.floor(Math.random() * start.outConnections.length)];
+                        synapsePulses.push(new SynapsePulse(start, next, 'rgba(6, 210, 240, 0.95)', 0.055, 4.2));
+                    }
+                }
+            } else if (state === 'output') {
+                const coreNodes = neurons.filter(n => n.layer === 'core');
+                if (coreNodes.length > 0) {
+                    const start = coreNodes[Math.floor(Math.random() * coreNodes.length)];
+                    if (start.outConnections.length > 0) {
+                        const next = start.outConnections[Math.floor(Math.random() * start.outConnections.length)];
+                        synapsePulses.push(new SynapsePulse(start, next, 'rgba(239, 68, 68, 0.95)', 0.058, 4.5));
+                    }
+                }
+            } else if (state === 'thinking') {
+                const hiddens = neurons.filter(n => n.layer === 'hidden1' || n.layer === 'hidden2' || n.layer === 'core');
+                if (hiddens.length > 1) {
+                    const n1 = hiddens[Math.floor(Math.random() * hiddens.length)];
+                    if (n1.outConnections.length > 0) {
+                        const n2 = n1.outConnections[Math.floor(Math.random() * n1.outConnections.length)];
+                        const color = Math.random() > 0.5 ? 'rgba(245, 158, 11, 0.95)' : 'rgba(168, 85, 247, 0.95)';
+                        synapsePulses.push(new SynapsePulse(n1, n2, color, 0.065, 3.8));
+                    }
+                }
+            } else {
+                const randomNode = neurons[Math.floor(Math.random() * neurons.length)];
+                if (randomNode && randomNode.outConnections.length > 0) {
+                    const target = randomNode.outConnections[Math.floor(Math.random() * randomNode.outConnections.length)];
+                    synapsePulses.push(new SynapsePulse(randomNode, target, 'rgba(56, 189, 248, 0.75)', 0.025, 3.2));
+                }
+            }
+        }
 
         function animateSoundwave() {
             requestAnimationFrame(animateSoundwave);
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // Determine dynamic state: 'input', 'thinking', 'output', 'idle'
             let state = 'idle';
             if (isSpeaking) state = 'output';
             else if (isThinking) state = 'thinking';
             else if (isListening || isUserTyping) state = 'input';
 
             let audioAmplitude = 0;
-
-            // Read live frequency data from microphone if active
             if (isListening && audioAnalyser && freqArray) {
                 audioAnalyser.getByteFrequencyData(freqArray);
                 let sum = 0;
@@ -2153,19 +2485,23 @@
                 audioAmplitude = 0.05 + Math.sin(Date.now() / 600) * 0.02;
             }
 
-            // Real-time expansion of the central AI Orb & Holographic Rings
-            const orbScale = 1 + audioAmplitude * 0.55;
+            const orbScale = 1 + audioAmplitude * 0.45;
             voiceOrb.style.transform = `scale(${orbScale})`;
-            ring1.style.transform = `scale(${1 + audioAmplitude * 0.7})`;
-            ring2.style.transform = `scale(${1 + audioAmplitude * 1.1})`;
-            ring3.style.transform = `scale(${1 + audioAmplitude * 1.5})`;
-            ring4.style.transform = `scale(${1 + audioAmplitude * 1.9})`;
+            ring1.style.transform = `scale(${1 + audioAmplitude * 0.6})`;
+            ring2.style.transform = `scale(${1 + audioAmplitude * 0.9})`;
+            ring3.style.transform = `scale(${1 + audioAmplitude * 1.2})`;
+            ring4.style.transform = `scale(${1 + audioAmplitude * 1.5})`;
 
-            // 1. Draw Synaptic Axons
-            renderAxons(ctx, state);
+            // 1. Draw Layer Headers on Canvas
+            renderLayerHeaders(ctx);
 
-            // 2. Update & Draw Synapse Pulses
-            fireNeuralPulses(state, audioAmplitude);
+            // 2. Draw Synaptic Axons
+            for (let conn of connections) {
+                conn.draw(ctx, state);
+            }
+
+            // 3. Draw Synaptic Energy Pulses
+            fireAmbientPulses(state, audioAmplitude);
             for (let i = synapsePulses.length - 1; i >= 0; i--) {
                 const p = synapsePulses[i];
                 if (p.update()) {
@@ -2175,7 +2511,7 @@
                 }
             }
 
-            // 3. Update & Draw Shockwaves
+            // 4. Draw Shockwaves
             for (let i = shockwaves.length - 1; i >= 0; i--) {
                 const sw = shockwaves[i];
                 if (sw.update(neurons)) {
@@ -2185,15 +2521,18 @@
                 }
             }
 
-            // 4. Update & Draw Neurons
+            // 5. Update & Draw All Neurons
             for (let n of neurons) {
                 n.update(audioAmplitude, state);
                 n.draw(ctx, state);
             }
 
-            // 5. Draw Fluid Reactive Soundwave Ribbon across center-bottom
+            // 6. Draw Dialogue Conduits if HUD is active
+            drawDialogueConduits(ctx, state);
+
+            // 7. Draw Fluid Reactive Soundwave Ribbon across center-bottom
             wavePhase += (isListening || isSpeaking) ? 0.09 : 0.025;
-            const centerY = canvas.height * 0.60;
+            const centerY = canvas.height * 0.62;
 
             if (isSpeaking) {
                 drawFluidSineWave(centerY, audioAmplitude * 115, wavePhase + 1.4, 'rgba(239, 68, 68, 0.92)', 4.0);
@@ -2220,7 +2559,7 @@
             let x = 0;
 
             for (let i = 0; i <= totalPoints; i++) {
-                const envelope = Math.sin((i / totalPoints) * Math.PI); // Smooth zero at edges
+                const envelope = Math.sin((i / totalPoints) * Math.PI);
                 const y = centerY + Math.sin(phase + i * 0.15) * amplitude * envelope;
 
                 if (i === 0) {
@@ -2257,18 +2596,35 @@
             statusPill.className = `status-pill ${state}`;
             updateMicButtonUI(state === 'listening');
 
+            const busIn = document.getElementById('busNodeInput');
+            const busThink = document.getElementById('busNodeThink');
+            const busOut = document.getElementById('busNodeOutput');
+
             if (state === 'listening') {
                 statusPill.textContent = '⚡ NEURAL INPUT RECEPTOR ACTIVE // LISTENING';
                 orbIcon.className = 'fas fa-microphone text-white';
+                if (busIn) busIn.classList.add('active-input');
+                if (busThink) busThink.classList.remove('active-think');
+                if (busOut) busOut.classList.remove('active-output');
             } else if (state === 'thinking') {
                 statusPill.textContent = '⚡ COGNITIVE SYNAPSE MATRIX // INFERENCE';
                 orbIcon.className = 'fas fa-brain text-white';
+                if (busIn) busIn.classList.remove('active-input');
+                if (busThink) busThink.classList.add('active-think');
+                if (busOut) busOut.classList.remove('active-output');
+                triggerThinkingReaction();
             } else if (state === 'speaking') {
                 statusPill.textContent = '⚡ NEURAL DIRECTIVE EMISSION // OUTPUT';
                 orbIcon.className = 'fas fa-volume-high text-white';
+                if (busIn) busIn.classList.remove('active-input');
+                if (busThink) busThink.classList.remove('active-think');
+                if (busOut) busOut.classList.add('active-output');
             } else {
                 statusPill.textContent = 'AI ULTRON NEURAL NETWORK READY';
                 orbIcon.className = 'fas fa-network-wired text-white';
+                if (busIn) busIn.classList.remove('active-input');
+                if (busThink) busThink.classList.remove('active-think');
+                if (busOut) busOut.classList.remove('active-output');
             }
         }
 
@@ -2651,17 +3007,30 @@
             if (userText) {
                 userEl.textContent = (userText.startsWith('[') || userText.startsWith('KAVI STARK:')) ? userText : `KAVI STARK: "${userText}"`;
                 userEl.style.display = 'block';
+                // Trigger neural network reaction for input display
+                triggerInputReaction(userText);
             } else {
                 userEl.style.display = 'none';
             }
             if (assistantText) {
-                if (assistantText === 'Listening...' || assistantText === 'Synthesizing objective...' || assistantText.startsWith('ULTRON:')) {
+                if (assistantText === 'Listening...') {
                     respEl.textContent = assistantText;
+                    triggerInputReaction(userText || 'Listening');
+                } else if (assistantText === 'Synthesizing objective...') {
+                    respEl.textContent = assistantText;
+                    triggerThinkingReaction();
                 } else {
-                    respEl.textContent = `ULTRON: "${assistantText}"`;
+                    if (assistantText.startsWith('ULTRON:')) {
+                        respEl.textContent = assistantText;
+                    } else {
+                        respEl.textContent = `ULTRON: "${assistantText}"`;
+                    }
+                    // Trigger neural network reaction for output display
+                    triggerOutputReaction(assistantText);
                 }
             } else {
                 respEl.textContent = 'ULTRON: Processing directive...';
+                triggerThinkingReaction();
             }
             hud.scrollTop = hud.scrollHeight;
         }
