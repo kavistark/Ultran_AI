@@ -85,12 +85,50 @@ ALLOWED_ACTIONS = {
         'requires_confirmation': False,
         'required_fields': [],
     },
+    'open_app': {
+        'description': 'Launch or open desktop application on laptop',
+        'requires_confirmation': False,
+        'required_fields': ['app_name'],
+    },
+    'close_app': {
+        'description': 'Close desktop application on laptop',
+        'requires_confirmation': True,
+        'required_fields': ['app_name'],
+    },
+    'inspect_screen': {
+        'description': 'Capture and visually inspect computer screen with AI vision',
+        'requires_confirmation': False,
+        'required_fields': [],
+    },
+    'type_text': {
+        'description': 'Type text into active application window',
+        'requires_confirmation': False,
+        'required_fields': ['text'],
+    },
+    'press_key': {
+        'description': 'Press keyboard shortcut or key',
+        'requires_confirmation': False,
+        'required_fields': ['key'],
+    },
+    'lock_screen': {
+        'description': 'Lock computer workstation',
+        'requires_confirmation': False,
+        'required_fields': [],
+    },
+    'get_device_status': {
+        'description': 'Retrieve live device telemetry (battery, CPU, RAM, active window)',
+        'requires_confirmation': False,
+        'required_fields': [],
+    },
+    'open_path': {
+        'description': 'Open folder or file in file explorer',
+        'requires_confirmation': False,
+        'required_fields': ['path'],
+    },
 }
 
 BLOCKED_ACTIONS = [
     'execute_code',
-    'access_filesystem',
-    'control_hardware',
     'unlock_device',
     'send_message_as_user',
     'access_private_accounts',

@@ -144,7 +144,7 @@ def handle_action(user, action, conversation):
         )
         return {
             'success': False,
-            'message': f"⚠️ Security Notice: Action '{intent}' is not permitted by AI ULTRON's action controller allowlist.",
+            'message': f"[Security Alert] Action '{intent}' is not permitted by AI ULTRON's action controller allowlist.",
         }
 
     ActionLog.objects.create(
@@ -157,10 +157,14 @@ def handle_action(user, action, conversation):
     if intent == 'create_reminder':
         try:
             from datetime import datetime
+            from .telephony_service import format_e164_number, get_default_phone_number
             date_str = action.get('date', '')
             time_str = action.get('time', '09:00')
             title = action.get('title', 'Reminder')
             priority = action.get('priority', 'medium')
+            call_on_due = action.get('call_on_due', True)
+            raw_phone = action.get('phone_number') or get_default_phone_number()
+            phone_number = format_e164_number(raw_phone)
 
             if date_str:
                 dt_str = f"{date_str} {time_str}"
@@ -176,12 +180,16 @@ def handle_action(user, action, conversation):
                     title=title,
                     due_time=due_time,
                     priority=priority,
+                    call_on_due=call_on_due,
+                    phone_number=phone_number,
                     status='pending',
                 )
                 return {
                     'success': True,
-                    'message': f'✅ Reminder created: "{title}" for {due_time.strftime("%B %d, %Y at %I:%M %p")}.',
+                    'message': f'Reminder created: "{title}" for {due_time.strftime("%B %d, %Y at %I:%M %p")}. Outbound call will trigger to {phone_number} when due.',
                     'reminder_id': reminder.id,
+                    'phone_number': phone_number,
+                    'call_on_due': call_on_due,
                 }
         except Exception as e:
             return {'success': False, 'message': f'Could not create reminder: {str(e)}'}
@@ -189,9 +197,9 @@ def handle_action(user, action, conversation):
     elif intent == 'list_reminders':
         reminders = Reminder.objects.filter(user=user, status='pending').order_by('due_time')[:5]
         if reminders:
-            items = '\n'.join([f"• {r.title} — {r.due_time.strftime('%b %d at %I:%M %p')}" for r in reminders])
-            return {'success': True, 'message': f'📋 Your upcoming reminders:\n{items}'}
-        return {'success': True, 'message': '📋 You have no pending reminders.'}
+            items = '\n'.join([f"- {r.title} -- {r.due_time.strftime('%b %d at %I:%M %p')}" for r in reminders])
+            return {'success': True, 'message': f'Upcoming reminders:\n{items}'}
+        return {'success': True, 'message': 'You have no pending reminders.'}
 
     elif intent == 'delete_reminder':
         reminder_id = action.get('reminder_id')
@@ -261,15 +269,15 @@ def handle_action(user, action, conversation):
     elif intent == 'list_contacts':
         contacts = Contact.objects.filter(user=user).order_by('name')
         if contacts.exists():
-            listing = "\n".join([f"• {c.name}: {c.phone_number}" for c in contacts])
+            listing = "\n".join([f"- {c.name}: {c.phone_number}" for c in contacts])
             return {
                 'success': True,
-                'message': f"📋 Contact directory contains {contacts.count()} records:\n{listing}",
+                'message': f"Contact directory contains {contacts.count()} records:\n{listing}",
                 'contacts': [{'id': c.id, 'name': c.name, 'phone_number': c.phone_number} for c in contacts],
             }
         return {
             'success': True,
-            'message': "📋 Your contact directory is currently empty, Kavi Stark. Say 'add contact [Name] [Number]' to save contacts.",
+            'message': "Your contact directory is currently empty, Kavi Stark. Say 'add contact [Name] [Number]' to save contacts.",
             'contacts': [],
         }
 
@@ -279,6 +287,52 @@ def handle_action(user, action, conversation):
             'shutdown': True,
             'message': "Shutting down AI ULTRON systems. Goodbye, Kavi Stark.",
         }
+
+    elif intent == 'open_app':
+        from .device_controller import open_application
+        app_name = action.get('app_name', '').strip()
+        result = open_application(app_name)
+        return result
+
+    elif intent == 'close_app':
+        from .device_controller import close_application
+        app_name = action.get('app_name', '').strip()
+        result = close_application(app_name)
+        return result
+
+    elif intent == 'inspect_screen':
+        from .device_controller import inspect_screen_with_ai
+        query = action.get('query', 'Analyze what is currently open on my screen.')
+        result = inspect_screen_with_ai(query)
+        return result
+
+    elif intent == 'get_device_status':
+        from .device_controller import get_system_telemetry
+        telem = get_system_telemetry()
+        bat = f"{telem['battery_percent']}%" if telem.get('battery_percent') is not None else "N/A"
+        plug = "Plugged in" if telem.get('power_plugged') else "On battery"
+        win = telem.get('active_window', 'Desktop')
+        msg = f"Device telemetry: Active Window: '{win}'. CPU: {telem.get('cpu_percent', 0)}%, RAM: {telem.get('ram_percent', 0)}%, Battery: {bat} ({plug})."
+        return {'success': True, 'message': msg, 'telemetry': telem}
+
+    elif intent == 'lock_screen':
+        from .device_controller import lock_workstation
+        return lock_workstation()
+
+    elif intent == 'type_text':
+        from .device_controller import type_text
+        text_to_type = action.get('text', '')
+        return type_text(text_to_type)
+
+    elif intent == 'press_key':
+        from .device_controller import press_keyboard_key
+        key = action.get('key', 'enter')
+        return press_keyboard_key(key)
+
+    elif intent == 'open_path':
+        from .device_controller import open_file_or_directory
+        path = action.get('path', '')
+        return open_file_or_directory(path)
 
     return {'success': True, 'message': ''}
 
@@ -328,7 +382,7 @@ def delete_all_history_api(request):
 @csrf_exempt
 @require_http_methods(["GET", "POST"])
 def due_reminders_api(request):
-    """Check for due reminders that trigger automated voice alerts."""
+    """Check for due reminders that trigger automated voice alerts and phone calls."""
     if not request.user.is_authenticated:
         from django.contrib.auth.models import User
         user = User.objects.filter(username='kavi').first() or User.objects.first()
@@ -346,16 +400,27 @@ def due_reminders_api(request):
         called=False
     )
 
+    from .telephony_service import dispatch_reminder_call, format_e164_number
+
     results = []
     for r in due_list:
         r.called = True
         r.status = 'completed'
         r.save()
+
+        call_telemetry = None
+        if r.call_on_due:
+            call_telemetry = dispatch_reminder_call(r, user_name=user.first_name or "Kavi Stark")
+
+        target_phone = r.phone_number or '9092117397'
         results.append({
             'id': r.id,
             'title': r.title,
             'due_time': r.due_time.strftime('%I:%M %p'),
             'call_on_due': r.call_on_due,
+            'phone_number': target_phone,
+            'formatted_phone': format_e164_number(target_phone),
+            'call_telemetry': call_telemetry,
         })
 
     return JsonResponse({'due_reminders': results})
@@ -508,3 +573,127 @@ def configure_gemini_key_api(request):
         "masked_key": masked_key,
         "model": getattr(settings, 'GEMINI_MODEL', 'gemini-2.0-flash'),
     })
+
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def test_call_api(request):
+    """Initiate a test phone call alert to verify the telephony subsystem."""
+    import json
+    from .telephony_service import trigger_test_call
+    target_phone = None
+    try:
+        data = json.loads(request.body)
+        target_phone = data.get('phone_number')
+    except Exception:
+        pass
+    telemetry = trigger_test_call(target_phone)
+    return JsonResponse({
+        'success': True,
+        'message': f"Automated test call initiated to {telemetry.get('phone_number')}",
+        'telemetry': telemetry,
+    })
+
+
+@csrf_exempt
+@require_http_methods(["GET", "POST"])
+def configure_phone_api(request):
+    """Get or update primary phone number for Kavi Stark reminder calls."""
+    import os
+    import json
+    from .telephony_service import get_default_phone_number, format_e164_number
+    if request.method == 'GET':
+        return JsonResponse({
+            'success': True,
+            'phone_number': get_default_phone_number(),
+        })
+
+    try:
+        data = json.loads(request.body)
+        new_phone = (data.get('phone_number') or '').strip()
+        if not new_phone:
+            return JsonResponse({'success': False, 'error': 'Phone number cannot be empty.'}, status=400)
+        formatted = format_e164_number(new_phone)
+        settings.USER_PHONE_NUMBER = formatted
+        os.environ['USER_PHONE_NUMBER'] = formatted
+        return JsonResponse({
+            'success': True,
+            'phone_number': formatted,
+            'message': f"Primary phone number updated to {formatted}, Kavi Stark.",
+        })
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=400)
+
+
+@csrf_exempt
+@require_http_methods(["GET"])
+def device_status_api(request):
+    """Retrieve live hardware and OS telemetry (CPU, RAM, Battery, Active Window)."""
+    from .device_controller import get_system_telemetry
+    try:
+        telemetry = get_system_telemetry()
+        return JsonResponse({
+            'success': True,
+            'telemetry': telemetry,
+        })
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def device_action_api(request):
+    """Direct execution of device control actions (open app, lock, type, press key, open path)."""
+    import json
+    from .device_controller import (
+        open_application, close_application, lock_workstation,
+        type_text, press_keyboard_key, open_file_or_directory
+    )
+
+    try:
+        data = json.loads(request.body)
+        action_name = data.get('action', '').strip()
+
+        if action_name == 'open_app':
+            res = open_application(data.get('app_name', ''))
+            return JsonResponse(res)
+        elif action_name == 'close_app':
+            res = close_application(data.get('app_name', ''))
+            return JsonResponse(res)
+        elif action_name == 'lock_screen':
+            res = lock_workstation()
+            return JsonResponse(res)
+        elif action_name == 'type_text':
+            res = type_text(data.get('text', ''))
+            return JsonResponse(res)
+        elif action_name == 'press_key':
+            res = press_keyboard_key(data.get('key', 'enter'))
+            return JsonResponse(res)
+        elif action_name == 'open_path':
+            res = open_file_or_directory(data.get('path', ''))
+            return JsonResponse(res)
+        else:
+            return JsonResponse({'success': False, 'error': f"Unknown device action '{action_name}'."}, status=400)
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=400)
+
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def inspect_screen_api(request):
+    """Capture screen and run multimodal AI vision inspection."""
+    import json
+    from .device_controller import inspect_screen_with_ai
+
+    query = "Analyze what is currently on my screen."
+    try:
+        data = json.loads(request.body)
+        query = data.get('query') or query
+    except Exception:
+        pass
+
+    try:
+        result = inspect_screen_with_ai(query)
+        return JsonResponse(result)
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)

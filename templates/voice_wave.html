@@ -233,7 +233,7 @@
             height: 160px;
             border-radius: 50%;
             background: linear-gradient(135deg, #1d4ed8 0%, #7c3aed 50%, #06b6d4 100%);
-            box-shadow: 0 0 70px rgba(59, 130, 246, 0.8), inset 0 0 35px rgba(255, 255, 255, 0.5);
+            box-shadow: 0 0 70px rgba(7, 7, 7, 0.8), inset 0 0 35px rgba(255, 255, 255, 0.5);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -998,6 +998,234 @@
                 padding: 14px;
             }
         }
+
+        /* ==========================================
+           TACTICAL INCOMING CALL MODAL & RINGTONE HUD
+           ========================================== */
+        .incoming-call-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 99999;
+            background: rgba(2, 6, 23, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            animation: fadeInCall 0.3s ease-out;
+        }
+
+        @keyframes fadeInCall {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .incoming-call-card {
+            background: linear-gradient(145deg, rgba(15, 23, 42, 0.96), rgba(30, 41, 59, 0.94));
+            border: 2px solid rgba(239, 68, 68, 0.6);
+            border-radius: 24px;
+            padding: 32px 28px;
+            width: 100%;
+            max-width: 440px;
+            text-align: center;
+            box-shadow: 0 0 70px rgba(239, 68, 68, 0.5), inset 0 0 20px rgba(239, 68, 68, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .incoming-call-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(239, 68, 68, 0.12) 0%, transparent 60%);
+            animation: callPulseAura 2s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes callPulseAura {
+            0%, 100% { transform: scale(0.9); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.9; }
+        }
+
+        .call-pulse-avatar {
+            position: relative;
+            width: 90px;
+            height: 90px;
+            margin: 0 auto 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .call-ripple {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            border: 2px solid rgba(239, 68, 68, 0.6);
+            animation: callRippleOut 1.8s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+        }
+
+        .call-ripple.delay-1 {
+            animation-delay: 0.6s;
+        }
+
+        .call-ripple.delay-2 {
+            animation-delay: 1.2s;
+        }
+
+        @keyframes callRippleOut {
+            0% { transform: scale(0.8); opacity: 1; }
+            100% { transform: scale(2.2); opacity: 0; }
+        }
+
+        .call-avatar-icon {
+            position: relative;
+            z-index: 2;
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: #ffffff;
+            box-shadow: 0 0 30px rgba(239, 68, 68, 0.8);
+            animation: phoneWiggle 1.4s ease-in-out infinite;
+        }
+
+        @keyframes phoneWiggle {
+            0%, 100% { transform: rotate(0deg); }
+            15% { transform: rotate(14deg); }
+            30% { transform: rotate(-14deg); }
+            45% { transform: rotate(10deg); }
+            60% { transform: rotate(-6deg); }
+            75% { transform: rotate(0deg); }
+        }
+
+        .call-kicker {
+            font-size: 0.72rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            color: #f87171;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+
+        .call-caller-name {
+            font-size: 1.6rem;
+            font-weight: 900;
+            color: #ffffff;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+
+        .call-target-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: #fca5a5;
+            margin-bottom: 14px;
+        }
+
+        .call-phone-pill {
+            font-size: 1.15rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            color: #38bdf8;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .call-directive-box {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-size: 0.92rem;
+            color: #e2e8f0;
+            font-style: italic;
+            margin-bottom: 24px;
+            max-height: 80px;
+            overflow-y: auto;
+        }
+
+        .call-buttons-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .call-btn-action {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 13px 16px;
+            border-radius: 14px;
+            font-size: 0.88rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border: none;
+        }
+
+        .call-btn-answer {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: #ffffff;
+            box-shadow: 0 4px 18px rgba(16, 185, 129, 0.4);
+        }
+
+        .call-btn-answer:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 24px rgba(16, 185, 129, 0.6);
+        }
+
+        .call-btn-dial {
+            background: linear-gradient(135deg, #0284c7, #2563eb);
+            color: #ffffff;
+            box-shadow: 0 4px 18px rgba(2, 132, 199, 0.4);
+        }
+
+        .call-btn-dial:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 24px rgba(2, 132, 199, 0.6);
+        }
+
+        .call-btn-dismiss {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #94a3b8;
+            padding: 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .call-btn-dismiss:hover {
+            background: rgba(239, 68, 68, 0.15);
+            color: #f87171;
+            border-color: rgba(239, 68, 68, 0.3);
+        }
     </style>
 </head>
 <body class="state-idle" id="stageBody" onclick="handleStageTap()">
@@ -1019,8 +1247,17 @@
             <div class="agent-tool-hud" id="agentToolBadge">
                 ⚡ TOOL: IDLE
             </div>
+            <div class="device-telemetry-badge" id="deviceTelemetryBadge" title="Workstation Telemetry" style="display:inline-flex; align-items:center; gap:6px; background:rgba(15,23,42,0.85); border:1px solid rgba(56,189,248,0.3); border-radius:14px; padding:3px 10px; font-size:0.75rem; font-family:'JetBrains Mono',monospace; color:#94a3b8;">
+                <i class="fas fa-laptop" style="color:#38bdf8;"></i>
+                <span id="deviceBatText" style="color:#38bdf8;">BAT: --%</span>
+                <span style="opacity:0.4;">|</span>
+                <span id="deviceCpuText" style="color:#a78bfa;">CPU: --%</span>
+            </div>
         </div>
         <div class="hud-right">
+            <button class="hud-action-pill" id="quickInspectScreenBtn" title="Inspect Workstation Screen with AI Vision" onclick="event.stopPropagation(); triggerScreenInspectionUI()" style="background:rgba(56,189,248,0.15); border:1px solid rgba(56,189,248,0.4); color:#38bdf8; padding:5px 12px; border-radius:12px; font-size:0.75rem; font-weight:800; cursor:pointer; display:inline-flex; align-items:center; gap:6px; letter-spacing:0.5px;">
+                <i class="fas fa-desktop"></i> <span>SCREEN</span>
+            </button>
             <button class="hud-menu-btn" id="openMenuBtn" title="How to Control AI ULTRON (Operational Manual)" onclick="event.stopPropagation(); toggleControlMenu()">
                 <i class="fas fa-bars-staggered"></i> <span>CONTROL MENU</span>
             </button>
@@ -1036,6 +1273,40 @@
             <div class="shutdown-title">SYSTEM OFFLINE</div>
             <div class="shutdown-sub">AI ULTRON CORE DEACTIVATED</div>
             <div class="shutdown-note">All processes terminated. Refresh tab to reactivate agent.</div>
+        </div>
+    </div>
+
+    <!-- Tactical Incoming Directive Call & Ringtone HUD Modal -->
+    <div class="incoming-call-modal" id="incomingCallModal" style="display:none;" onclick="event.stopPropagation()">
+        <div class="incoming-call-card">
+            <div class="call-pulse-avatar">
+                <div class="call-ripple"></div>
+                <div class="call-ripple delay-1"></div>
+                <div class="call-ripple delay-2"></div>
+                <div class="call-avatar-icon">
+                    <i class="fas fa-phone-volume"></i>
+                </div>
+            </div>
+            <div class="call-kicker">OUTBOUND DIRECTIVE CALL // REMINDER ALERT</div>
+            <div class="call-caller-name">AI ULTRON</div>
+            <div class="call-target-badge"><i class="fas fa-shield-halved"></i> DIRECTIVE FOR KAVI STARK</div>
+            <div class="call-phone-pill" id="callModalPhoneDisplay">
+                <i class="fas fa-satellite-dish"></i> <span id="callModalPhoneText">+91 9092117397</span>
+            </div>
+            <div class="call-directive-box" id="callModalDirectiveText">
+                "Checking scheduled directive..."
+            </div>
+            <div class="call-buttons-row">
+                <button class="call-btn-action call-btn-answer" id="btnAnswerCall" onclick="handleAnswerReminderCall()">
+                    <i class="fas fa-phone"></i> Answer Call
+                </button>
+                <a class="call-btn-action call-btn-dial" id="btnDialPhone" href="tel:+919092117397" target="_blank">
+                    <i class="fas fa-mobile-screen"></i> Cellular App
+                </a>
+            </div>
+            <button class="call-btn-dismiss" id="btnDismissCall" onclick="handleDismissReminderCall()">
+                <i class="fas fa-xmark"></i> Dismiss Alert
+            </button>
         </div>
     </div>
 
@@ -1084,6 +1355,43 @@
                     <div id="geminiKeyFeedback" style="font-size:0.75rem; margin-top:6px; color:#94a3b8;">Say "set gemini key [YOUR_KEY]" or enter above.</div>
                 </div>
 
+                <!-- 0.1 Workstation & Multi-Device Control Matrix -->
+                <div class="guide-card" data-keywords="laptop computer rpa open launch app screen lock pc battery device control terminal vscode spotify calculator" style="border-color: rgba(56, 189, 248, 0.45); background: rgba(56, 189, 248, 0.05);">
+                    <div class="card-top">
+                        <div class="card-heading"><i class="fas fa-laptop-code"></i> Workstation & Device RPA Control</div>
+                        <span class="card-badge" style="background: rgba(56, 189, 248, 0.2); color: #38bdf8;">ACTIVE SENTINEL</span>
+                    </div>
+                    <div class="card-desc">
+                        Full physical control of Kavi Stark's laptop workstation and endpoints: launch desktop apps, inspect screen with multimodal vision, monitor hardware telemetry, and lock workstations.
+                    </div>
+                    <div style="display:flex; flex-wrap:wrap; gap:6px; margin: 10px 0;">
+                        <button class="try-pill" style="background:rgba(56,189,248,0.2); border:1px solid rgba(56,189,248,0.4);" onclick="tryDirectiveFromManual('open chrome')"><i class="fab fa-chrome"></i> Chrome</button>
+                        <button class="try-pill" style="background:rgba(56,189,248,0.2); border:1px solid rgba(56,189,248,0.4);" onclick="tryDirectiveFromManual('open vs code')"><i class="fas fa-code"></i> VS Code</button>
+                        <button class="try-pill" style="background:rgba(56,189,248,0.2); border:1px solid rgba(56,189,248,0.4);" onclick="tryDirectiveFromManual('open spotify')"><i class="fab fa-spotify"></i> Spotify</button>
+                        <button class="try-pill" style="background:rgba(56,189,248,0.2); border:1px solid rgba(56,189,248,0.4);" onclick="tryDirectiveFromManual('open calculator')"><i class="fas fa-calculator"></i> Calc</button>
+                        <button class="try-pill" style="background:rgba(56,189,248,0.2); border:1px solid rgba(56,189,248,0.4);" onclick="tryDirectiveFromManual('what is on my screen')"><i class="fas fa-desktop"></i> Read Screen</button>
+                        <button class="try-pill" style="background:rgba(56,189,248,0.2); border:1px solid rgba(56,189,248,0.4);" onclick="tryDirectiveFromManual('device status')"><i class="fas fa-microchip"></i> Telemetry</button>
+                        <button class="try-pill" style="background:rgba(239,68,68,0.2); border:1px solid rgba(239,68,68,0.4); color:#fca5a5;" onclick="tryDirectiveFromManual('lock my pc')"><i class="fas fa-lock"></i> Lock PC</button>
+                    </div>
+                    <div class="directive-box">
+                        <div class="directive-row">
+                            <span>Open Desktop Application:</span>
+                            <button class="try-pill" onclick="tryDirectiveFromManual('open chrome')">Try <i class="fas fa-play"></i></button>
+                        </div>
+                        <code>"open chrome", "launch vs code", "open spotify", "launch calculator"</code>
+                        <div class="directive-row" style="margin-top:6px;">
+                            <span>Screen Visual Q&A:</span>
+                            <button class="try-pill" onclick="tryDirectiveFromManual('what is on my screen')">Try <i class="fas fa-play"></i></button>
+                        </div>
+                        <code>"what is on my screen", "read my screen", "inspect screen"</code>
+                        <div class="directive-row" style="margin-top:6px;">
+                            <span>Lock Workstation:</span>
+                            <button class="try-pill" onclick="tryDirectiveFromManual('lock my pc')">Try <i class="fas fa-play"></i></button>
+                        </div>
+                        <code>"lock my pc" or "lock workstation"</code>
+                    </div>
+                </div>
+
                 <!-- 1. Contact Registry -->
                 <div class="guide-card" data-keywords="contact contacts address book add save number person phonebook registry">
                     <div class="card-top">
@@ -1130,21 +1438,40 @@
                     </div>
                 </div>
 
-                <!-- 3. Scheduled Reminders -->
-                <div class="guide-card" data-keywords="reminder remind reminders schedule alert task alarm due alert">
+                <!-- 3. Scheduled Reminders & Phone Call Alerts -->
+                <div class="guide-card" data-keywords="reminder remind reminders schedule alert task alarm due alert call phone outbound telephone">
                     <div class="card-top">
-                        <div class="card-heading"><i class="fas fa-bell"></i> 3. Scheduled Reminders & Alerts</div>
-                        <span class="card-badge">AUTOMATED AGENT</span>
+                        <div class="card-heading"><i class="fas fa-bell"></i> 3. Scheduled Reminders & Outbound Phone Calls</div>
+                        <span class="card-badge" style="background: rgba(239, 68, 68, 0.2); color: #f87171;">TELEPHONY & AGENT</span>
                     </div>
                     <div class="card-desc">
-                        Schedule tasks by natural speech. When the target time arrives, AI ULTRON vocalizes the reminder alert instantly in its signature synthetic villain voice.
+                        Schedule tasks by natural speech. When due, AI ULTRON initiates an outbound cellular phone call to Kavi Stark and displays an incoming directive HUD with dual-tone ringtone and one-click answering.
                     </div>
+
+                    <!-- Telephony Phone Config & Test -->
+                    <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 12px; padding: 12px; margin-top: 10px; margin-bottom: 12px;">
+                        <div style="font-size: 0.72rem; font-weight: 800; color: #fca5a5; margin-bottom: 6px; letter-spacing: 0.8px;">
+                            <i class="fas fa-phone-volume"></i> KAVI STARK TELEPHONE DISPATCH CONFIGURATION
+                        </div>
+                        <div style="display:flex; gap:8px;">
+                            <input type="text" id="telephonyPhoneInput" value="+919092117397" placeholder="+919092117397" style="flex:1; padding:8px 12px; background:rgba(15,23,42,0.9); border:1px solid rgba(255,255,255,0.2); border-radius:8px; color:#fff; font-size:0.85rem; font-family:monospace;" />
+                            <button class="try-pill" style="padding:8px 12px; font-weight:700; background:rgba(255,255,255,0.1);" onclick="saveTelephonyPhoneUI()">SAVE <i class="fas fa-floppy-disk"></i></button>
+                            <button class="try-pill" style="padding:8px 12px; font-weight:700; background:linear-gradient(135deg, #ef4444, #dc2626);" onclick="triggerTestCallUI()">TEST CALL <i class="fas fa-phone"></i></button>
+                        </div>
+                        <div id="telephonyStatusFeedback" style="font-size:0.75rem; margin-top:6px; color:#94a3b8;">Primary target: +919092117397. Twilio Voice API ready.</div>
+                    </div>
+
                     <div class="directive-box">
                         <div class="directive-row">
-                            <span>Create task reminder:</span>
-                            <button class="try-pill" onclick="tryDirectiveFromManual('remind me to review deployment tomorrow at 10 AM')">Try <i class="fas fa-play"></i></button>
+                            <span>Remind & Call Phone:</span>
+                            <button class="try-pill" onclick="tryDirectiveFromManual('remind me to inspect server in 2 minutes and call my number')">Try <i class="fas fa-play"></i></button>
                         </div>
-                        <code>"remind me to &lt;task&gt; tomorrow at &lt;time&gt;"</code>
+                        <code>"remind me to &lt;task&gt; at &lt;time&gt; and call my number"</code>
+                        <div class="directive-row" style="margin-top:6px;">
+                            <span>Explicit Target Number:</span>
+                            <button class="try-pill" onclick="tryDirectiveFromManual('remind me to take medicine at 8 PM and call 9092117397')">Try <i class="fas fa-play"></i></button>
+                        </div>
+                        <code>"remind me to &lt;task&gt; at &lt;time&gt; and call 9092117397"</code>
                         <div class="directive-row" style="margin-top:6px;">
                             <span>Review pending schedule:</span>
                             <button class="try-pill" onclick="tryDirectiveFromManual('show my reminders')">Try <i class="fas fa-play"></i></button>
@@ -1705,8 +2032,132 @@
             }
         }
 
+        async function loadTelephonyPhoneConfig() {
+            try {
+                const res = await fetch('/api/config/phone-number/');
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.phone_number) {
+                        const input = document.getElementById('telephonyPhoneInput');
+                        const phoneText = document.getElementById('callModalPhoneText');
+                        if (input) input.value = data.phone_number;
+                        if (phoneText) phoneText.textContent = data.phone_number;
+                    }
+                }
+            } catch(e) {}
+        }
+
+        async function saveTelephonyPhoneUI() {
+            const input = document.getElementById('telephonyPhoneInput');
+            const feedback = document.getElementById('telephonyStatusFeedback');
+            if (!input) return;
+            const phone = input.value.trim();
+            if (!phone) {
+                if (feedback) feedback.textContent = "Please enter a valid phone number (e.g. +919092117397).";
+                return;
+            }
+            if (feedback) feedback.textContent = "Updating primary phone number...";
+            try {
+                const res = await fetch('/api/config/phone-number/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-CSRFToken': CSRF_TOKEN },
+                    body: JSON.stringify({ phone_number: phone })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    if (feedback) feedback.textContent = `Saved: ${data.phone_number}. Telephony ready.`;
+                    const phoneText = document.getElementById('callModalPhoneText');
+                    if (phoneText) phoneText.textContent = data.phone_number;
+                    speakVoiceResponse(`Phone number updated to ${data.phone_number}, Kavi Stark.`);
+                } else {
+                    if (feedback) feedback.textContent = `Error: ${data.error || 'Failed to update'}`;
+                }
+            } catch(err) {
+                if (feedback) feedback.textContent = `Error: ${err.message}`;
+            }
+        }
+
+        async function triggerTestCallUI() {
+            const input = document.getElementById('telephonyPhoneInput');
+            const feedback = document.getElementById('telephonyStatusFeedback');
+            const phone = input ? input.value.trim() : '+919092117397';
+            if (feedback) feedback.textContent = `Initiating outbound test call to ${phone}...`;
+            try {
+                const res = await fetch('/api/reminders/test-call/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-CSRFToken': CSRF_TOKEN },
+                    body: JSON.stringify({ phone_number: phone })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    if (feedback) feedback.textContent = `Call dispatched! Telemetry: ${data.telemetry ? (data.telemetry.status || data.telemetry.sid || 'Active') : 'Initiated'}`;
+                    triggerIncomingCallModal({
+                        title: "Ultron Telephony Diagnostic Verification",
+                        phone_number: phone,
+                        formatted_phone: phone
+                    });
+                } else {
+                    if (feedback) feedback.textContent = `Call dispatch failed: ${data.error || 'Check Twilio credentials'}`;
+                }
+            } catch(err) {
+                if (feedback) feedback.textContent = `Error: ${err.message}`;
+            }
+        }
+
+        async function fetchDeviceTelemetryUI() {
+            try {
+                const res = await fetch('/api/device/status/');
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.success && data.telemetry) {
+                        const t = data.telemetry;
+                        const batEl = document.getElementById('deviceBatText');
+                        const cpuEl = document.getElementById('deviceCpuText');
+                        if (batEl) {
+                            if (t.battery_percent !== null && t.battery_percent !== undefined) {
+                                batEl.textContent = `BAT: ${t.battery_percent}%${t.power_plugged ? '⚡' : ''}`;
+                            } else {
+                                batEl.textContent = 'PWR: AC';
+                            }
+                        }
+                        if (cpuEl) {
+                            cpuEl.textContent = `CPU: ${Math.round(t.cpu_percent || 0)}%`;
+                        }
+                    }
+                }
+            } catch(e) {}
+        }
+        setInterval(fetchDeviceTelemetryUI, 5000);
+
+        async function triggerScreenInspectionUI() {
+            unlockMobileAudioContext();
+            showDialogueResponse('SCREEN INSPECTION DIRECTIVE', 'Capturing workstation display and analyzing open applications...');
+            setVoiceState('thinking');
+            statusPill.textContent = 'ANALYZING WORKSTATION DISPLAY...';
+
+            try {
+                const res = await fetch('/api/device/screen/inspect/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-CSRFToken': CSRF_TOKEN },
+                    body: JSON.stringify({ query: 'Analyze what is currently open on my screen and summarize it.' })
+                });
+                const data = await res.json();
+                if (data.success && data.message) {
+                    showDialogueResponse('SCREEN INSPECTION RESULT', data.message);
+                    speakVoiceResponse(data.message);
+                } else {
+                    showDialogueResponse('SCREEN NOTICE', data.error || 'Screen capture could not complete.');
+                    speakVoiceResponse('Workstation screen inspection notice: Display is protected or inaccessible.');
+                }
+            } catch(e) {
+                showDialogueResponse('ERROR', `Inspection failed: ${e.message}`);
+                speakVoiceResponse(`Screen inspection error, Kavi Stark.`);
+            }
+        }
+
         function tryDirectiveFromManual(directiveText) {
             toggleControlMenu(false);
+            activeQueryInFlight = false;
             const input = document.getElementById('agentDirectiveInput');
             if (input) input.value = directiveText;
             if (!hasWelcomed) hasWelcomed = true;
@@ -1754,6 +2205,7 @@
         function toggleMicrophoneListening() {
             unlockMobileAudioContext();
             micBlocked = false;
+            activeQueryInFlight = false;
             if (isSpeaking) {
                 stopSpeakingVoice();
             }
@@ -1824,6 +2276,7 @@
 
         function submitTypedDirective() {
             unlockMobileAudioContext();
+            activeQueryInFlight = false;
             if (!directiveInput) return;
             const text = directiveInput.value.trim();
             if (!text) return;
@@ -2350,6 +2803,11 @@
             lastProcessedQuery = cleanQuery;
             lastProcessedTimestamp = now;
 
+            // Failsafe auto-reset: guarantees activeQueryInFlight never permanently locks input
+            setTimeout(() => {
+                activeQueryInFlight = false;
+            }, 8000);
+
             // Immediately mute and pause microphone so it cannot pick up acoustic feedback or echo
             pauseSpeechCapture();
             isThinking = true;
@@ -2549,6 +3007,7 @@
         const ttsAudioCache = new Map();
 
         function stopSpeakingVoice() {
+            activeQueryInFlight = false;
             if (speechSafetyTimer) {
                 clearTimeout(speechSafetyTimer);
                 speechSafetyTimer = null;
@@ -2604,6 +3063,7 @@
             const completeSpeech = () => {
                 if (speechDone || speechId !== currentSpeechGenerationId) return;
                 speechDone = true;
+                activeQueryInFlight = false;
                 stopSpeakingVoice();
                 setVoiceState('idle');
                 if (!isManuallyPaused && !isUserTyping && !isShuttingDown) {
@@ -2845,6 +3305,122 @@
         }
         requestScreenWakeLock();
 
+        // ==========================================
+        // 9. TELEPHONY RINGTONE & INCOMING CALL HUD
+        // ==========================================
+        let ringtoneInterval = null;
+        let isRinging = false;
+        let currentDueReminder = null;
+
+        function startRingtoneAudio() {
+            if (isRinging) return;
+            isRinging = true;
+            try {
+                if (!audioCtx) {
+                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+
+                function playBurst() {
+                    if (!isRinging || !audioCtx) return;
+                    try {
+                        const now = audioCtx.currentTime;
+                        const osc1 = audioCtx.createOscillator();
+                        const osc2 = audioCtx.createOscillator();
+                        const burstGain = audioCtx.createGain();
+
+                        osc1.type = 'sine';
+                        osc1.frequency.setValueAtTime(440, now); // 440 Hz standard call tone
+                        osc2.type = 'sine';
+                        osc2.frequency.setValueAtTime(480, now); // 480 Hz harmonic
+
+                        burstGain.gain.setValueAtTime(0, now);
+                        burstGain.gain.linearRampToValueAtTime(0.28, now + 0.05);
+                        burstGain.gain.setValueAtTime(0.28, now + 1.8);
+                        burstGain.gain.linearRampToValueAtTime(0, now + 2.0);
+
+                        osc1.connect(burstGain);
+                        osc2.connect(burstGain);
+                        burstGain.connect(audioCtx.destination);
+
+                        osc1.start(now);
+                        osc2.start(now);
+                        osc1.stop(now + 2.0);
+                        osc2.stop(now + 2.0);
+                    } catch (err) {
+                        console.warn('Ringtone burst err:', err);
+                    }
+                }
+
+                playBurst();
+                ringtoneInterval = setInterval(() => {
+                    if (isRinging) {
+                        playBurst();
+                    } else {
+                        clearInterval(ringtoneInterval);
+                    }
+                }, 3500);
+            } catch(e) {
+                console.warn('AudioContext ringtone error:', e);
+            }
+        }
+
+        function stopRingtoneAudio() {
+            isRinging = false;
+            if (ringtoneInterval) {
+                clearInterval(ringtoneInterval);
+                ringtoneInterval = null;
+            }
+        }
+
+        function triggerIncomingCallModal(due) {
+            currentDueReminder = due;
+            const modal = document.getElementById('incomingCallModal');
+            const phoneText = document.getElementById('callModalPhoneText');
+            const directiveText = document.getElementById('callModalDirectiveText');
+            const dialLink = document.getElementById('btnDialPhone');
+
+            const phone = due.formatted_phone || due.phone_number || '+919092117397';
+            if (phoneText) phoneText.textContent = phone;
+            if (dialLink) dialLink.href = `tel:${phone.replace(/\s+/g, '')}`;
+            if (directiveText) {
+                directiveText.textContent = `"${due.title || 'Scheduled directive due'}"`;
+            }
+
+            if (modal) {
+                modal.style.display = 'flex';
+            }
+
+            startRingtoneAudio();
+
+            // Mobile vibration sequence
+            if ('vibrate' in navigator) {
+                try {
+                    navigator.vibrate([400, 250, 400, 250, 600]);
+                } catch(e) {}
+            }
+        }
+
+        function handleAnswerReminderCall() {
+            stopRingtoneAudio();
+            const modal = document.getElementById('incomingCallModal');
+            if (modal) modal.style.display = 'none';
+
+            if (currentDueReminder) {
+                const title = currentDueReminder.title;
+                showDialogueResponse('[INCOMING CALL ANSWERED]', `Directive for Kavi Stark: ${title}`);
+                speakVoiceResponse(`Directive call connected for Kavi Stark. Scheduled reminder alert: ${title}. All protocols verified.`);
+            }
+        }
+
+        function handleDismissReminderCall() {
+            stopRingtoneAudio();
+            const modal = document.getElementById('incomingCallModal');
+            if (modal) modal.style.display = 'none';
+        }
+
         // Background Polling for Due Reminders
         let isPollingDue = false;
         async function pollDueReminders() {
@@ -2857,8 +3433,13 @@
                     const data = await res.json();
                     if (data.due_reminders && data.due_reminders.length > 0) {
                         const due = data.due_reminders[0];
-                        showDialogueResponse('[SCHEDULED REMINDER]', due.title);
-                        speakVoiceResponse(`Scheduled reminder alert for Kavi Stark: ${due.title}`);
+                        if (due.call_on_due) {
+                            showDialogueResponse('[OUTBOUND DIRECTIVE CALL]', `Calling Kavi Stark (${due.formatted_phone || due.phone_number}): "${due.title}"`);
+                            triggerIncomingCallModal(due);
+                        } else {
+                            showDialogueResponse('[SCHEDULED REMINDER]', due.title);
+                            speakVoiceResponse(`Scheduled reminder alert for Kavi Stark: ${due.title}`);
+                        }
                     }
                 }
             } catch(e) {
@@ -2900,6 +3481,8 @@
 
         // Warm up voices on page load and attempt single controlled auto-welcome
         window.addEventListener('load', () => {
+            loadTelephonyPhoneConfig();
+            fetchDeviceTelemetryUI();
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.onvoiceschanged = () => {
                     window.speechSynthesis.getVoices();

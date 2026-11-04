@@ -224,7 +224,61 @@ def local_fallback_parser(user_message, conversation_history=None, user_preferen
             'error': None,
         }
 
-    # 1. Check for unsupported hardware/phone operations
+    # 1. Device Automation & Laptop Control Directives
+    # 1.1 Screen Inspection & Visual Reading
+    if re.search(r'\b(what is on my screen|what\'s on my screen|inspect my screen|inspect screen|read my screen|read screen|look at my screen|check screen|what do you see on my screen|screen inspection|screen capture)\b', msg_lower):
+        return {
+            'text': "Capturing workstation display. Multimodal visual inspection engaged, Kavi Stark.",
+            'action': {'intent': 'inspect_screen', 'query': clean},
+            'error': None,
+        }
+
+    # 1.2 Open Applications
+    app_launch_match = re.search(r'\b(?:open|launch|start|run)\s+(chrome|spotify|vs code|code|calculator|calc|notepad|terminal|powershell|cmd|settings|task manager|explorer|browser)\b', clean)
+    if app_launch_match:
+        target_app = app_launch_match.group(1).strip()
+        return {
+            'text': f"Executing directive: Launching {target_app.title()} on workstation, Kavi Stark.",
+            'action': {'intent': 'open_app', 'app_name': target_app},
+            'error': None,
+        }
+
+    # 1.3 Live Device & Battery Telemetry
+    if re.search(r'\b(device status|system status|battery status|how much battery|battery percentage|what app is open|active window|cpu usage|ram usage|laptop status|pc status)\b', clean):
+        return {
+            'text': "Interrogating workstation telemetry and hardware performance metrics, Kavi Stark.",
+            'action': {'intent': 'get_device_status'},
+            'error': None,
+        }
+
+    # 1.4 Workstation Lock
+    if re.search(r'\b(lock my pc|lock the pc|lock the computer|lock computer|lock workstation|lock screen|secure pc)\b', clean):
+        return {
+            'text': "Securing workstation. Workstation locked, Kavi Stark.",
+            'action': {'intent': 'lock_screen'},
+            'error': None,
+        }
+
+    # 1.5 Keyboard Emulation (Type Text & Press Key)
+    type_match = re.search(r'^(?:please\s+)?type\s+(.+)$', clean)
+    if type_match:
+        text_to_type = type_match.group(1).strip()
+        return {
+            'text': f"Typing directive into active window, Kavi Stark: '{text_to_type}'.",
+            'action': {'intent': 'type_text', 'text': text_to_type},
+            'error': None,
+        }
+
+    press_match = re.search(r'^(?:please\s+)?press\s+(enter|escape|space|backspace|tab|ctrl\+c|alt\+tab|ctrl\+v|up|down|left|right)$', clean)
+    if press_match:
+        key_name = press_match.group(1).strip()
+        return {
+            'text': f"Sending key event: {key_name}, Kavi Stark.",
+            'action': {'intent': 'press_key', 'key': key_name},
+            'error': None,
+        }
+
+    # Check for unsupported remote phone operations
     if any(phrase in msg_lower for phrase in ['unlock my phone', 'unlock phone', 'turn on flashlight', 'read my sms', 'send sms']):
         return {
             'text': "I cannot perform hardware device operations directly through the web client.",
@@ -281,6 +335,9 @@ def local_fallback_parser(user_message, conversation_history=None, user_preferen
                 hr = 0
             target_time = f"{hr:02d}:{mn}"
 
+        phone_match = re.search(r'(?:call|phone|number)?\s*(\+?91[\d\s-]{10}|\b\d{10}\b)', clean)
+        user_phone = phone_match.group(1).replace(' ', '').replace('-', '') if phone_match else '9092117397'
+
         action = {
             'intent': 'create_reminder',
             'title': title,
@@ -289,11 +346,11 @@ def local_fallback_parser(user_message, conversation_history=None, user_preferen
             'priority': 'medium',
             'requires_confirmation': True,
             'call_on_due': True,
-            'phone_number': '',
+            'phone_number': user_phone,
             'from_number': '+91 9092117397',
         }
         return {
-            'text': f"Reminder set for {title} on {action['date']} at {action['time']}, Kavi Stark. Automated voice transmission will activate when due.",
+            'text': f"Reminder set for {title} on {action['date']} at {action['time']}, Kavi Stark. Automated phone call will trigger to {user_phone} when due.",
             'action': action,
             'error': None,
         }
