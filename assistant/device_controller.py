@@ -266,9 +266,12 @@ def inspect_screen_with_ai(query: str = "Analyze what is currently open on my sc
         )
 
         candidate_models = [
-            'gemini-2.0-flash',
-            'gemini-2.0-flash-lite',
-            'gemini-1.5-flash',
+            getattr(settings, 'GEMINI_MODEL', 'gemini-flash-lite-latest'),
+            'gemini-flash-lite-latest',
+            'gemini-3.1-flash-lite',
+            'gemini-3.5-flash-lite',
+            'gemini-3.5-flash',
+            'gemini-3-flash-preview',
         ]
 
         analysis = None

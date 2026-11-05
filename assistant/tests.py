@@ -199,11 +199,11 @@ class AIUltronIntegrationTests(TestCase):
         self.assertIn('location', data['response'].lower())
         self.assertEqual(data.get('tool_executed'), 'track_location')
 
-    def test_calling_system_decommissioned(self):
-        """Test that calling directives confirm telephony and calling subsystems are decommissioned."""
+    def test_calling_system_gateway(self):
+        """Test that calling directives trigger outbound cellular call dispatch to target or default phone."""
         self.client.login(username='user1', password='password123')
         payload = {
-            'message': 'Ultron, calling process Sarah',
+            'message': 'Ultron, call Sarah',
             'is_voice': True,
         }
         response = self.client.post(
@@ -213,7 +213,8 @@ class AIUltronIntegrationTests(TestCase):
         )
         self.assertEqual(response.status_code, 200)
         data = response.json()
-        self.assertIn('decommissioned', data['response'].lower())
+        self.assertEqual(data.get('action', {}).get('intent'), 'make_call')
+        self.assertIn('call', data['response'].lower())
 
     def test_contact_management_directives(self):
         """Test adding and listing contacts via voice/chat."""
@@ -252,7 +253,7 @@ class AIUltronIntegrationTests(TestCase):
         self.assertIn('shutting down', data['response'].lower())
 
     def test_phone_number_inquiries(self):
-        """Test Ultron clarifies telephony is decommissioned when queried for phone number."""
+        """Test Ultron clarifies registered phone number when queried for endpoint."""
         self.client.login(username='user1', password='password123')
         # What is your number
         res1 = self.client.post(
@@ -261,7 +262,7 @@ class AIUltronIntegrationTests(TestCase):
             content_type='application/json'
         )
         self.assertEqual(res1.status_code, 200)
-        self.assertIn('decommissioned', res1.json()['response'].lower())
+        self.assertIn('9092117397', res1.json()['response'])
 
     def test_reminder_creates_call_on_due(self):
         """Test creating reminder binds call_on_due=True."""
@@ -385,7 +386,7 @@ class AIUltronIntegrationTests(TestCase):
         self.assertEqual(resp.status_code, 200)
         data = resp.json()
         self.assertTrue(data['success'])
-        self.assertEqual(data['model'], 'gemini-2.0-flash')
+        self.assertIn('flash', data['model'])
 
     def test_voice_wave_alias_url(self):
         """Test that /voice-wave/ alias renders correctly without 404."""

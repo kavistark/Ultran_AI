@@ -16,7 +16,8 @@ def transcribe_audio_bytes(audio_bytes, content_type='audio/wav'):
         return ""
 
     # 1. Primary Engine: Google Gemini GenAI Multimodal Audio
-    api_key = getattr(settings, 'GEMINI_API_KEY', '')
+    DEFAULT_GEMINI_KEY = 'AQ.Ab8RN6JjGb9DzxygCebSqJUlXxxe-vCKdmTJ2viUcsnYKsHVCA'
+    api_key = getattr(settings, 'GEMINI_API_KEY', DEFAULT_GEMINI_KEY) or DEFAULT_GEMINI_KEY
     from .services import is_valid_api_key, get_gemini_client
     if is_valid_api_key(api_key):
         try:
@@ -27,7 +28,7 @@ def transcribe_audio_bytes(audio_bytes, content_type='audio/wav'):
             mime = content_type or ('audio/wav' if audio_bytes.startswith(b'RIFF') else 'audio/webm')
             audio_part = types.Part.from_bytes(data=audio_bytes, mime_type=mime)
             response = client.models.generate_content(
-                model=getattr(settings, 'GEMINI_MODEL', 'gemini-2.0-flash'),
+                model=getattr(settings, 'GEMINI_MODEL', 'gemini-flash-lite-latest'),
                 contents=[
                     audio_part,
                     "Transcribe the spoken audio verbatim. Output ONLY the raw spoken words with no preamble, formatting, quotes, or conversational explanations."

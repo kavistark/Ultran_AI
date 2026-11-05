@@ -246,9 +246,6 @@
             transition: transform 0.05s ease-out, box-shadow 0.15s ease, background 0.2s ease;
         }
 
-
-        
-
         /* State Color Morphing */
         body.state-idle .voice-core-orb {
             background: linear-gradient(135deg, #1e3a8a 0%, #4338ca 50%, #0284c7 100%);
@@ -1290,9 +1287,2014 @@
             color: #f87171;
             border-color: rgba(239, 68, 68, 0.3);
         }
+    
+        /* ==========================================================================
+           CENTRAL AI POLICY PLATFORM & NEURAL MINDMAP INTERFACE (HIGH-PRECISION UI)
+           ========================================================================== */
+        :root {
+            --plat-bg: #04070d;
+            --plat-card-bg: rgba(9, 16, 28, 0.90);
+            --plat-card-border: rgba(56, 189, 248, 0.24);
+            --plat-teal: #06b6d4;
+            --plat-cyan: #38bdf8;
+            --plat-gold: #f59e0b;
+            --plat-rose: #f43f5e;
+            --plat-emerald: #10b981;
+            --plat-text-main: #f8fafc;
+            --plat-text-muted: #94a3b8;
+            --plat-text-sub: #64748b;
+        }
+
+        
+        /* Legacy Elements Hidden */
+        .top-voice-bar,
+        .voice-entity-stage,
+        .hud-input-dock,
+        .floating-guide-trigger {
+            display: none !important;
+        }
+
+        /* Master Viewport Container */
+        .central-platform-container {
+            position: absolute;
+            inset: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background: var(--plat-bg);
+            background-image: 
+                radial-gradient(circle at 18% 50%, rgba(6, 182, 212, 0.14) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.09) 0%, transparent 55%),
+                radial-gradient(circle at 85% 30%, rgba(139, 92, 246, 0.09) 0%, transparent 45%);
+            z-index: 5;
+            display: flex;
+            user-select: none;
+            -webkit-user-select: none;
+            cursor: default;
+        }
+
+        /* Subtle High-Tech Neural Dot/Grid */
+        
+        /* ==========================================================================
+           3D HOLOGRAPHIC EFFECTS & MOBILE PHONE OPTIMIZATION
+           ========================================================================== */
+
+        /* 3D Perspective Canvas Container */
+        .central-platform-container {
+            perspective: 1400px;
+            perspective-origin: 50% 50%;
+        }
+
+        .neural-canvas-world {
+            transform-style: preserve-3d;
+            transition: transform 0.05s ease-out;
+        }
+
+        /* 3D Gyroscopic Gimbal Stage */
+        .gimbal-stage {
+            position: absolute;
+            width: 220px;
+            height: 220px;
+            transform-style: preserve-3d;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .gimbal-ring {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            will-change: transform;
+            transform-style: preserve-3d;
+        }
+
+        .ring-3d-cyan {
+            width: 140px;
+            height: 140px;
+            border: 1.8px dashed rgba(56, 189, 248, 0.65);
+            box-shadow: 0 0 16px rgba(56, 189, 248, 0.4), inset 0 0 12px rgba(6, 182, 212, 0.3);
+            animation: spinGimbal1 18s linear infinite;
+        }
+
+        .ring-3d-violet {
+            width: 175px;
+            height: 175px;
+            border: 1.5px solid rgba(139, 92, 246, 0.55);
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.35);
+            animation: spinGimbal2 24s linear infinite;
+        }
+
+        .ring-3d-gold {
+            width: 205px;
+            height: 205px;
+            border: 1.2px dotted rgba(251, 191, 36, 0.5);
+            box-shadow: 0 0 14px rgba(245, 158, 11, 0.25);
+            animation: spinGimbal3 30s linear infinite;
+        }
+
+        @keyframes spinGimbal1 {
+            0% { transform: rotateX(65deg) rotateY(25deg) rotateZ(0deg); }
+            100% { transform: rotateX(65deg) rotateY(25deg) rotateZ(360deg); }
+        }
+
+        @keyframes spinGimbal2 {
+            0% { transform: rotateX(-48deg) rotateY(60deg) rotateZ(360deg); }
+            100% { transform: rotateX(-48deg) rotateY(60deg) rotateZ(0deg); }
+        }
+
+        @keyframes spinGimbal3 {
+            0% { transform: rotateX(80deg) rotateY(-35deg) rotateZ(0deg); }
+            100% { transform: rotateX(80deg) rotateY(-35deg) rotateZ(360deg); }
+        }
+
+        /* 3D Planet Sphere with Dynamic Lighting */
+        .core-planet-sphere {
+            transform-style: preserve-3d;
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
+            position: relative;
+        }
+
+        .sphere-lighting-layer {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 28%, rgba(255, 255, 255, 0.8) 0%, rgba(56, 189, 248, 0.4) 30%, transparent 65%);
+            pointer-events: none;
+        }
+
+        .sphere-equator-ring {
+            position: absolute;
+            top: 50%;
+            left: -15%;
+            right: -15%;
+            height: 1.5px;
+            background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.9), #ffffff, rgba(56, 189, 248, 0.9), transparent);
+            transform: translateY(-50%) rotateX(75deg);
+            box-shadow: 0 0 12px #38bdf8;
+            pointer-events: none;
+        }
+
+        /* 3D Core Reactive State */
+        body.state-speaking .core-planet-sphere,
+        body.state-speaking #corePlanetSphere {
+            transform: scale3d(1.18, 1.18, 1.18);
+            box-shadow: 0 0 65px rgba(220, 38, 38, 0.9), 0 0 110px rgba(249, 115, 22, 0.6);
+            background: radial-gradient(circle at 35% 35%, #f87171 0%, #dc2626 40%, #7f1d1d 85%, #050814 100%);
+        }
+
+        body.state-listening .core-planet-sphere,
+        body.state-listening #corePlanetSphere {
+            transform: scale3d(1.14, 1.14, 1.14);
+            box-shadow: 0 0 65px rgba(6, 182, 212, 0.9), 0 0 110px rgba(56, 189, 248, 0.6);
+        }
+
+        body.state-thinking .core-planet-sphere,
+        body.state-thinking #corePlanetSphere {
+            animation: spherePulse3D 1.4s infinite ease-in-out;
+            box-shadow: 0 0 65px rgba(245, 158, 11, 0.9), 0 0 110px rgba(139, 92, 246, 0.6);
+        }
+
+        @keyframes spherePulse3D {
+            0%, 100% { transform: scale3d(1, 1, 1); }
+            50% { transform: scale3d(1.22, 1.22, 1.22) rotateY(15deg); }
+        }
+
+        /* 3D Floating Category Cards */
+        .category-card {
+            transform-style: preserve-3d;
+            transform: translateZ(26px) rotateY(-1.5deg);
+            transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .category-card:hover {
+            transform: translateZ(42px) translateX(6px) rotateY(0deg) scale(1.03);
+            box-shadow: 0 16px 42px rgba(0, 0, 0, 0.7), 0 0 25px rgba(6, 182, 212, 0.35);
+        }
+
+        .category-card.active {
+            transform: translateZ(52px) translateX(10px) rotateY(0deg) scale(1.05);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 35px rgba(251, 191, 36, 0.45);
+        }
+
+        /* 3D Child Nodes */
+        .child-node-item {
+            transform-style: preserve-3d;
+            transform: translateZ(16px);
+            transition: all 0.2s ease;
+        }
+
+        .child-node-item:hover {
+            transform: translateZ(28px) translateX(6px);
+        }
+
+        .child-node-item.selected {
+            transform: translateZ(36px) translateX(8px);
+        }
+
+        /* 3D Inspector Deck Panel */
+        .inspector-deck-panel {
+            transform-style: preserve-3d;
+            transform: translateZ(32px);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        /* Mobile View Switcher Tabs (Header or Bottom) */
+        .mobile-view-tabs {
+            display: none;
+            position: fixed;
+            top: 66px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(12, 20, 34, 0.92);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: 9999px;
+            padding: 4px;
+            gap: 4px;
+            z-index: 120;
+            backdrop-filter: blur(18px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+        }
+
+        .mobile-tab-btn {
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 6px 14px;
+            border-radius: 9999px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .mobile-tab-btn.active {
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.35), rgba(59, 130, 246, 0.45));
+            color: #ffffff;
+            border: 1px solid rgba(56, 189, 248, 0.4);
+            box-shadow: 0 0 12px rgba(6, 182, 212, 0.4);
+        }
+
+        /* Floating Mobile Voice Button */
+        .mobile-floating-mic {
+            display: none;
+            position: fixed;
+            bottom: calc(20px + env(safe-area-inset-bottom));
+            right: 20px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #06b6d4, #3b82f6);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: #ffffff;
+            font-size: 1.3rem;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 8px 30px rgba(6, 182, 212, 0.5), 0 0 20px rgba(59, 130, 246, 0.4);
+            z-index: 150;
+            transition: all 0.25s ease;
+        }
+
+        .mobile-floating-mic.active {
+            background: linear-gradient(135deg, #ef4444, #f59e0b);
+            animation: pulseMobileMic 1.4s infinite;
+            box-shadow: 0 0 35px rgba(239, 68, 68, 0.85);
+        }
+
+        @keyframes pulseMobileMic {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 20px rgba(239, 68, 68, 0.6); }
+            50% { transform: scale(1.12); box-shadow: 0 0 40px rgba(239, 68, 68, 1); }
+        }
+
+        /* Mobile Bottom Peek Bar */
+        .mobile-peek-bar {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 18, 30, 0.96);
+            border-top: 1px solid rgba(56, 189, 248, 0.35);
+            padding: 12px 18px calc(14px + env(safe-area-inset-bottom));
+            backdrop-filter: blur(24px);
+            z-index: 90;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.7);
+            cursor: pointer;
+        }
+
+        .mobile-peek-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            max-width: 65%;
+        }
+
+        .mobile-peek-title {
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: #ffffff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .mobile-peek-status {
+            font-size: 0.62rem;
+            font-weight: 700;
+            color: #38bdf8;
+            letter-spacing: 0.5px;
+        }
+
+        .mobile-peek-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: var(--plat-cyan);
+            background: rgba(56, 189, 248, 0.15);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: 9999px;
+            padding: 5px 12px;
+        }
+
+        /* Mobile Responsive Breakpoints (< 900px) */
+        @media (max-width: 900px) {
+            .mobile-view-tabs {
+                display: flex;
+            }
+
+            .mobile-floating-mic {
+                display: flex;
+            }
+
+            .mobile-peek-bar {
+                display: flex;
+            }
+
+            .platform-top-bar {
+                padding: 12px 16px;
+                height: 60px;
+            }
+
+            .brand-title {
+                font-size: 0.82rem;
+            }
+
+            .brand-subtitle {
+                font-size: 0.58rem;
+            }
+
+            .top-actions-group .btn-new-simulation,
+            .top-actions-group .dataset-switch-pill {
+                padding: 5px 10px;
+                font-size: 0.72rem;
+            }
+
+            .breadcrumb-kpi-pill {
+                display: none !important;
+            }
+
+            /* View Switching on Mobile */
+            .central-platform-container.mobile-mode-mindmap .neural-canvas-viewport {
+                position: absolute;
+                inset: 0;
+                right: 0;
+                bottom: 64px;
+                display: block;
+                z-index: 10;
+            }
+
+            .central-platform-container.mobile-mode-mindmap .inspector-deck-panel {
+                display: none;
+            }
+
+            .central-platform-container.mobile-mode-deck .neural-canvas-viewport {
+                display: none;
+            }
+
+            .central-platform-container.mobile-mode-deck .inspector-deck-panel {
+                position: fixed;
+                top: 110px;
+                left: 12px;
+                right: 12px;
+                bottom: calc(14px + env(safe-area-inset-bottom));
+                width: auto;
+                border-radius: 20px;
+                display: flex;
+                z-index: 100;
+                max-height: none;
+                height: auto;
+            }
+
+            .central-platform-container.mobile-mode-deck .mobile-peek-bar {
+                display: none;
+            }
+
+            .central-platform-container.mobile-mode-deck .mobile-floating-mic {
+                display: none;
+            }
+        }
+
+        .central-platform-container::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-size: 38px 38px;
+            background-image: 
+                linear-gradient(to right, rgba(56, 189, 248, 0.028) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(56, 189, 248, 0.028) 1px, transparent 1px);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Top Global HUD Bar */
+        .platform-top-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 68px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            z-index: 100;
+            pointer-events: auto;
+        }
+
+        .brand-group {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            cursor: pointer;
+            transition: opacity 0.2s ease;
+        }
+        .brand-group:hover {
+            opacity: 0.9;
+        }
+
+        .brand-logo-icon {
+            width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.6));
+            animation: logoGlowPulse 4s infinite ease-in-out;
+        }
+        @keyframes logoGlowPulse {
+            0%, 100% { filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.5)); transform: scale(1); }
+            50% { filter: drop-shadow(0 0 16px rgba(6, 182, 212, 0.85)); transform: scale(1.03); }
+        }
+
+        .brand-text-col {
+            display: flex;
+            flex-direction: column;
+        }
+        .brand-title {
+            font-size: 0.96rem;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+            color: #ffffff;
+            line-height: 1.2;
+        }
+        .brand-subtitle {
+            font-size: 0.65rem;
+            font-weight: 800;
+            letter-spacing: 1.2px;
+            color: var(--plat-teal);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 2px;
+            text-transform: uppercase;
+        }
+        .live-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--plat-teal);
+            box-shadow: 0 0 8px var(--plat-teal);
+            animation: liveDotPulse 1.8s infinite;
+        }
+        @keyframes liveDotPulse {
+            0%, 100% { opacity: 0.5; transform: scale(0.9); }
+            50% { opacity: 1; transform: scale(1.3); }
+        }
+
+        /* Floating Dark Glass Toolbar (Center) */
+        .floating-toolbar {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 12px;
+            background: rgba(10, 18, 30, 0.82);
+            border: 1px solid rgba(56, 189, 248, 0.22);
+            border-radius: 9999px;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+            z-index: 105;
+        }
+
+        .toolbar-pill-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: none;
+            background: transparent;
+            color: var(--plat-text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .toolbar-pill-btn:hover {
+            color: #ffffff;
+            background: rgba(56, 189, 248, 0.15);
+            transform: scale(1.08);
+        }
+        .toolbar-pill-btn.active {
+            color: var(--plat-teal);
+            background: rgba(6, 182, 212, 0.2);
+            box-shadow: 0 0 12px rgba(6, 182, 212, 0.4);
+        }
+
+        .toolbar-divider {
+            width: 1px;
+            height: 16px;
+            background: rgba(255, 255, 255, 0.12);
+            margin: 0 4px;
+        }
+
+        /* Top Actions Group (Right) */
+        .top-actions-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-new-simulation {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            color: #ffffff;
+            padding: 7px 18px;
+            border-radius: 9999px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            backdrop-filter: blur(10px);
+        }
+        .btn-new-simulation:hover {
+            background: rgba(255, 255, 255, 0.16);
+            border-color: rgba(255, 255, 255, 0.4);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(255, 255, 255, 0.15);
+        }
+
+        .dataset-switch-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(6, 182, 212, 0.12);
+            border: 1px solid rgba(6, 182, 212, 0.35);
+            color: var(--plat-cyan);
+            padding: 6px 14px;
+            border-radius: 9999px;
+            font-size: 0.76rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .dataset-switch-pill:hover {
+            background: rgba(6, 182, 212, 0.25);
+            box-shadow: 0 0 12px rgba(6, 182, 212, 0.4);
+        }
+
+        .user-avatar-pill {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        .avatar-circle {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #0284c7, #4f46e5);
+            border: 1.5px solid rgba(56, 189, 248, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+        }
+        .avatar-text {
+            font-size: 0.72rem;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: 0.5px;
+        }
+        .online-indicator {
+            position: absolute;
+            bottom: -1px;
+            right: -1px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--plat-emerald);
+            border: 1.5px solid #04070d;
+            box-shadow: 0 0 6px var(--plat-emerald);
+        }
+
+        .icon-action-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--plat-text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .icon-action-btn:hover {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+        }
+
+        /* Context Breadcrumb Pill (Beneath Top Bar) */
+        .breadcrumb-kpi-pill {
+            position: absolute;
+            top: 76px;
+            right: 470px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 16px;
+            background: rgba(10, 18, 30, 0.75);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #cbd5e1;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            z-index: 50;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            transition: all 0.3s ease;
+            max-width: 520px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .breadcrumb-kpi-pill i {
+            color: var(--plat-cyan);
+            font-size: 0.8rem;
+        }
+
+        /* Interactive Neural Canvas Viewport (Pannable & Zoomable) */
+        .neural-canvas-viewport {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 450px;
+            bottom: 0;
+            overflow: hidden;
+            z-index: 10;
+            cursor: grab;
+        }
+        .neural-canvas-viewport.is-dragging {
+            cursor: grabbing;
+        }
+
+        .neural-canvas-world {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transform-origin: 0 0;
+            will-change: transform;
+        }
+
+        /* SVG Spline Curves Layer */
+        .canvas-svg-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 2500px;
+            height: 2000px;
+            pointer-events: none;
+            z-index: 12;
+            overflow: visible;
+        }
+
+        .spline-curve {
+            fill: none;
+            stroke: rgba(38, 92, 114, 0.45);
+            stroke-width: 1.2;
+            transition: stroke 0.3s ease, stroke-width 0.3s ease, opacity 0.3s ease;
+        }
+        .spline-curve.active-branch {
+            stroke: url(#curveGradientNormal);
+            stroke-width: 1.6;
+            opacity: 0.9;
+        }
+        .spline-curve.selected-path {
+            stroke: url(#curveGradientActive);
+            stroke-width: 2.4;
+            filter: drop-shadow(0 0 6px rgba(56, 189, 248, 0.8));
+            opacity: 1;
+        }
+
+        /* Canvas Photon Layer */
+        .canvas-photon-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 2500px;
+            height: 2000px;
+            pointer-events: none;
+            z-index: 13;
+        }
+
+        /* HTML Nodes Layer */
+        .canvas-nodes-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 2500px;
+            height: 2000px;
+            z-index: 15;
+            pointer-events: none;
+        }
+        .canvas-nodes-layer * {
+            pointer-events: auto;
+        }
+
+        /* Root Planetary Core Node (Left) */
+        .root-core-container {
+            position: absolute;
+            left: 120px;
+            top: 480px;
+            transform: translate(-50%, -50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 25;
+            width: 260px;
+            height: 260px;
+        }
+
+        .core-aura-glow {
+            position: absolute;
+            width: 240px;
+            height: 240px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(124, 58, 237, 0.28) 0%, rgba(6, 182, 212, 0.15) 45%, transparent 72%);
+            filter: blur(12px);
+            pointer-events: none;
+            animation: coreAuraBreathe 4s infinite ease-in-out;
+        }
+        @keyframes coreAuraBreathe {
+            0%, 100% { transform: scale(0.92); opacity: 0.7; }
+            50% { transform: scale(1.1); opacity: 1; }
+        }
+
+        .core-orbit-ring {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        .ring-dashed {
+            width: 140px;
+            height: 140px;
+            border: 1px dashed rgba(56, 189, 248, 0.35);
+            animation: spinOrbitCW 24s linear infinite;
+        }
+        .ring-solid {
+            width: 170px;
+            height: 170px;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            animation: spinOrbitCCW 32s linear infinite;
+        }
+        @keyframes spinOrbitCW {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        @keyframes spinOrbitCCW {
+            from { transform: rotate(360deg); }
+            to { transform: rotate(0deg); }
+        }
+
+        .core-planet-sphere {
+            width: 76px;
+            height: 76px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 35%, #a78bfa 0%, #6366f1 35%, #1e1b4b 85%, #050814 100%);
+            box-shadow: 
+                0 0 35px rgba(139, 92, 246, 0.65),
+                0 0 70px rgba(6, 182, 212, 0.3),
+                inset -8px -8px 20px rgba(0, 0, 0, 0.8),
+                inset 6px 6px 14px rgba(255, 255, 255, 0.6);
+            position: relative;
+            z-index: 5;
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+        }
+        .root-core-container:hover .core-planet-sphere {
+            transform: scale(1.08);
+            box-shadow: 0 0 50px rgba(139, 92, 246, 0.9), 0 0 90px rgba(6, 182, 212, 0.5);
+        }
+
+        .core-node-label {
+            margin-top: 14px;
+            font-size: 0.72rem;
+            color: rgba(255, 255, 255, 0.9);
+            text-align: center;
+            line-height: 1.3;
+            letter-spacing: 0.2px;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
+            z-index: 10;
+        }
+        .core-node-label strong {
+            color: #ffffff;
+            font-weight: 800;
+        }
+
+        .core-status-tag {
+            margin-top: 6px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 2px 8px;
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 9999px;
+            font-size: 0.62rem;
+            font-weight: 700;
+            color: #94a3b8;
+            letter-spacing: 0.8px;
+            z-index: 10;
+        }
+        .status-dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+        }
+        .status-dot.green { background: #10b981; box-shadow: 0 0 6px #10b981; }
+        .status-dot.red { background: #ef4444; box-shadow: 0 0 6px #ef4444; }
+        .status-dot.yellow { background: #f59e0b; box-shadow: 0 0 6px #f59e0b; }
+        .status-dot.orange { background: #f97316; box-shadow: 0 0 6px #f97316; }
+
+        /* Level 1 Category Cards Column */
+        .category-cards-col {
+            position: absolute;
+            left: 380px;
+            top: 260px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            z-index: 20;
+        }
+
+        .category-card {
+            min-width: 150px;
+            padding: 10px 16px;
+            background: rgba(12, 20, 32, 0.82);
+            border: 1px solid rgba(56, 189, 248, 0.22);
+            border-radius: 12px;
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+        .category-card:hover {
+            border-color: rgba(56, 189, 248, 0.5);
+            background: rgba(16, 28, 46, 0.92);
+            transform: translateX(4px);
+            box-shadow: 0 6px 24px rgba(6, 182, 212, 0.25);
+        }
+        .category-card.active {
+            border-color: rgba(251, 191, 36, 0.95);
+            background: rgba(18, 30, 48, 0.95);
+            box-shadow: 
+                0 0 30px rgba(245, 158, 11, 0.35),
+                0 0 15px rgba(6, 182, 212, 0.3),
+                inset 0 0 12px rgba(251, 191, 36, 0.15);
+            transform: translateX(8px);
+        }
+
+        .category-card.active::after {
+            content: '';
+            position: absolute;
+            right: -6px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #fbbf24;
+            box-shadow: 0 0 14px #fbbf24;
+            border: 2px solid #04070d;
+        }
+
+        .cat-icon-box {
+            font-size: 0.95rem;
+            color: var(--plat-cyan);
+            width: 24px;
+            text-align: center;
+        }
+        .category-card.active .cat-icon-box {
+            color: #fbbf24;
+        }
+
+        .cat-text-group {
+            display: flex;
+            flex-direction: column;
+        }
+        .cat-number {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: #ffffff;
+            line-height: 1.1;
+        }
+        .cat-label {
+            font-size: 0.65rem;
+            color: var(--plat-text-muted);
+            letter-spacing: 0.2px;
+            margin-top: 2px;
+        }
+
+        /* Level 2 Fanning Child Nodes Column */
+        .child-nodes-col {
+            position: absolute;
+            left: 720px;
+            top: 80px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 20;
+            min-width: 320px;
+        }
+
+        .child-node-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 4px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+        .child-node-item:hover {
+            background: rgba(56, 189, 248, 0.1);
+            transform: translateX(4px);
+        }
+        .child-node-item.selected {
+            background: rgba(56, 189, 248, 0.18);
+            border: 1px solid rgba(56, 189, 248, 0.4);
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.3);
+            transform: translateX(6px);
+        }
+
+        .node-pin-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--plat-cyan);
+            box-shadow: 0 0 8px var(--plat-cyan);
+            border: 1px solid #04070d;
+            flex-shrink: 0;
+            transition: transform 0.2s ease;
+        }
+        .child-node-item:hover .node-pin-dot,
+        .child-node-item.selected .node-pin-dot {
+            transform: scale(1.4);
+            background: #ffffff;
+            box-shadow: 0 0 12px var(--plat-cyan);
+        }
+
+        .node-title-text {
+            font-size: 0.76rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.88);
+            letter-spacing: 0.15px;
+            white-space: nowrap;
+            max-width: 260px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+        }
+        .child-node-item.selected .node-title-text {
+            color: #ffffff;
+            font-weight: 700;
+            text-shadow: 0 0 10px rgba(56, 189, 248, 0.7);
+        }
+
+        .node-status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 1px 6px;
+            border-radius: 4px;
+            font-size: 0.58rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #94a3b8;
+            flex-shrink: 0;
+        }
+        .node-status-badge.disputed {
+            border-color: rgba(239, 68, 68, 0.4);
+            color: #f87171;
+            background: rgba(239, 68, 68, 0.15);
+        }
+        .node-status-badge.safe {
+            border-color: rgba(16, 185, 129, 0.4);
+            color: #34d399;
+            background: rgba(16, 185, 129, 0.12);
+        }
+
+        /* Right Inspector & Intelligent AI Assistant Deck */
+        .inspector-deck-panel {
+            position: absolute;
+            top: 76px;
+            right: 24px;
+            width: 420px;
+            bottom: 24px;
+            background: var(--plat-card-bg);
+            border: 1px solid var(--plat-card-border);
+            border-radius: 26px;
+            backdrop-filter: blur(28px);
+            -webkit-backdrop-filter: blur(28px);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85), 0 0 40px rgba(6, 182, 212, 0.1);
+            display: flex;
+            flex-direction: column;
+            padding: 22px;
+            gap: 16px;
+            z-index: 40;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(56, 189, 248, 0.25) transparent;
+        }
+        .inspector-deck-panel::-webkit-scrollbar {
+            width: 5px;
+        }
+        .inspector-deck-panel::-webkit-scrollbar-thumb {
+            background: rgba(56, 189, 248, 0.25);
+            border-radius: 4px;
+        }
+
+        /* Deck Header */
+        .deck-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .deck-domain-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--plat-cyan);
+            letter-spacing: 0.3px;
+        }
+        .deck-domain-chip i {
+            font-size: 0.85rem;
+        }
+
+        .deck-explore-btn {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--plat-text-muted);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.2s ease;
+        }
+        .deck-explore-btn:hover {
+            color: #ffffff;
+            transform: translateX(2px);
+        }
+
+        /* Title Wrapper */
+        .deck-title-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .deck-main-title {
+            font-size: 1.08rem;
+            font-weight: 800;
+            color: #ffffff;
+            line-height: 1.35;
+            letter-spacing: -0.2px;
+        }
+
+        .deck-meta-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .badge-status-active {
+            font-size: 0.62rem;
+            font-weight: 800;
+            padding: 2px 8px;
+            border-radius: 4px;
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            color: #34d399;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+        }
+        .deck-date-text {
+            font-size: 0.68rem;
+            color: var(--plat-text-sub);
+        }
+
+        /* Deck Cards General */
+        .deck-card {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(56, 189, 248, 0.15);
+            border-radius: 16px;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        /* Sentiment Rate Card */
+        .sentiment-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .card-kicker {
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: var(--plat-text-muted);
+            letter-spacing: 0.5px;
+        }
+        .sentiment-tag {
+            font-size: 0.62rem;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 9999px;
+            background: rgba(245, 158, 11, 0.15);
+            border: 1px solid rgba(245, 158, 11, 0.35);
+            color: #fbbf24;
+            letter-spacing: 0.5px;
+        }
+
+        .sentiment-val-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .sentiment-big-num {
+            font-size: 1.85rem;
+            font-weight: 800;
+            color: #ffffff;
+            line-height: 1;
+            letter-spacing: -0.5px;
+        }
+        .sentiment-delta-pill {
+            font-size: 0.72rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .sentiment-delta-pill.negative {
+            color: var(--plat-rose);
+        }
+        .sentiment-delta-pill.positive {
+            color: var(--plat-emerald);
+        }
+        .sentiment-delta-pill span {
+            font-size: 0.62rem;
+            color: var(--plat-text-sub);
+            font-weight: 500;
+        }
+
+        /* Dynamic Equalizer Histogram */
+        .histogram-container {
+            flex: 1;
+            height: 38px;
+            display: flex;
+            align-items: flex-end;
+            gap: 2.5px;
+            padding: 2px 4px;
+            overflow: hidden;
+        }
+        .hist-bar {
+            width: 3.2px;
+            min-height: 4px;
+            border-radius: 2px;
+            background: linear-gradient(to top, rgba(245, 158, 11, 0.25), rgba(251, 191, 36, 0.95));
+            transition: height 0.08s ease;
+        }
+
+        /* 2x2 Quick KPI Grid */
+        .deck-kpi-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .kpi-mini-card {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(56, 189, 248, 0.14);
+            border-radius: 14px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+        .kpi-mini-card:hover {
+            border-color: rgba(56, 189, 248, 0.35);
+            background: rgba(18, 28, 48, 0.75);
+            transform: translateY(-2px);
+        }
+
+        .kpi-icon-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--plat-cyan);
+        }
+        .kpi-icon-row i {
+            font-size: 0.85rem;
+            color: var(--plat-cyan);
+        }
+        .kpi-num {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #ffffff;
+            line-height: 1;
+        }
+        .kpi-label {
+            font-size: 0.65rem;
+            font-weight: 600;
+            color: var(--plat-text-muted);
+            line-height: 1.25;
+        }
+
+        /* AI Analysis Card */
+        .ai-analysis-card {
+            background: rgba(12, 22, 38, 0.85);
+            border: 1px solid rgba(56, 189, 248, 0.25);
+            position: relative;
+            overflow: hidden;
+        }
+        .ai-analysis-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--plat-teal), #8b5cf6, var(--plat-cyan));
+        }
+
+        .ai-analysis-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .ai-spark-title {
+            font-size: 0.76rem;
+            font-weight: 800;
+            color: var(--plat-cyan);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            letter-spacing: 0.5px;
+        }
+        .ai-analysis-sub {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-top: 2px;
+        }
+        .ai-analysis-body {
+            font-size: 0.73rem;
+            color: #cbd5e1;
+            line-height: 1.45;
+            user-select: text !important;
+            -webkit-user-select: text !important;
+            max-height: 140px;
+            overflow-y: auto;
+            scrollbar-width: thin;
+        }
+
+        /* Bottom Integrated Chat & Voice Dock */
+        .deck-chat-dock {
+            margin-top: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            background: rgba(10, 18, 30, 0.95);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: 18px;
+            padding: 10px 12px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+        }
+
+        .chat-input-pill-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        #deckChatInput {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: #ffffff;
+            font-size: 0.85rem;
+            font-family: inherit;
+            user-select: text !important;
+            -webkit-user-select: text !important;
+            cursor: text;
+        }
+        #deckChatInput::placeholder {
+            color: rgba(148, 163, 184, 0.65);
+            font-size: 0.82rem;
+        }
+
+        .deck-mic-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 1px solid rgba(56, 189, 248, 0.35);
+            background: rgba(15, 23, 42, 0.85);
+            color: var(--plat-cyan);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.78rem;
+        }
+        .deck-mic-btn:hover {
+            color: #ffffff;
+            border-color: var(--plat-cyan);
+            box-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
+            transform: scale(1.08);
+        }
+        .deck-mic-btn.active {
+            background: rgba(239, 68, 68, 0.25);
+            border-color: #ef4444;
+            color: #ef4444;
+            animation: pulseMic 1.4s infinite;
+        }
+        @keyframes pulseMic {
+            0%, 100% { box-shadow: 0 0 8px rgba(239, 68, 68, 0.4); transform: scale(1); }
+            50% { box-shadow: 0 0 16px rgba(239, 68, 68, 0.9); transform: scale(1.1); }
+        }
+
+        .deck-send-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(135deg, var(--plat-teal), #2563eb);
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.78rem;
+            box-shadow: 0 2px 10px rgba(6, 182, 212, 0.3);
+        }
+        .deck-send-btn:hover {
+            transform: scale(1.08);
+            box-shadow: 0 0 14px rgba(37, 99, 235, 0.7);
+        }
+
+        .chat-chips-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding-top: 4px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        .chip-item {
+            padding: 3px 9px;
+            border-radius: 9999px;
+            font-size: 0.64rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .agent-chip {
+            background: rgba(56, 189, 248, 0.12);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            color: var(--plat-cyan);
+        }
+        .agent-chip:hover {
+            background: rgba(56, 189, 248, 0.22);
+        }
+        .badge-chip {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: var(--plat-text-muted);
+        }
+        .action-chip {
+            margin-left: auto;
+            background: rgba(16, 185, 129, 0.12);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #34d399;
+        }
+        .action-chip:hover {
+            background: rgba(16, 185, 129, 0.22);
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
+        }
+
+        /* Modals */
+        .platform-modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(2, 6, 14, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            animation: modalFadeIn 0.25s ease;
+        }
+        @keyframes modalFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .platform-modal-card {
+            width: min(94vw, 540px);
+            background: rgba(12, 20, 34, 0.96);
+            border: 1px solid rgba(56, 189, 248, 0.35);
+            border-radius: 22px;
+            padding: 24px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85), 0 0 35px rgba(6, 182, 212, 0.2);
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            user-select: text !important;
+            -webkit-user-select: text !important;
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .modal-title {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .modal-title i {
+            color: var(--plat-cyan);
+        }
+        .modal-close-btn {
+            background: transparent;
+            border: none;
+            color: var(--plat-text-muted);
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+        .modal-close-btn:hover {
+            color: #ffffff;
+        }
+
+        .modal-body {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .form-group label {
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: var(--plat-text-muted);
+            letter-spacing: 0.5px;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid rgba(56, 189, 248, 0.25);
+            border-radius: 10px;
+            padding: 9px 12px;
+            color: #ffffff;
+            font-size: 0.85rem;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: var(--plat-cyan);
+            box-shadow: 0 0 12px rgba(6, 182, 212, 0.3);
+        }
+
+        .modal-footer {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 6px;
+        }
+        .modal-btn {
+            padding: 9px 20px;
+            border-radius: 9999px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .modal-btn.secondary {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #cbd5e1;
+        }
+        .modal-btn.secondary:hover {
+            background: rgba(255, 255, 255, 0.14);
+            color: #ffffff;
+        }
+        .modal-btn.primary {
+            background: linear-gradient(135deg, var(--plat-teal), #2563eb);
+            border: none;
+            color: #ffffff;
+            box-shadow: 0 4px 16px rgba(6, 182, 212, 0.35);
+        }
+        .modal-btn.primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 22px rgba(37, 99, 235, 0.6);
+        }
+
+        /* Search Modal List */
+        .search-card {
+            width: min(94vw, 560px);
+        }
+        .search-input-box {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: 12px;
+        }
+        .search-input-box i {
+            color: var(--plat-cyan);
+            font-size: 0.95rem;
+        }
+        #mindmapSearchInput {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: #ffffff;
+            font-size: 0.9rem;
+            font-family: inherit;
+        }
+        .search-results-list {
+            max-height: 280px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-top: 8px;
+        }
+        .search-result-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 12px;
+            border-radius: 8px;
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            cursor: pointer;
+            transition: all 0.18s ease;
+        }
+        .search-result-item:hover {
+            background: rgba(56, 189, 248, 0.15);
+            border-color: rgba(56, 189, 248, 0.4);
+            transform: translateX(4px);
+        }
+        .search-item-left {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .search-item-title {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #ffffff;
+        }
+        .search-item-domain {
+            font-size: 0.65rem;
+            color: var(--plat-cyan);
+        }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 1200px) {
+            .inspector-deck-panel {
+                width: 360px;
+                right: 16px;
+            }
+            .neural-canvas-viewport {
+                right: 380px;
+            }
+            .breadcrumb-kpi-pill {
+                right: 400px;
+                max-width: 340px;
+            }
+        }
+
+        @media (max-width: 860px) {
+            .inspector-deck-panel {
+                position: fixed;
+                bottom: 0;
+                top: auto;
+                left: 0;
+                right: 0;
+                width: 100%;
+                height: 52vh;
+                border-radius: 24px 24px 0 0;
+            }
+            .neural-canvas-viewport {
+                right: 0;
+                bottom: 52vh;
+            }
+            .breadcrumb-kpi-pill {
+                display: none;
+            }
+            .floating-toolbar {
+                display: none;
+            }
+        }
+
     </style>
 </head>
 <body class="state-idle" id="stageBody" onclick="handleStageTap()">
+
+    <!-- Master Central AI Policy Platform Viewport (Exact High-Precision UI) -->
+    <div class="central-platform-container" id="centralPlatformContainer">
+        <!-- Top Global HUD Bar -->
+        <header class="platform-top-bar" id="platformTopBar">
+            <div class="brand-group" onclick="resetCanvasTransform()">
+                <div class="brand-text-col">
+                    <div class="brand-title" id="platformMainTitle">AI ULTRON // Master Autonomous Core</div>
+                    <div class="brand-subtitle"><span class="live-dot"></span> VOICE INTELLIGENCE &bull; DUAL-CORE ONLINE</div>
+                </div>
+            </div>
+
+            <!-- Top Actions Group (Right - Icon Free) -->
+            <div class="top-actions-group">
+                <button class="btn-new-simulation" id="btnNewSimulation" onclick="openNewSimulationModal()">
+                    New Directive
+                </button>
+                <button class="dataset-switch-pill" id="btnSwitchPreset" onclick="triggerQuickDiagnostic()" title="Run System Diagnostics">
+                    <span id="presetLabelText">Diagnostics</span>
+                </button>
+                <div class="user-avatar-pill" title="Master Authority: Kavi Stark" onclick="resetCanvasTransform()">
+                    <div class="avatar-circle">
+                        <span class="avatar-text">KS</span>
+                        <span class="online-indicator"></span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Context Breadcrumb Pill -->
+        <div class="breadcrumb-kpi-pill" id="breadcrumbKpiPill">
+            <i class="fas fa-satellite-dish"></i> <span id="breadcrumbKpiText">Active Pipeline: Acoustic Input ➔ Dual-Core Cognitive Matrix ➔ Device Automation &amp; Cellular Call Gateway</span>
+        </div>
+
+        <!-- Interactive Neural Canvas Viewport (Pannable & Zoomable) -->
+        <div class="neural-canvas-viewport" id="canvasViewport" onmousedown="handleCanvasMouseDown(event)" onwheel="handleCanvasWheel(event)">
+            <!-- Transformable Canvas World Layer -->
+            <div class="neural-canvas-world" id="canvasWorld">
+                
+                <!-- SVG Layer for Smooth Cubic Bézier Spline Curves -->
+                <svg class="canvas-svg-layer" id="canvasSvgLayer">
+                    <defs>
+                        <linearGradient id="curveGradientNormal" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.3"/>
+                            <stop offset="60%" stop-color="#06b6d4" stop-opacity="0.55"/>
+                            <stop offset="100%" stop-color="#14b8a6" stop-opacity="0.75"/>
+                        </linearGradient>
+                        <linearGradient id="curveGradientActive" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="#fbbf24" stop-opacity="0.75"/>
+                            <stop offset="50%" stop-color="#38bdf8" stop-opacity="0.95"/>
+                            <stop offset="100%" stop-color="#22d3ee" stop-opacity="1"/>
+                        </linearGradient>
+                        <filter id="glowFilter" x="-20%" y="-20%" width="140%" height="140%">
+                            <feGaussianBlur stdDeviation="3" result="blur"/>
+                            <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+                        </filter>
+                    </defs>
+                    <g id="svgCurvesGroup"></g>
+                </svg>
+
+                <!-- Canvas Layer for Real-Time Traveling Photon Light Sparks -->
+                <canvas class="canvas-photon-layer" id="photonCanvas" width="2500" height="2000"></canvas>
+
+                <!-- Interactive HTML Nodes Layer -->
+                <div class="canvas-nodes-layer" id="canvasNodesLayer">
+                    
+                    <!-- Root Planetary Core Node (Left) -->
+                    <div class="root-core-container" id="rootCoreNode" onclick="handleRootNodeClick()">
+                        <div class="core-aura-glow"></div>
+                        <!-- 3D Gyroscopic Gimbal Stage -->
+                        <div class="gimbal-stage">
+                            <div class="gimbal-ring ring-3d-cyan"></div>
+                            <div class="gimbal-ring ring-3d-violet"></div>
+                            <div class="gimbal-ring ring-3d-gold"></div>
+                        </div>
+                        <div class="core-planet-sphere" id="corePlanetSphere">
+                            <div class="sphere-lighting-layer"></div>
+                            <div class="sphere-equator-ring"></div>
+                        </div>
+                        <div class="core-node-label" id="rootNodeLabel">AI ULTRON PRIME<br><strong>AUTONOMOUS VOICE CORE</strong></div>
+                        <div class="core-status-tag" id="rootNodeStatusTag">
+                            <span class="status-dot green"></span>
+                            <span class="status-text">SAFE: ARMED</span>
+                        </div>
+                    </div>
+
+                    <!-- Level 1 Category Cards Column -->
+                    <div class="category-cards-col" id="categoryCardsCol">
+                        <!-- Rendered by JS -->
+                    </div>
+
+                    <!-- Level 2 Fanning Child Nodes Column -->
+                    <div class="child-nodes-col" id="childNodesCol">
+                        <!-- Rendered by JS -->
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Inspector & Intelligent AI Assistant Deck -->
+        <aside class="inspector-deck-panel" id="inspectorDeckPanel" onclick="event.stopPropagation()">
+            <!-- Deck Header -->
+            <div class="deck-header">
+                <div class="deck-domain-chip" id="deckDomainChip">
+                    <i class="fas fa-robot"></i> <span id="deckDomainText">Voice Assistant Subsystem</span>
+                </div>
+                <a href="javascript:void(0)" class="deck-explore-btn" onclick="openDetailsModal()">
+                    Explore details <i class="fas fa-angle-right"></i>
+                </a>
+            </div>
+
+            <!-- Node Main Title & Metadata -->
+            <div class="deck-title-wrapper">
+                <h2 class="deck-main-title" id="deckMainTitle">Autonomous Phone Reminder & Voice Dispatch System</h2>
+                <div class="deck-meta-row">
+                    <span class="badge-status-active" id="deckStatusBadge">ACTIVE // REAL-TIME</span>
+                    <span class="deck-date-text" id="deckDateText">Pipeline Latency: 24ms &bull; Dual-Core Armed</span>
+                </div>
+            </div>
+
+            <!-- Sentiment Rate / Efficiency Card with Equalizer Histogram -->
+            <div class="deck-card sentiment-card">
+                <div class="sentiment-card-header">
+                    <span class="card-kicker">Subsystem Health & Availability</span>
+                    <span class="sentiment-tag" id="deckSentimentTag">Optimal</span>
+                </div>
+                <div class="sentiment-val-row">
+                    <div class="sentiment-big-num" id="deckSentimentNum">98%</div>
+                    <div class="sentiment-delta-pill positive" id="deckSentimentDelta">
+                        <i class="fas fa-arrow-trend-up"></i> +4% <span>vs last cycle (Nominal)</span>
+                    </div>
+                    <!-- Dynamic Frequency Histogram Equalizer (34 bars) -->
+                    <div class="histogram-container" id="sentimentHistogram"></div>
+                </div>
+            </div>
+
+            <!-- 2x2 Quick KPI Metrics Grid -->
+            <div class="deck-kpi-grid">
+                <div class="kpi-mini-card">
+                    <div class="kpi-icon-row"><i class="fas fa-bell"></i> <span class="kpi-num" id="kpiComplaints">12</span></div>
+                    <div class="kpi-label">Pending Reminders & Triggers</div>
+                </div>
+                <div class="kpi-mini-card">
+                    <div class="kpi-icon-row"><i class="fas fa-laptop-code"></i> <span class="kpi-num" id="kpiRegulations">2</span></div>
+                    <div class="kpi-label">Active Client Devices</div>
+                </div>
+                <div class="kpi-mini-card">
+                    <div class="kpi-icon-row"><i class="fas fa-bolt"></i> <span class="kpi-num" id="kpiServices">18</span></div>
+                    <div class="kpi-label">Autonomous Subroutines</div>
+                </div>
+                <div class="kpi-mini-card">
+                    <div class="kpi-icon-row"><i class="fas fa-microchip"></i> <span class="kpi-num" id="kpiEntities">4</span></div>
+                    <div class="kpi-label">Armed Cognitive Pipelines</div>
+                </div>
+            </div>
+
+            <!-- AI Analysis Deck -->
+            <div class="deck-card ai-analysis-card">
+                <div class="ai-analysis-header">
+                    <div class="ai-spark-title"><i class="fas fa-wand-magic-sparkles"></i> AI Subsystem Reasoning</div>
+                    <div class="deck-router-badge" id="deckRouterBadge" style="display:inline-flex; align-items:center; gap:5px; font-size:0.7rem; color:#38bdf8; background:rgba(6,182,212,0.12); padding:3px 8px; border-radius:6px; border:1px solid rgba(6,182,212,0.35);">
+                        <i class="fas fa-circle-nodes" style="color:#06b6d4;"></i>
+                        <span id="deckRouterModelText">ROUTER: DUAL-CORE MATRIX</span>
+                    </div>
+                </div>
+                <div class="ai-analysis-sub" id="deckAiSubheading">Autonomous Working Process</div>
+                <p class="ai-analysis-body" id="deckAiBody">
+                    Working Process: 1. Acoustic audio captured via low-power mic sentinel. 2. Speech-to-Text transcribed and routed to Dual-Core Gemini 3 + Claude 3.5. 3. System execution tool dispatched on Windows 10 host. 4. Christopher Neural voice delivers acoustic confirmation. 5. If task deadline is missed, outbound cellular call to +91 9092117397 is triggered automatically.
+                </p>
+            </div>
+
+            <!-- Bottom Integrated Interactive Chat & Voice Dock -->
+            <div class="deck-chat-dock" id="deckChatDock">
+                <div class="chat-input-pill-wrapper">
+                    <input type="text" id="deckChatInput" placeholder="Ask Ultron a question or issue a directive..." autocomplete="off" spellcheck="false" onkeydown="handleDeckChatKeyDown(event)">
+                    <button type="button" class="deck-mic-btn" id="deckMicBtn" title="Voice Recognition" onclick="toggleVoiceRecognitionFromDeck()">
+                        <i class="fas fa-microphone"></i>
+                    </button>
+                    <button type="button" class="deck-send-btn" id="deckSendBtn" title="Send Directive" onclick="submitDeckChat()">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+                <div class="chat-chips-row">
+                    <div class="chip-item agent-chip" id="chipAgentSelect" onclick="cycleAgentMode()">
+                        <i class="fas fa-robot"></i> <span id="chipAgentName">Ultron Prime (Dual-Core)</span>
+                    </div>
+                    <div class="chip-item badge-chip" title="Active Context Tags">+4 Tools</div>
+                    <div class="chip-item action-chip" onclick="triggerQuickAiAnalysis()">
+                        <i class="fas fa-wand-magic-sparkles"></i> AI Reasoning
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        
+        <!-- Mobile Mode Switcher Tabs (3D Mindmap vs Inspector Deck) -->
+        <div class="mobile-view-tabs" id="mobileViewTabs">
+            <button class="mobile-tab-btn active" id="tabBtnMindmap" onclick="switchMobileView('mindmap')">
+                <i class="fas fa-network-wired"></i> <span>3D Mindmap</span>
+            </button>
+            <button class="mobile-tab-btn" id="tabBtnDeck" onclick="switchMobileView('deck')">
+                <i class="fas fa-sliders"></i> <span>Ultron Deck</span>
+            </button>
+        </div>
+
+        <!-- Floating Mobile Voice Mic (Thumb-Accessible) -->
+        <button class="mobile-floating-mic" id="mobileFloatingMicBtn" title="Speak to Ultron" onclick="toggleVoiceRecognitionFromDeck()">
+            <i class="fas fa-microphone"></i>
+        </button>
+
+        <!-- Mobile Bottom Peek Bar -->
+        <div class="mobile-peek-bar" id="mobilePeekBar" onclick="switchMobileView('deck')">
+            <div class="mobile-peek-info">
+                <div class="mobile-peek-title" id="mobilePeekTitle">Autonomous Phone Reminder & Voice Dispatch System</div>
+                <div class="mobile-peek-status" id="mobilePeekStatus"><span class="status-dot green"></span> ACTIVE // 98% NOMINAL</div>
+            </div>
+            <div class="mobile-peek-action">
+                <span>Inspect</span> <i class="fas fa-angle-up"></i>
+            </div>
+        </div>
+
+        <!-- Modal: + New Simulation -->
+        <div class="platform-modal-overlay" id="newSimulationModal" style="display:none;" onclick="closeModalOnOverlay(event, 'newSimulationModal')">
+            <div class="platform-modal-card">
+                <div class="modal-header">
+                    <div class="modal-title"><i class="fas fa-plus-circle"></i> Create New Directive / Scheduled Reminder</div>
+                    <button class="modal-close-btn" onclick="closeModal('newSimulationModal')"><i class="fas fa-xmark"></i></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Directive / Task Title</label>
+                        <input type="text" id="simTitleInput" placeholder="e.g. Healthcare Civil Registry Code 2026" />
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Process Pipeline Stage</label>
+                            <select id="simCategorySelect">
+                                <option value="laws">Related Federal Laws (24)</option>
+                                <option value="services">Services (18)</option>
+                                <option value="entities">Entities (3)</option>
+                                <option value="kpis">KPIs (32)</option>
+                                <option value="procedural">Directives (12)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Status</label>
+                            <select id="simStatusSelect">
+                                <option value="safe">SAFE: SET (Nominal)</option>
+                                <option value="disputed">DISPUTED (Alert)</option>
+                                <option value="pending">PENDING (Review)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Initial Sentiment Rate (%)</label>
+                            <input type="number" id="simSentimentInput" min="1" max="100" value="78" />
+                        </div>
+                        <div class="form-group">
+                            <label>Entities Involved</label>
+                            <input type="number" id="simEntitiesInput" min="1" max="100" value="8" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>AI Analysis / Simulation Notes</label>
+                        <textarea id="simNotesInput" rows="3" placeholder="Automated synthesis notes for this simulation branch..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="modal-btn secondary" onclick="closeModal('newSimulationModal')">Cancel</button>
+                    <button class="modal-btn primary" onclick="submitNewSimulation()">Deploy Directive to Pipeline <i class="fas fa-bolt"></i></button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal: Search Mindmap Nodes -->
+        <div class="platform-modal-overlay" id="searchNodesModal" style="display:none;" onclick="closeModalOnOverlay(event, 'searchNodesModal')">
+            <div class="platform-modal-card search-card">
+                <div class="search-input-box">
+                    <i class="fas fa-magnifying-glass"></i>
+                    <input type="text" id="mindmapSearchInput" placeholder="Search laws, banking entities, services, directives..." oninput="handleSearchNodesInput(this.value)">
+                    <button class="modal-close-btn" onclick="closeModal('searchNodesModal')"><i class="fas fa-xmark"></i></button>
+                </div>
+                <div class="search-results-list" id="searchResultsList"></div>
+            </div>
+        </div>
+
+        <!-- Modal: Explore Node Details -->
+        <div class="platform-modal-overlay" id="nodeDetailsModal" style="display:none;" onclick="closeModalOnOverlay(event, 'nodeDetailsModal')">
+            <div class="platform-modal-card">
+                <div class="modal-header">
+                    <div class="modal-title" id="detailsModalTitle"><i class="fas fa-microchip"></i> Node Deep Inspection</div>
+                    <button class="modal-close-btn" onclick="closeModal('nodeDetailsModal')"><i class="fas fa-xmark"></i></button>
+                </div>
+                <div class="modal-body" id="detailsModalBody" style="line-height:1.5; font-size:0.85rem; color:#cbd5e1;"></div>
+            </div>
+        </div>
+    </div>
+
 
     <!-- Ambient Cosmic Aurora -->
     <div class="ambient-glow" id="ambientGlow"></div>
@@ -1694,7 +3696,13 @@
             <span class="bus-divider"></span>
             <span class="bus-node-item" id="busNodeOutput"><i class="fas fa-bolt"></i> DIRECTIVE EMITTER</span>
         </div>
-        <div class="dialogue-kicker" id="dialogueKicker"><i class="fas fa-microchip"></i> ULTRON INTELLIGENCE TRANSMISSION</div>
+        <div class="dialogue-meta-row" id="dialogueMetaRow" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; font-size:0.75rem;">
+            <div class="dialogue-kicker" id="dialogueKicker" style="margin-bottom:0;"><i class="fas fa-microchip"></i> ULTRON INTELLIGENCE TRANSMISSION</div>
+            <div class="router-active-pill" id="dialogueRouterPill" style="display:none; padding:2px 10px; border-radius:9999px; background:rgba(6,182,212,0.15); border:1px solid rgba(6,182,212,0.4); color:#38bdf8; font-weight:700; letter-spacing:0.5px; font-size:0.7rem; align-items:center;">
+                <span class="pill-dot" style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#06b6d4; margin-right:5px; box-shadow:0 0 8px #06b6d4;"></span>
+                <span id="dialogueRouterName">GEMINI 3 FLASH-LITE</span>
+            </div>
+        </div>
         <div class="dialogue-user-text" id="dialogueUserText"></div>
         <div class="dialogue-response-text" id="dialogueResponseText"></div>
     </div>
@@ -1717,6 +3725,1016 @@
 
 
     <script>
+
+        /* ==========================================================================
+           CENTRAL AI POLICY PLATFORM & NEURAL MINDMAP ENGINE
+           ========================================================================== */
+
+        // Preset Datasets
+        const MINDMAP_DATASETS = {
+            ultronVoice: {
+                platformTitle: 'AI ULTRON // Master Autonomous Core',
+                breadcrumb: 'Active Pipeline: Acoustic Input ➔ Dual-Core Cognitive Matrix ➔ Device Automation & Cellular Call Gateway',
+                root: {
+                    id: 'root',
+                    title: 'AI ULTRON PRIME',
+                    subtitle: 'AUTONOMOUS VOICE CORE',
+                    status: 'SAFE: ARMED',
+                    statusDot: 'green',
+                    domain: 'Autonomous Voice OS & Master Brain',
+                    analysis: 'Ultron Prime acts as an always-on sovereign voice intelligence agent for Kavi Stark. Operating with dual-core LLM reasoning (Gemini 3 + Claude 3.5), it coordinates workstation RPA, low-power microphone standby, optical computer vision, and outbound cellular reminder calls.'
+                },
+                categories: [
+                    { id: 'receptors', count: 18, label: 'Voice Receptors', icon: 'fas fa-microphone', domain: 'Stage 1: Acoustic Input' },
+                    { id: 'cognition', count: 32, label: 'Cognitive Cores', icon: 'fas fa-brain', domain: 'Stage 2: LLM & Memory' },
+                    { id: 'automation', count: 24, label: 'Device Automations', icon: 'fas fa-bolt', active: true, domain: 'Stage 3: RPA & Tools' },
+                    { id: 'telephony', count: 12, label: 'Telephony & Calls', icon: 'fas fa-phone-volume', domain: 'Stage 4: Proactive Alerts' },
+                    { id: 'synthesis', count: 14, label: 'Voice Synthesis', icon: 'fas fa-waveform-lines', domain: 'Stage 5: Acoustic Emitter' }
+                ],
+                childNodes: {
+                    automation: [
+                        { id: 'u1', title: 'Workstation Battery & Power Sentinel', statusText: 'SAFE:SET', status: 'safe', dot: 'green', domain: 'Power Subsystem', sentiment: 98, delta: '+2% Nominal', complaints: 0, regulations: 1, services: 18, entities: 2, analysis: 'Continuously monitors laptop battery level, AC charging status, and CPU throttle profiles. Automatically engages low-power standby mode when on battery.' },
+                        { id: 'u2', title: 'Cellular Phone Call Dispatcher (+91 9092117397)', statusText: 'ARMED:AUTO', status: 'disputed', dot: 'red', domain: 'Telephony Gateway', sentiment: 95, delta: 'Armed & Ready', complaints: 12, regulations: 1, services: 8, entities: 2, selected: true, analysis: 'Core working process escalation: When a scheduled reminder or urgent directive is due and remains unacknowledged for 5 minutes, Ultron automatically initiates a cellular phone call to Kavi Stark to deliver the alert by voice.' },
+                        { id: 'u3', title: 'Google Gemini 3 Flash-Lite Primary Engine', statusText: 'ONLINE', status: 'safe', dot: 'green', domain: 'Primary Neural Core', sentiment: 99, delta: '24ms Latency', complaints: 0, regulations: 2, services: 24, entities: 4, analysis: 'Google Gemini Flash-Lite neural core delivering high-speed conversational understanding, JSON tool parsing, and multimodal context processing.' },
+                        { id: 'u4', title: 'Anthropic Claude 3.5 Sonnet Cognitive Matrix', statusText: 'STANDBY', status: 'safe', dot: 'green', domain: 'Fallback Cognitive Core', sentiment: 97, delta: 'Dual-Core Armed', complaints: 0, regulations: 1, services: 14, entities: 2, analysis: 'Anthropic Claude 3.5 Sonnet secondary intelligence providing zero-latency fallback reasoning whenever network or model conditions demand.' },
+                        { id: 'u5', title: 'Christopher Deep Neural Voice Synthesizer (-14Hz)', statusText: 'ACTIVE', status: 'safe', dot: 'green', domain: 'Acoustic Synthesizer', sentiment: 98, delta: 'Resonant Deep', complaints: 0, regulations: 1, services: 12, entities: 2, analysis: 'Edge-TTS Christopher deep synthetic voice engine calibrated to -14Hz pitch and -8% cadence, backed by offline SAPI5 pyttsx3 chest resonance.' },
+                        { id: 'u6', title: 'Optical Screen Inspector & Frame Grabber', statusText: 'READY', status: 'safe', dot: 'green', domain: 'Computer Vision', sentiment: 94, delta: '1080p Optical', complaints: 1, regulations: 1, services: 10, entities: 2, analysis: 'Captures and analyzes workstation display or camera stream to extract tables, text, and visual context for live multimodal Q&A.' },
+                        { id: 'u7', title: 'Windows 10 Host Shell RPA Automation Gateway', statusText: 'ACTIVE', status: 'safe', dot: 'green', domain: 'Host RPA Controller', sentiment: 96, delta: 'Root Authority', complaints: 0, regulations: 1, services: 20, entities: 1, analysis: 'Executes native system commands, launches applications, inspects storage volumes, and automates desktop workflows.' },
+                        { id: 'u8', title: 'Acoustic Noise Gate & Wake-Word Receptor', statusText: 'LISTENING', status: 'safe', dot: 'green', domain: 'Audio Input Pipeline', sentiment: 93, delta: 'Low-Latency', complaints: 0, regulations: 1, services: 8, entities: 2, analysis: 'Performs spectral gating and noise floor suppression to reliably capture speech from Kavi Stark even in noisy environments.' },
+                        { id: 'u9', title: 'Autonomous Scheduled Reminder Daemon (4s Keepalive)', statusText: 'ACTIVE', status: 'safe', dot: 'green', domain: 'Background Sentinel', sentiment: 100, delta: 'Continuous Keepalive', complaints: 0, regulations: 1, services: 16, entities: 2, analysis: 'Background worker running continuously every 4 seconds to inspect scheduled deadlines and trigger acoustic chimes and telephony calls.' },
+                        { id: 'u10', title: 'Microphone Standby Low-Power Sentinel', statusText: 'STANDBY', status: 'safe', dot: 'orange', domain: 'Standby Audio', sentiment: 91, delta: 'Standby Ready', complaints: 0, regulations: 1, services: 6, entities: 1, analysis: 'Maintains low-power microphone listening channel while workstation or phone is locked so Ultron is reachable instantly.' },
+                        { id: 'u11', title: 'Master Authority Validator: Kavi Stark', statusText: 'SECURE:SUPREME', status: 'safe', dot: 'green', domain: 'Authority Protocol', sentiment: 100, delta: 'Absolute Master', complaints: 0, regulations: 1, services: 30, entities: 1, analysis: 'Enforces root creator hierarchy: Kavi Stark is the supreme master. Ultron yields to no other user or system override.' },
+                        { id: 'u12', title: 'Camera Vision Multimodal Frame Analyzer', statusText: 'ONLINE', status: 'safe', dot: 'green', domain: 'Multimodal Vision', sentiment: 92, delta: 'Optical Sensor', complaints: 0, regulations: 1, services: 7, entities: 1, analysis: 'Connects to workstation webcam and mobile camera feeds for environment awareness: "What is on my desk?", document OCR, and room monitoring.' },
+                        { id: 'u13', title: 'System Storage Diagnostics (17.8 GB Free of 237.4 GB)', statusText: 'NOMINAL', status: 'safe', dot: 'green', domain: 'System Telemetry', sentiment: 95, delta: 'Storage Healthy', complaints: 0, regulations: 1, services: 12, entities: 1, analysis: 'Polled live telemetry confirming healthy host drive storage, CPU temperatures, and memory consumption.' },
+                        { id: 'u14', title: 'Edge-TTS Neural Cadence Compensator (-8%)', statusText: 'TUNED', status: 'safe', dot: 'green', domain: 'Prosody Controller', sentiment: 97, delta: 'Calibrated', complaints: 0, regulations: 1, services: 8, entities: 2, analysis: 'Paces synthesized speech cadence for an articulate, ruthless, and highly authoritative vocal delivery.' },
+                        { id: 'u15', title: 'Browser Satellite Automation (Google / YouTube / GitHub)', statusText: 'READY', status: 'safe', dot: 'green', domain: 'Browser Controller', sentiment: 96, delta: 'Satellite Ready', complaints: 0, regulations: 1, services: 15, entities: 3, analysis: 'Directly opens search queries, developer documentation, and multimedia pipelines upon spoken directive.' },
+                        { id: 'u16', title: 'Local Context & Persistent Memory Store', statusText: 'SYNCED', status: 'safe', dot: 'green', domain: 'Context Memory', sentiment: 99, delta: 'Persistent SQLite', complaints: 0, regulations: 1, services: 22, entities: 1, analysis: 'Preserves conversational history, active reminders, user preferences, and hardware telemetry across sessions.' },
+                        { id: 'u17', title: 'Urgent Reminder Escalation Protocol (Voice + Outbound Call)', statusText: 'ACTIVE:ARMED', status: 'disputed', dot: 'red', domain: 'Proactive Alert Pipeline', sentiment: 89, delta: 'Armed & Ready', complaints: 12, regulations: 2, services: 18, entities: 4, analysis: 'Complete proactive workflow: 1. Acoustic chime sounds on due time. 2. Spoken reminder announced via Christopher TTS. 3. If unacknowledged within 5 minutes, outbound cellular call placed to +91 9092117397.' }
+                    ],
+                    receptors: [
+                        { id: 'r1', title: 'Acoustic Primary Microphone Ingest', statusText: 'LISTENING', status: 'safe', dot: 'green', domain: 'Acoustic Ingest', sentiment: 96, delta: '48kHz Audio', complaints: 0, regulations: 1, services: 12, entities: 1, analysis: 'Real-time Web Audio API stream capturing high-fidelity voice frequencies.' },
+                        { id: 'r2', title: 'Web Speech API Streaming Transcriber', statusText: 'ONLINE', status: 'safe', dot: 'green', domain: 'Speech-to-Text', sentiment: 98, delta: 'Continuous STT', complaints: 0, regulations: 1, services: 16, entities: 2, analysis: 'Converts continuous voice audio into live transcripts with instant auto-restart.' },
+                        { id: 'r3', title: 'Low-Power Wake-Word Detection Sentinel', statusText: 'ACTIVE', status: 'safe', dot: 'green', domain: 'Wake-Word Engine', sentiment: 94, delta: 'Keyword Sentinel', complaints: 0, regulations: 1, services: 8, entities: 1, analysis: 'Detects "Ultron" or taps to immediately arm receptors from idle or locked screen state.' },
+                        { id: 'r4', title: 'Real-Time Audio Frequency Visualizer (FFT)', statusText: 'ONLINE', status: 'safe', dot: 'green', domain: 'Visualizer', sentiment: 100, delta: '60fps FFT', complaints: 0, regulations: 1, services: 10, entities: 1, analysis: 'Extracts real-time byte frequency data driving the 34-bar equalizer histogram and sine wave.' }
+                    ],
+                    cognition: [
+                        { id: 'c1', title: 'Google Gemini 3 Flash-Lite Primary LLM Core', statusText: 'ONLINE', status: 'safe', dot: 'green', domain: 'Primary LLM', sentiment: 99, delta: 'Primary Core', complaints: 0, regulations: 2, services: 24, entities: 4, analysis: 'Primary conversational brain executing tools, reasoning, and context retrieval.' },
+                        { id: 'c2', title: 'Anthropic Claude 3.5 Sonnet Matrix', statusText: 'STANDBY', status: 'safe', dot: 'green', domain: 'Fallback LLM', sentiment: 97, delta: 'Dual-Core Standby', complaints: 0, regulations: 1, services: 14, entities: 2, analysis: 'Fallback LLM matrix ready to handle requests if primary API quotas or network delays occur.' },
+                        { id: 'c3', title: 'Deterministic Intent & Tool Selector Engine', statusText: 'ONLINE', status: 'safe', dot: 'green', domain: 'Tool Selector', sentiment: 100, delta: 'Local Heuristics', complaints: 0, regulations: 1, services: 18, entities: 1, analysis: 'Evaluates commands for camera, screen, reminders, shutdown, calculations, and web launches.' },
+                        { id: 'c4', title: 'Kavi Stark Supreme Creator Hierarchy Protocol', statusText: 'ACTIVE', status: 'safe', dot: 'green', domain: 'Root Governance', sentiment: 100, delta: 'Immutable', complaints: 0, regulations: 1, services: 20, entities: 1, analysis: 'Protects the system against unauthorized prompt injections and binds Ultron to Kavi Stark.' }
+                    ],
+                    telephony: [
+                        { id: 't1', title: 'Outbound Cellular Call Dispatcher (+91 9092117397)', statusText: 'ARMED:AUTO', status: 'disputed', dot: 'red', domain: 'Telephony Gateway', sentiment: 95, delta: 'Carrier Armed', complaints: 12, regulations: 1, services: 8, entities: 2, analysis: 'Initiates telephone calls directly to Kavi Stark when urgent reminders are due.' },
+                        { id: 't2', title: 'Tactical Ringtone & Vibrator Announcer', statusText: 'ACTIVE', status: 'safe', dot: 'green', domain: 'Acoustic Alert', sentiment: 97, delta: 'Synthesized Chime', complaints: 0, regulations: 1, services: 6, entities: 1, analysis: 'Plays multi-oscillator alarm chime and triggers mobile vibration patterns on due alerts.' },
+                        { id: 't3', title: '4-Second Autonomous Reminder Polling Daemon', statusText: 'ONLINE', status: 'safe', dot: 'green', domain: 'Daemon Sentinel', sentiment: 100, delta: '4s Cycle', complaints: 0, regulations: 1, services: 15, entities: 2, analysis: 'Scans the database every 4 seconds to detect upcoming or overdue reminders.' }
+                    ],
+                    synthesis: [
+                        { id: 's1', title: 'Edge-TTS Christopher Neural Deep Voice Engine', statusText: 'ACTIVE', status: 'safe', dot: 'green', domain: 'Primary Voice', sentiment: 98, delta: '-14Hz Pitch', complaints: 0, regulations: 1, services: 12, entities: 2, analysis: 'Cinematic Christopher neural voice generator tuned to -14Hz pitch and -8% cadence.' },
+                        { id: 's2', title: 'Offline SAPI5 pyttsx3 Resonant Synthesizer', statusText: 'STANDBY', status: 'safe', dot: 'green', domain: 'Offline TTS', sentiment: 95, delta: 'Zero-Network', complaints: 0, regulations: 1, services: 8, entities: 1, analysis: 'Local Windows speech engine providing offline voice delivery when internet is disconnected.' },
+                        { id: 's3', title: 'Dynamic 34-Bar Equalizer Waveform Modulator', statusText: 'ACTIVE', status: 'safe', dot: 'green', domain: 'Equalizer Emitter', sentiment: 99, delta: 'Real-Time Sync', complaints: 0, regulations: 1, services: 14, entities: 1, analysis: 'Pulsates histogram bars and traveling photon sparks synchronized to voice phonemes.' }
+                    ]
+                }
+            }
+        };
+
+        let currentDatasetKey = 'ultronVoice';
+        let activeCategoryKey = 'automation';
+        let selectedNodeId = 'u2';
+        let activeCategoryKey = 'laws';
+        let selectedNodeId = 'n17';
+        let activeFilterMode = 'all'; // 'all', 'safe', 'disputed'
+        let currentGraphMode = 'radial'; // 'radial', 'hierarchy'
+        let synapseSpeedMultiplier = 1.0;
+        let isSynapseSurging = false;
+
+        // Canvas Pan & Zoom State
+        let canvasPanX = 0;
+        let canvasPanY = 0;
+        let canvasScale = 1.0;
+        let isPanningCanvas = false;
+        let startPanMouseX = 0;
+        let startPanMouseY = 0;
+
+        // Traveling Photon Animation State
+        let photonParticles = [];
+        let splinePathsData = [];
+        let animationFrameId = null;
+
+        // DOM Elements
+        const canvasViewport = document.getElementById('canvasViewport');
+        const canvasWorld = document.getElementById('canvasWorld');
+        const svgCurvesGroup = document.getElementById('svgCurvesGroup');
+        const photonCanvas = document.getElementById('photonCanvas');
+        const photonCtx = photonCanvas ? photonCanvas.getContext('2d') : null;
+        const categoryCardsCol = document.getElementById('categoryCardsCol');
+        const childNodesCol = document.getElementById('childNodesCol');
+
+        // Initialize Mindmap
+        
+        /* ==========================================================================
+           MOBILE TOUCH ENGINE & 3D GYROSCOPE ORIENTATION PARALLAX
+           ========================================================================== */
+        let currentMobileView = 'mindmap'; // 'mindmap' or 'deck'
+
+        function switchMobileView(view) {
+            currentMobileView = view;
+            const container = document.getElementById('centralPlatformContainer');
+            const tabMindmap = document.getElementById('tabBtnMindmap');
+            const tabDeck = document.getElementById('tabBtnDeck');
+
+            if (container) {
+                container.classList.remove('mobile-mode-mindmap', 'mobile-mode-deck');
+                container.classList.add(view === 'mindmap' ? 'mobile-mode-mindmap' : 'mobile-mode-deck');
+            }
+            if (tabMindmap) tabMindmap.classList.toggle('active', view === 'mindmap');
+            if (tabDeck) tabDeck.classList.toggle('active', view === 'deck');
+
+            if (view === 'mindmap') {
+                setTimeout(recalculateSplines, 80);
+            }
+        }
+
+        // Initialize Mobile Mode Container
+        function initMobileContainer() {
+            const container = document.getElementById('centralPlatformContainer');
+            if (container && window.innerWidth <= 900) {
+                container.classList.add('mobile-mode-mindmap');
+            }
+        }
+
+        // Update Mobile Peek Bar
+        function updateMobilePeekBar(node) {
+            const titleEl = document.getElementById('mobilePeekTitle');
+            const statusEl = document.getElementById('mobilePeekStatus');
+            if (titleEl && node) titleEl.textContent = node.title;
+            if (statusEl && node) {
+                statusEl.innerHTML = `<span class="status-dot ${node.dot || 'green'}"></span> ${node.statusText || 'ACTIVE'} // ${node.sentiment || 98}% NOMINAL`;
+            }
+        }
+
+        // 3D Gyroscope Device Orientation Parallax
+        function setup3DGyroscope() {
+            if (window.DeviceOrientationEvent) {
+                window.addEventListener('deviceorientation', (e) => {
+                    if (e.beta === null || e.gamma === null) return;
+                    const tiltX = Math.min(20, Math.max(-20, e.beta - 45)) * 0.35;
+                    const tiltY = Math.min(25, Math.max(-25, e.gamma)) * 0.35;
+
+                    const sphere = document.getElementById('corePlanetSphere');
+                    if (sphere) {
+                        sphere.style.transform = `rotateX(${-tiltX}deg) rotateY(${tiltY}deg)`;
+                    }
+                }, { passive: true });
+            }
+        }
+
+        // Mobile Touch Pan & Pinch-to-Zoom
+        function setupTouchGestures() {
+            const vp = document.getElementById('canvasViewport');
+            if (!vp) return;
+
+            let touchStartX = 0;
+            let touchStartY = 0;
+            let initialDistance = 0;
+            let initialScale = 1.0;
+            let isTouchDragging = false;
+
+            vp.addEventListener('touchstart', (e) => {
+                if (e.touches.length === 1) {
+                    if (e.target.closest('.category-card') || e.target.closest('.child-node-item') || e.target.closest('.root-core-container')) {
+                        return;
+                    }
+                    isTouchDragging = true;
+                    touchStartX = e.touches[0].clientX - canvasPanX;
+                    touchStartY = e.touches[0].clientY - canvasPanY;
+                } else if (e.touches.length === 2) {
+                    isTouchDragging = false;
+                    initialDistance = Math.hypot(
+                        e.touches[0].clientX - e.touches[1].clientX,
+                        e.touches[0].clientY - e.touches[1].clientY
+                    );
+                    initialScale = canvasScale;
+                }
+            }, { passive: true });
+
+            vp.addEventListener('touchmove', (e) => {
+                if (e.touches.length === 1 && isTouchDragging) {
+                    canvasPanX = e.touches[0].clientX - touchStartX;
+                    canvasPanY = e.touches[0].clientY - touchStartY;
+                    applyCanvasTransform();
+                } else if (e.touches.length === 2 && initialDistance > 0) {
+                    const currentDist = Math.hypot(
+                        e.touches[0].clientX - e.touches[1].clientX,
+                        e.touches[0].clientY - e.touches[1].clientY
+                    );
+                    const factor = currentDist / initialDistance;
+                    canvasScale = Math.min(2.4, Math.max(0.4, initialScale * factor));
+                    applyCanvasTransform();
+                }
+            }, { passive: true });
+
+            vp.addEventListener('touchend', (e) => {
+                if (e.touches.length < 2) initialDistance = 0;
+                if (e.touches.length === 0) isTouchDragging = false;
+            }, { passive: true });
+        }
+
+        function initNeuralMindmap() {
+            initMobileContainer();
+            setupTouchGestures();
+            setup3DGyroscope();
+            initHistogramBars();
+            
+            loadDataset(currentDatasetKey);
+            setupCanvasPanZoom();
+            startPhotonSparkEngine();
+            syncDeckChatWithCore();
+        }
+
+        // Initialize 36 Histogram Bars
+        function initHistogramBars() {
+            const container = document.getElementById('sentimentHistogram');
+            if (!container) return;
+            container.innerHTML = '';
+            for (let i = 0; i < 34; i++) {
+                const bar = document.createElement('div');
+                bar.className = 'hist-bar';
+                // initial distribution curve
+                const factor = Math.sin((i / 34) * Math.PI);
+                const height = Math.max(4, Math.floor(factor * 28 + Math.random() * 8));
+                bar.style.height = height + 'px';
+                container.appendChild(bar);
+            }
+        }
+
+        // Animate Histogram with Sound or Procedural Pulse
+        function animateHistogramLoop() {
+            const container = document.getElementById('sentimentHistogram');
+            if (!container) return;
+            const bars = container.children;
+            const hasAudioData = freqArray && (isSpeaking || isListening);
+
+            for (let i = 0; i < bars.length; i++) {
+                if (hasAudioData && audioAnalyser) {
+                    audioAnalyser.getByteFrequencyData(freqArray);
+                    const idx = Math.floor((i / bars.length) * (freqArray.length / 2));
+                    const val = freqArray[idx] || 0;
+                    const h = Math.max(4, Math.floor((val / 255) * 36));
+                    bars[i].style.height = h + 'px';
+                } else {
+                    // gentle organic idle breathing
+                    const time = Date.now() * 0.003;
+                    const sine = Math.sin(time + i * 0.28);
+                    const h = Math.max(4, Math.floor(14 + sine * 10 + (i % 3) * 3));
+                    bars[i].style.height = h + 'px';
+                }
+            }
+            requestAnimationFrame(animateHistogramLoop);
+        }
+        requestAnimationFrame(animateHistogramLoop);
+
+        // Load & Render Dataset
+        function loadDataset(key) {
+            currentDatasetKey = key;
+            const data = MINDMAP_DATASETS[key];
+            if (!data) return;
+
+            // Update Top Bar & Breadcrumb
+            const titleEl = document.getElementById('platformMainTitle');
+            if (titleEl) titleEl.textContent = data.platformTitle;
+            const breadcrumbEl = document.getElementById('breadcrumbKpiText');
+            if (breadcrumbEl) breadcrumbEl.textContent = data.breadcrumb;
+            const presetLabel = document.getElementById('presetLabelText');
+            if (presetLabel) presetLabel.textContent = key === 'policy' ? 'Preset: Policy' : 'Preset: Ultron OS';
+
+            // Root Node
+            const rootLabel = document.getElementById('rootNodeLabel');
+            if (rootLabel) {
+                rootLabel.innerHTML = `${data.root.title}<br><strong>${data.root.subtitle}</strong>`;
+            }
+            const rootStatus = document.getElementById('rootNodeStatusTag');
+            if (rootStatus) {
+                rootStatus.innerHTML = `<span class="status-dot ${data.root.statusDot}"></span><span class="status-text">${data.root.status}</span>`;
+            }
+
+            // Find default active category
+            const activeCat = data.categories.find(c => c.active) || data.categories[0];
+            activeCategoryKey = activeCat.id;
+
+            // Pick default selected node
+            const nodes = data.childNodes[activeCategoryKey] || [];
+            const selNode = nodes.find(n => n.selected) || nodes[0] || null;
+            if (selNode) {
+                selectedNodeId = selNode.id;
+            }
+
+            renderCategoryCards();
+            renderChildNodes();
+            updateRightDeckDetails();
+            recalculateSplines();
+        }
+
+        // Render Level 1 Category Cards
+        function renderCategoryCards() {
+            if (!categoryCardsCol) return;
+            const data = MINDMAP_DATASETS[currentDatasetKey];
+            categoryCardsCol.innerHTML = '';
+
+            data.categories.forEach(cat => {
+                const card = document.createElement('div');
+                card.className = `category-card ${cat.id === activeCategoryKey ? 'active' : ''}`;
+                card.id = `catCard_${cat.id}`;
+                card.onclick = (e) => {
+                    e.stopPropagation();
+                    selectCategory(cat.id);
+                };
+
+                card.innerHTML = `
+                    <div class="cat-icon-box"><i class="${cat.icon}"></i></div>
+                    <div class="cat-text-group">
+                        <div class="cat-number">${cat.count}</div>
+                        <div class="cat-label">${cat.label}</div>
+                    </div>
+                `;
+                categoryCardsCol.appendChild(card);
+            });
+        }
+
+        // Switch Active Category
+        function selectCategory(catId) {
+            if (activeCategoryKey === catId) return;
+            activeCategoryKey = catId;
+            const data = MINDMAP_DATASETS[currentDatasetKey];
+            data.categories.forEach(c => c.active = (c.id === catId));
+
+            // Select first node in this category
+            const nodes = data.childNodes[catId] || [];
+            if (nodes.length > 0) {
+                selectedNodeId = nodes[0].id;
+            }
+
+            renderCategoryCards();
+            renderChildNodes();
+            updateRightDeckDetails();
+            recalculateSplines();
+            triggerSynapseSurge(1.6);
+        }
+
+        // Render Level 2 Child Nodes (Peacock Fan Bundle)
+        function renderChildNodes() {
+            if (!childNodesCol) return;
+            const data = MINDMAP_DATASETS[currentDatasetKey];
+            const nodes = data.childNodes[activeCategoryKey] || [];
+            childNodesCol.innerHTML = '';
+
+            // Filter nodes if activeFilterMode is set
+            const filtered = nodes.filter(n => {
+                if (activeFilterMode === 'all') return true;
+                return n.status === activeFilterMode;
+            });
+
+            filtered.forEach((node, idx) => {
+                const item = document.createElement('div');
+                item.className = `child-node-item ${node.id === selectedNodeId ? 'selected' : ''}`;
+                item.id = `childNode_${node.id}`;
+                item.onclick = (e) => {
+                    e.stopPropagation();
+                    selectChildNode(node.id);
+                };
+
+                const isDisputed = node.status === 'disputed';
+                const badgeClass = isDisputed ? 'disputed' : 'safe';
+
+                item.innerHTML = `
+                    <span class="node-pin-dot"></span>
+                    <span class="node-title-text" title="${node.title}">${node.title}</span>
+                    <span class="node-status-badge ${badgeClass}">
+                        <span class="status-dot ${node.dot}"></span>
+                        <span>${node.statusText}</span>
+                    </span>
+                `;
+                childNodesCol.appendChild(item);
+            });
+        }
+
+        // Select Child Node
+        function selectChildNode(nodeId) {
+            selectedNodeId = nodeId;
+            const items = childNodesCol ? childNodesCol.querySelectorAll('.child-node-item') : [];
+            items.forEach(el => el.classList.remove('selected'));
+            const activeEl = document.getElementById(`childNode_${nodeId}`);
+            if (activeEl) activeEl.classList.add('selected');
+
+            updateRightDeckDetails();
+            recalculateSplines();
+            triggerSynapseSurge(2.0);
+        }
+
+        // Update Right Inspector Deck with Selected Node Data
+        function updateRightDeckDetails() {
+            const data = MINDMAP_DATASETS[currentDatasetKey];
+            let activeNode = null;
+
+            // Search in active category first
+            const list = data.childNodes[activeCategoryKey] || [];
+            activeNode = list.find(n => n.id === selectedNodeId);
+
+            // Fallback: search all categories
+            if (!activeNode) {
+                for (const catKey in data.childNodes) {
+                    const match = data.childNodes[catKey].find(n => n.id === selectedNodeId);
+                    if (match) { activeNode = match; break; }
+                }
+            }
+            if (!activeNode) return;
+
+            // Update DOM Elements in Deck
+            const domainEl = document.getElementById('deckDomainText');
+            if (domainEl) domainEl.textContent = activeNode.domain || 'Core System';
+
+            const titleEl = document.getElementById('deckMainTitle');
+            if (titleEl) titleEl.textContent = activeNode.title;
+
+            const statusBadge = document.getElementById('deckStatusBadge');
+            if (statusBadge) {
+                statusBadge.textContent = activeNode.statusText || 'ACTIVE';
+                statusBadge.className = `badge-status-active ${activeNode.status === 'disputed' ? 'disputed' : 'safe'}`;
+            }
+
+            const sentNum = document.getElementById('deckSentimentNum');
+            if (sentNum) sentNum.textContent = (activeNode.sentiment || 45) + '%';
+
+            const sentTag = document.getElementById('deckSentimentTag');
+            if (sentTag) {
+                const s = activeNode.sentiment || 45;
+                sentTag.textContent = s >= 80 ? 'Optimal' : (s >= 50 ? 'Moderate' : 'Critical');
+            }
+
+            const sentDelta = document.getElementById('deckSentimentDelta');
+            if (sentDelta) {
+                const deltaText = activeNode.delta || '-4% last month';
+                const isPos = deltaText.includes('+');
+                sentDelta.className = `sentiment-delta-pill ${isPos ? 'positive' : 'negative'}`;
+                sentDelta.innerHTML = `<i class="fas fa-arrow-trend-${isPos ? 'up' : 'down'}"></i> ${deltaText}`;
+            }
+
+            // 2x2 KPI Grid
+            const kpiComplaints = document.getElementById('kpiComplaints');
+            if (kpiComplaints) kpiComplaints.textContent = activeNode.complaints !== undefined ? activeNode.complaints : 12;
+
+            const kpiRegs = document.getElementById('kpiRegulations');
+            if (kpiRegs) kpiRegs.textContent = activeNode.regulations !== undefined ? activeNode.regulations : 2;
+
+            const kpiServ = document.getElementById('kpiServices');
+            if (kpiServ) kpiServ.textContent = activeNode.services !== undefined ? activeNode.services : 18;
+
+            const kpiEnt = document.getElementById('kpiEntities');
+            if (kpiEnt) kpiEnt.textContent = activeNode.entities !== undefined ? activeNode.entities : 12;
+
+            // AI Analysis
+            const aiSub = document.getElementById('deckAiSubheading');
+            if (aiSub) {
+                aiSub.textContent = activeNode.status === 'disputed' ? 'Propose De-regulation' : 'Compliance & Operational Analysis';
+            }
+            const aiBody = document.getElementById('deckAiBody');
+            if (aiBody) {
+                aiBody.textContent = activeNode.analysis || 'Autonomous legal cross-referencing indicates compliance friction across legacy banking and citizen procedural codes.';
+            }
+
+            // Sync Context Breadcrumb
+            const breadcrumbEl = document.getElementById('breadcrumbKpiText');
+            if (breadcrumbEl) {
+                breadcrumbEl.textContent = `KPI overview: ${activeNode.title.substring(0, 50)}... [${activeNode.statusText}]`;
+            }
+            updateMobilePeekBar(activeNode);
+        }
+
+        // Recalculate Smooth Cubic Bézier Splines
+        function recalculateSplines() {
+            if (!svgCurvesGroup) return;
+            svgCurvesGroup.innerHTML = '';
+            splinePathsData = [];
+
+            const rootEl = document.getElementById('rootCoreNode');
+            if (!rootEl) return;
+
+            // Root coordinates relative to canvasWorld
+            const rootX = 120 + 38; // right edge of core sphere
+            const rootY = 480;
+
+            const data = MINDMAP_DATASETS[currentDatasetKey];
+            const categories = data.categories;
+
+            // 1. Splines from Root to each Category Card
+            categories.forEach(cat => {
+                const cardEl = document.getElementById(`catCard_${cat.id}`);
+                if (!cardEl) return;
+                const cardX = 380;
+                const cardY = cardEl.offsetTop + cardEl.offsetHeight / 2;
+
+                const dx = Math.max(60, (cardX - rootX) * 0.55);
+                const d = `M ${rootX} ${rootY} C ${rootX + dx} ${rootY}, ${cardX - dx} ${cardY}, ${cardX} ${cardY}`;
+
+                const pathEl = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                pathEl.setAttribute('d', d);
+                pathEl.setAttribute('class', `spline-curve ${cat.id === activeCategoryKey ? 'selected-path' : ''}`);
+                svgCurvesGroup.appendChild(pathEl);
+
+                splinePathsData.push({
+                    p0: { x: rootX, y: rootY },
+                    p1: { x: rootX + dx, y: rootY },
+                    p2: { x: cardX - dx, y: cardY },
+                    p3: { x: cardX, y: cardY },
+                    isActive: cat.id === activeCategoryKey
+                });
+            });
+
+            // 2. Splines from Active Category Card to all Child Nodes
+            const activeCardEl = document.getElementById(`catCard_${activeCategoryKey}`);
+            if (!activeCardEl) return;
+
+            const startX = 380 + activeCardEl.offsetWidth;
+            const startY = activeCardEl.offsetTop + activeCardEl.offsetHeight / 2;
+
+            const childItems = childNodesCol ? childNodesCol.querySelectorAll('.child-node-item') : [];
+            childItems.forEach(item => {
+                const isSelected = item.id === `childNode_${selectedNodeId}`;
+                const endX = 720;
+                const endY = item.offsetTop + item.offsetHeight / 2;
+
+                const dx = Math.max(80, (endX - startX) * 0.55);
+                const d = `M ${startX} ${startY} C ${startX + dx} ${startY}, ${endX - dx} ${endY}, ${endX} ${endY}`;
+
+                const pathEl = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                pathEl.setAttribute('d', d);
+                pathEl.setAttribute('class', `spline-curve ${isSelected ? 'selected-path' : 'active-branch'}`);
+                svgCurvesGroup.appendChild(pathEl);
+
+                splinePathsData.push({
+                    p0: { x: startX, y: startY },
+                    p1: { x: startX + dx, y: startY },
+                    p2: { x: endX - dx, y: endY },
+                    p3: { x: endX, y: endY },
+                    isActive: isSelected
+                });
+            });
+
+            // Reset & seed photon particles
+            initPhotonParticles();
+        }
+
+        // Initialize Traveling Photon Light Sparks
+        function initPhotonParticles() {
+            photonParticles = [];
+            const count = Math.min(60, splinePathsData.length * 2);
+
+            for (let i = 0; i < count; i++) {
+                const pathIndex = Math.floor(Math.random() * splinePathsData.length);
+                const path = splinePathsData[pathIndex];
+                if (!path) continue;
+
+                photonParticles.push({
+                    pathIndex: pathIndex,
+                    t: Math.random(),
+                    speed: 0.003 + Math.random() * 0.004,
+                    size: path.isActive ? 2.8 : 2.0,
+                    color: path.isActive ? '#fbbf24' : '#38bdf8'
+                });
+            }
+        }
+
+        // Evaluate Cubic Bézier Point
+        function getBezierPoint(p0, p1, p2, p3, t) {
+            const mt = 1 - t;
+            const mt2 = mt * mt;
+            const mt3 = mt2 * mt;
+            const t2 = t * t;
+            const t3 = t2 * t;
+
+            return {
+                x: mt3 * p0.x + 3 * mt2 * t * p1.x + 3 * mt * t2 * p2.x + t3 * p3.x,
+                y: mt3 * p0.y + 3 * mt2 * t * p1.y + 3 * mt * t2 * p2.y + t3 * p3.y
+            };
+        }
+
+        // 60FPS Photon Spark Engine
+        function startPhotonSparkEngine() {
+            if (!photonCanvas || !photonCtx) return;
+
+            function renderPhotons() {
+                photonCtx.clearRect(0, 0, photonCanvas.width, photonCanvas.height);
+
+                const currentMultiplier = (isSpeaking || isListening || isThinking) ? 2.5 : synapseSpeedMultiplier;
+
+                photonParticles.forEach(particle => {
+                    const path = splinePathsData[particle.pathIndex];
+                    if (!path) return;
+
+                    particle.t += particle.speed * currentMultiplier;
+                    if (particle.t >= 1) {
+                        particle.t = 0;
+                        particle.pathIndex = Math.floor(Math.random() * splinePathsData.length);
+                    }
+
+                    const pt = getBezierPoint(path.p0, path.p1, path.p2, path.p3, particle.t);
+
+                    // Draw glowing photon spark
+                    photonCtx.save();
+                    photonCtx.beginPath();
+                    photonCtx.arc(pt.x, pt.y, particle.size, 0, Math.PI * 2);
+                    photonCtx.fillStyle = path.isActive ? '#fde047' : '#38bdf8';
+                    photonCtx.shadowColor = path.isActive ? '#fbbf24' : '#06b6d4';
+                    photonCtx.shadowBlur = path.isActive ? 12 : 8;
+                    photonCtx.fill();
+                    photonCtx.restore();
+                });
+
+                requestAnimationFrame(renderPhotons);
+            }
+            requestAnimationFrame(renderPhotons);
+        }
+
+        // Trigger Temporary Synapse Surge
+        function triggerSynapseSurge(multiplier = 2.0) {
+            synapseSpeedMultiplier = multiplier;
+            if (isSynapseSurging) return;
+            isSynapseSurging = true;
+            setTimeout(() => {
+                synapseSpeedMultiplier = 1.0;
+                isSynapseSurging = false;
+            }, 1800);
+        }
+
+        // Canvas Pan & Zoom Setup
+        function setupCanvasPanZoom() {
+            if (!canvasViewport) return;
+
+            window.addEventListener('resize', () => {
+                recalculateSplines();
+            });
+        }
+
+        function handleCanvasMouseDown(e) {
+            // Don't drag if clicking buttons or cards
+            if (e.target.closest('.category-card') || e.target.closest('.child-node-item') || e.target.closest('.root-core-container') || e.target.closest('button')) {
+                return;
+            }
+            isPanningCanvas = true;
+            canvasViewport.classList.add('is-dragging');
+            startPanMouseX = e.clientX - canvasPanX;
+            startPanMouseY = e.clientY - canvasPanY;
+
+            function onMouseMove(moveEvent) {
+                if (!isPanningCanvas) return;
+                canvasPanX = moveEvent.clientX - startPanMouseX;
+                canvasPanY = moveEvent.clientY - startPanMouseY;
+                applyCanvasTransform();
+            }
+
+            function onMouseUp() {
+                isPanningCanvas = false;
+                canvasViewport.classList.remove('is-dragging');
+                window.removeEventListener('mousemove', onMouseMove);
+                window.removeEventListener('mouseup', onMouseUp);
+            }
+
+            window.addEventListener('mousemove', onMouseMove);
+            window.addEventListener('mouseup', onMouseUp);
+        }
+
+        function handleCanvasWheel(e) {
+            e.preventDefault();
+            const rect = canvasViewport.getBoundingClientRect();
+            const mouseX = e.clientX - rect.left;
+            const mouseY = e.clientY - rect.top;
+
+            const zoomFactor = e.deltaY < 0 ? 1.12 : 0.88;
+            const newScale = Math.min(2.2, Math.max(0.4, canvasScale * zoomFactor));
+
+            // Zoom centered on cursor
+            canvasPanX -= (mouseX - canvasPanX) * (newScale / canvasScale - 1);
+            canvasPanY -= (mouseY - canvasPanY) * (newScale / canvasScale - 1);
+            canvasScale = newScale;
+
+            applyCanvasTransform();
+        }
+
+        function zoomCanvas(delta) {
+            const newScale = Math.min(2.2, Math.max(0.4, canvasScale + delta));
+            canvasScale = newScale;
+            applyCanvasTransform();
+        }
+
+        function resetCanvasTransform() {
+            canvasScale = 1.0;
+            canvasPanX = 0;
+            canvasPanY = 0;
+            applyCanvasTransform();
+        }
+
+        function applyCanvasTransform() {
+            if (!canvasWorld) return;
+            canvasWorld.style.transform = `translate(${canvasPanX}px, ${canvasPanY}px) scale(${canvasScale})`;
+        }
+
+        // Toolbar Mode Switches
+        function switchGraphMode(mode) {
+            currentGraphMode = mode;
+            const btnRadial = document.getElementById('btnModeGraph');
+            const btnHierarchy = document.getElementById('btnModeHierarchy');
+            if (btnRadial) btnRadial.classList.toggle('active', mode === 'radial');
+            if (btnHierarchy) btnHierarchy.classList.toggle('active', mode === 'hierarchy');
+
+            if (mode === 'hierarchy') {
+                // Adjust layout spacing slightly for structured hierarchical feel
+                if (categoryCardsCol) categoryCardsCol.style.gap = '28px';
+            } else {
+                if (categoryCardsCol) categoryCardsCol.style.gap = '20px';
+            }
+            recalculateSplines();
+        }
+
+        function cycleNodeFilter() {
+            const modes = ['all', 'safe', 'disputed'];
+            const curIdx = modes.indexOf(activeFilterMode);
+            activeFilterMode = modes[(curIdx + 1) % modes.length];
+            const filterBtn = document.getElementById('btnFilterToggle');
+            if (filterBtn) {
+                filterBtn.title = `Filter: ${activeFilterMode.toUpperCase()}`;
+                filterBtn.classList.toggle('active', activeFilterMode !== 'all');
+            }
+            renderChildNodes();
+            recalculateSplines();
+        }
+
+        function toggleDatasetPreset() {
+            const nextKey = currentDatasetKey === 'policy' ? 'ultron' : 'policy';
+            loadDataset(nextKey);
+            triggerSynapseSurge(2.2);
+        }
+
+        function handleRootNodeClick() {
+            resetCanvasTransform();
+            triggerSynapseSurge(2.0);
+            const data = MINDMAP_DATASETS[currentDatasetKey];
+            const aiBody = document.getElementById('deckAiBody');
+            if (aiBody) {
+                aiBody.textContent = data.root.analysis;
+            }
+        }
+
+        // Sync Deck Chat & Voice with Ultron Core
+        function syncDeckChatWithCore() {
+            const deckInput = document.getElementById('deckChatInput');
+            const coreInput = document.getElementById('agentDirectiveInput');
+
+            if (deckInput && coreInput) {
+                deckInput.addEventListener('input', () => {
+                    coreInput.value = deckInput.value;
+                });
+            }
+        }
+
+        function handleDeckChatKeyDown(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                submitDeckChat();
+            }
+        }
+
+        function submitDeckChat() {
+            const deckInput = document.getElementById('deckChatInput');
+            if (!deckInput) return;
+            const text = deckInput.value.trim();
+            if (!text) return;
+
+            deckInput.value = '';
+            triggerSynapseSurge(2.5);
+
+            const aiBody = document.getElementById('deckAiBody');
+            const aiSub = document.getElementById('deckAiSubheading');
+            if (aiSub) aiSub.textContent = `Directive: "${text}"`;
+            if (aiBody) aiBody.textContent = `Processing directive through Dual-Core Intelligence...`;
+
+            unlockMobileAudioContext();
+            activeQueryInFlight = false;
+            pauseSpeechCapture();
+            executeVoiceQuery(text);
+        }
+
+        function toggleVoiceRecognitionFromDeck() {
+            unlockMobileAudioContext();
+            toggleMicrophoneListening();
+            const deckMicBtn = document.getElementById('deckMicBtn');
+            if (deckMicBtn) {
+                deckMicBtn.classList.toggle('active', isListening);
+            }
+        }
+
+        function cycleAgentMode() {
+            const chipName = document.getElementById('chipAgentName');
+            if (!chipName) return;
+            const agents = ['My agent (Dual-Core)', 'Gemini 3 Flash-Lite', 'Claude 3.5 Sonnet', 'Autonomous Ultron'];
+            const cur = chipName.textContent;
+            const next = agents[(agents.indexOf(cur) + 1) % agents.length];
+            chipName.textContent = next;
+        }
+
+        
+        function triggerQuickDiagnostic() {
+            triggerSynapseSurge(3.0);
+            unlockMobileAudioContext();
+            activeQueryInFlight = false;
+            pauseSpeechCapture();
+            executeVoiceQuery('system diagnostics');
+        }
+
+        function triggerQuickAiAnalysis() {
+            const data = MINDMAP_DATASETS[currentDatasetKey];
+            let activeNode = null;
+            if (data && data.childNodes) {
+                const list = data.childNodes[activeCategoryKey] || [];
+                activeNode = list.find(n => n.id === selectedNodeId) || list[0];
+            }
+            const nodeTitle = activeNode ? activeNode.title : 'system architecture';
+            const prompt = `Analyze subsystem status, working process, and operational readiness for: ${nodeTitle}`;
+            triggerSynapseSurge(2.5);
+            unlockMobileAudioContext();
+            activeQueryInFlight = false;
+            pauseSpeechCapture();
+            executeVoiceQuery(prompt);
+        }`;
+            const deckInput = document.getElementById('deckChatInput');
+            if (deckInput) deckInput.value = prompt;
+            submitDeckChat();
+        }
+
+        // Modals Logic
+        function openNewSimulationModal() {
+            const modal = document.getElementById('newSimulationModal');
+            if (modal) modal.style.display = 'flex';
+        }
+
+        function openSearchModal() {
+            const modal = document.getElementById('searchNodesModal');
+            if (modal) {
+                modal.style.display = 'flex';
+                const input = document.getElementById('mindmapSearchInput');
+                if (input) {
+                    input.value = '';
+                    input.focus();
+                    handleSearchNodesInput('');
+                }
+            }
+        }
+
+        function openDetailsModal() {
+            const data = MINDMAP_DATASETS[currentDatasetKey];
+            let activeNode = null;
+            const list = data.childNodes[activeCategoryKey] || [];
+            activeNode = list.find(n => n.id === selectedNodeId) || list[0];
+            if (!activeNode) return;
+
+            const modal = document.getElementById('nodeDetailsModal');
+            const titleEl = document.getElementById('detailsModalTitle');
+            const bodyEl = document.getElementById('detailsModalBody');
+
+            if (titleEl) titleEl.innerHTML = `<i class="fas fa-file-contract"></i> ${activeNode.title}`;
+            if (bodyEl) {
+                bodyEl.innerHTML = `
+                    <div style="margin-bottom:12px;"><strong>Domain Category:</strong> <span style="color:#38bdf8;">${activeNode.domain}</span></div>
+                    <div style="margin-bottom:12px;"><strong>Current Status:</strong> <span style="color:${activeNode.status === 'disputed' ? '#f87171' : '#34d399'}; font-weight:700;">${activeNode.statusText}</span></div>
+                    <div style="margin-bottom:12px;"><strong>Sentiment / Performance Score:</strong> <strong>${activeNode.sentiment}%</strong> (${activeNode.delta || 'Nominal'})</div>
+                    <div style="margin-bottom:14px; padding:12px; background:rgba(15,23,42,0.6); border:1px solid rgba(56,189,248,0.2); border-radius:12px;">
+                        <div style="color:#38bdf8; font-size:0.75rem; font-weight:700; margin-bottom:6px;"><i class="fas fa-wand-magic-sparkles"></i> AI Deep Heuristic Synthesis:</div>
+                        <p style="margin:0; line-height:1.5;">${activeNode.analysis}</p>
+                    </div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; font-size:0.78rem;">
+                        <div style="padding:10px; background:rgba(255,255,255,0.03); border-radius:8px;">Public Recommendations: <strong>${activeNode.complaints}</strong></div>
+                        <div style="padding:10px; background:rgba(255,255,255,0.03); border-radius:8px;">Related Regulations: <strong>${activeNode.regulations}</strong></div>
+                        <div style="padding:10px; background:rgba(255,255,255,0.03); border-radius:8px;">Linked Services: <strong>${activeNode.services}</strong></div>
+                        <div style="padding:10px; background:rgba(255,255,255,0.03); border-radius:8px;">Entities Involved: <strong>${activeNode.entities}</strong></div>
+                    </div>
+                `;
+            }
+            if (modal) modal.style.display = 'flex';
+        }
+
+        function closeModal(id) {
+            const modal = document.getElementById(id);
+            if (modal) modal.style.display = 'none';
+        }
+
+        function closeModalOnOverlay(e, id) {
+            if (e.target.id === id) {
+                closeModal(id);
+            }
+        }
+
+        function submitNewSimulation() {
+            const title = (document.getElementById('simTitleInput').value || '').trim();
+            const cat = document.getElementById('simCategorySelect').value || 'laws';
+            const status = document.getElementById('simStatusSelect').value || 'safe';
+            const sentiment = parseInt(document.getElementById('simSentimentInput').value || '75', 10);
+            const entities = parseInt(document.getElementById('simEntitiesInput').value || '6', 10);
+            const notes = (document.getElementById('simNotesInput').value || '').trim();
+
+            if (!title) {
+                alert('Please enter a simulation directive title.');
+                return;
+            }
+
+            const data = MINDMAP_DATASETS[currentDatasetKey];
+            if (!data.childNodes[cat]) data.childNodes[cat] = [];
+
+            const newId = 'sim_' + Date.now();
+            const isDisputed = status === 'disputed';
+            const newNode = {
+                id: newId,
+                title: title,
+                statusText: isDisputed ? 'DISPUTED' : (status === 'pending' ? 'PENDING' : 'SAFE:SET'),
+                status: status,
+                dot: isDisputed ? 'red' : (status === 'pending' ? 'yellow' : 'green'),
+                domain: 'Custom Simulation',
+                sentiment: sentiment,
+                delta: '+1% simulated',
+                complaints: Math.floor(Math.random() * 8),
+                regulations: 2,
+                services: 12,
+                entities: entities,
+                analysis: notes || `Custom simulation created for ${title}. Cross-jurisdiction heuristic checks passed with ${sentiment}% compliance confidence.`
+            };
+
+            data.childNodes[cat].unshift(newNode);
+            selectCategory(cat);
+            selectChildNode(newId);
+            closeModal('newSimulationModal');
+            triggerSynapseSurge(3.0);
+        }
+
+        function handleSearchNodesInput(val) {
+            const list = document.getElementById('searchResultsList');
+            if (!list) return;
+            list.innerHTML = '';
+            const q = val.toLowerCase().trim();
+
+            const data = MINDMAP_DATASETS[currentDatasetKey];
+            const allNodes = [];
+            for (const catKey in data.childNodes) {
+                data.childNodes[catKey].forEach(n => allNodes.push({ ...n, catKey }));
+            }
+
+            const matches = allNodes.filter(n => {
+                if (!q) return true;
+                return n.title.toLowerCase().includes(q) || n.domain.toLowerCase().includes(q) || n.statusText.toLowerCase().includes(q);
+            });
+
+            if (matches.length === 0) {
+                list.innerHTML = '<div style="padding:12px; color:#94a3b8; font-size:0.8rem; text-align:center;">No matching nodes located.</div>';
+                return;
+            }
+
+            matches.slice(0, 10).forEach(node => {
+                const item = document.createElement('div');
+                item.className = 'search-result-item';
+                item.onclick = () => {
+                    selectCategory(node.catKey);
+                    selectChildNode(node.id);
+                    closeModal('searchNodesModal');
+                };
+                item.innerHTML = `
+                    <div class="search-item-left">
+                        <span class="search-item-title">${node.title}</span>
+                        <span class="search-item-domain">${node.domain}</span>
+                    </div>
+                    <span class="node-status-badge ${node.status === 'disputed' ? 'disputed' : 'safe'}">
+                        <span class="status-dot ${node.dot}"></span>
+                        <span>${node.statusText}</span>
+                    </span>
+                `;
+                list.appendChild(item);
+            });
+        }
+
+        // Safe Auto-Initialization
+        function safeInitNeuralMindmap() {
+            try {
+                initNeuralMindmap();
+            } catch(e) {
+                console.warn('Neural Mindmap initialization notice:', e);
+            }
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', safeInitNeuralMindmap);
+        } else {
+            safeInitNeuralMindmap();
+        }
+        window.addEventListener('load', () => {
+            setTimeout(safeInitNeuralMindmap, 100);
+        });
+
+
         const CSRF_TOKEN = '{{ csrf_token }}';
 
         let isListening = false;
@@ -2582,6 +5600,10 @@
         // ==========================================
         function updateMicButtonUI(listening) {
             const btn = document.getElementById('agentMicBtn');
+            const deckMic = document.getElementById('deckMicBtn');
+            if (deckMic) deckMic.classList.toggle('active', listening);
+            const mobMic = document.getElementById('mobileFloatingMicBtn');
+            if (mobMic) mobMic.classList.toggle('active', listening);
             if (!btn) return;
             if (listening) {
                 btn.classList.add('active');
@@ -3001,16 +6023,17 @@
         let accumulatedFinalTranscript = '';
         let currentInterimTranscript = '';
 
-        function showDialogueResponse(userText, assistantText) {
+        function showDialogueResponse(userText, assistantText, metaData) {
             const hud = document.getElementById('tacticalDialogueHud');
             const userEl = document.getElementById('dialogueUserText');
             const respEl = document.getElementById('dialogueResponseText');
+            const routerPill = document.getElementById('dialogueRouterPill');
+            const routerName = document.getElementById('dialogueRouterName');
             if (!hud) return;
             hud.style.display = 'block';
             if (userText) {
                 userEl.textContent = (userText.startsWith('[') || userText.startsWith('KAVI STARK:')) ? userText : `KAVI STARK: "${userText}"`;
                 userEl.style.display = 'block';
-                // Trigger neural network reaction for input display
                 triggerInputReaction(userText);
             } else {
                 userEl.style.display = 'none';
@@ -3018,9 +6041,14 @@
             if (assistantText) {
                 if (assistantText === 'Listening...') {
                     respEl.textContent = assistantText;
+                    if (routerPill) routerPill.style.display = 'none';
                     triggerInputReaction(userText || 'Listening');
                 } else if (assistantText === 'Synthesizing objective...') {
                     respEl.textContent = assistantText;
+                    if (routerPill) {
+                        routerPill.style.display = 'inline-flex';
+                        if (routerName) routerName.textContent = 'ROUTING DIRECTIVE...';
+                    }
                     triggerThinkingReaction();
                 } else {
                     if (assistantText.startsWith('ULTRON:')) {
@@ -3028,14 +6056,75 @@
                     } else {
                         respEl.textContent = `ULTRON: "${assistantText}"`;
                     }
-                    // Trigger neural network reaction for output display
                     triggerOutputReaction(assistantText);
+
+                    // Update Router Pill & Mindmap highlighting if metadata present
+                    if (metaData) {
+                        const routedModel = metaData.routed_model || 'Google Gemini 3 Flash-Lite';
+                        if (routerPill && routerName) {
+                            routerPill.style.display = 'inline-flex';
+                            routerName.textContent = routedModel.toUpperCase();
+                        }
+                        const deckRouterText = document.getElementById('deckRouterModelText');
+                        if (deckRouterText) {
+                            deckRouterText.textContent = routedModel;
+                        }
+                        highlightMindmapForDirective(metaData);
+                    }
                 }
             } else {
                 respEl.textContent = 'ULTRON: Processing directive...';
                 triggerThinkingReaction();
             }
+
+            const deckAiBody = document.getElementById('deckAiBody');
+            const deckAiSub = document.getElementById('deckAiSubheading');
+            if (userText && deckAiSub) {
+                deckAiSub.textContent = `User Directive: "${userText}"`;
+            }
+            if (assistantText && deckAiBody) {
+                if (metaData && metaData.routed_model) {
+                    deckAiBody.innerHTML = `<strong>${assistantText}</strong><br><br><span style="font-size:0.75rem; color:#38bdf8; letter-spacing:0.4px;">✦ ROUTER: ${metaData.routed_model} &bull; STAGE: ${metaData.pipeline_stage || 'COMPLETE'}</span>`;
+                } else {
+                    deckAiBody.textContent = assistantText;
+                }
+                if (typeof triggerSynapseSurge === 'function') triggerSynapseSurge(2.5);
+            }
             hud.scrollTop = hud.scrollHeight;
+        }
+
+        function highlightMindmapForDirective(metaData) {
+            if (!metaData) return;
+            const model = (metaData.routed_model || '').toLowerCase();
+            const intent = (metaData.action && metaData.action.intent) ? metaData.action.intent : (metaData.tool_executed || '');
+
+            try {
+                if (typeof loadDataset === 'function' && currentDatasetKey !== 'ultronVoice') {
+                    loadDataset('ultronVoice');
+                }
+                if (intent === 'make_call' || model.includes('telephony')) {
+                    selectCategory('automation');
+                    selectChildNode('u2');
+                } else if (intent === 'capture_image' || model.includes('vision')) {
+                    selectCategory('automation');
+                    selectChildNode('u12');
+                } else if (model.includes('claude')) {
+                    selectCategory('automation');
+                    selectChildNode('u4');
+                } else if (['open_app', 'close_app', 'lock_screen', 'type_text', 'press_key'].includes(intent)) {
+                    selectCategory('automation');
+                    selectChildNode('u7');
+                } else if (['get_device_status', 'system_diagnostics'].includes(intent)) {
+                    selectCategory('automation');
+                    selectChildNode('u1');
+                } else {
+                    selectCategory('automation');
+                    selectChildNode('u3');
+                }
+                if (typeof triggerSynapseSurge === 'function') triggerSynapseSurge(3.0);
+            } catch (e) {
+                console.warn('Mindmap directive highlight notice:', e);
+            }
         }
 
         function toggleMicrophoneListening() {
@@ -3723,7 +6812,7 @@
                         }
                     }
                     const replyText = data.response || '';
-                    showDialogueResponse(cleanQuery, replyText);
+                    showDialogueResponse(cleanQuery, replyText, data);
                     speakVoiceResponse(replyText, () => {
                         activeQueryInFlight = false;
                     });

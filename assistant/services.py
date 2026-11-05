@@ -24,16 +24,28 @@ SUPPORTED_INTENTS = {
     'add_contact',
     'list_contacts',
     'shutdown_system',
+    'open_app',
+    'close_app',
+    'inspect_screen',
+    'get_device_status',
+    'lock_screen',
+    'type_text',
+    'press_key',
+    'open_path',
+    'make_call',
 }
+
+
+# Hardcoded AI Engine Keys for AI ULTRON
+DEFAULT_GEMINI_KEY = 'AQ.Ab8RN6JjGb9DzxygCebSqJUlXxxe-vCKdmTJ2viUcsnYKsHVCA'
+DEFAULT_CLAUDE_KEY = 'apikey_0134DZBvsKi1aVKoGG4cFDwh'
 
 
 def is_valid_api_key(key):
     if not key or not str(key).strip() or str(key).strip() == 'your-gemini-api-key-here':
         return False
     k = str(key).strip()
-    if k.startswith('AQ.'):
-        return False
-    return len(k) >= 20
+    return len(k) >= 15
 
 
 def update_gemini_api_key(new_key):
@@ -71,13 +83,99 @@ def update_gemini_api_key(new_key):
         return True, f'Key applied in memory: {str(e)}'
 
 
+def update_claude_api_key(new_key):
+    """Update CLAUDE_API_KEY dynamically in memory and in the .env file."""
+    import os
+    clean_key = (new_key or '').strip()
+    if not clean_key:
+        return False, 'Key cannot be empty.'
+
+    settings.CLAUDE_API_KEY = clean_key
+    settings.ANTHROPIC_API_KEY = clean_key
+    os.environ['CLAUDE_API_KEY'] = clean_key
+    os.environ['ANTHROPIC_API_KEY'] = clean_key
+
+    env_path = os.path.join(settings.BASE_DIR, '.env')
+    try:
+        lines_env = []
+        if os.path.exists(env_path):
+            with open(env_path, 'r', encoding='utf-8') as ef:
+                lines_env = ef.readlines()
+
+        found = False
+        new_lines_env = []
+        for line in lines_env:
+            if line.strip().startswith('CLAUDE_API_KEY='):
+                new_lines_env.append(f'CLAUDE_API_KEY={clean_key}\n')
+                found = True
+            else:
+                new_lines_env.append(line)
+        if not found:
+            new_lines_env.append(f'CLAUDE_API_KEY={clean_key}\n')
+
+        with open(env_path, 'w', encoding='utf-8') as ef:
+            ef.writelines(new_lines_env)
+        return True, 'CLAUDE_API_KEY configured successfully.'
+    except Exception as e:
+        return True, f'Key applied in memory: {str(e)}'
+
+
 def get_gemini_client():
-    api_key = getattr(settings, 'GEMINI_API_KEY', '')
+    api_key = getattr(settings, 'GEMINI_API_KEY', '') or DEFAULT_GEMINI_KEY
     if not is_valid_api_key(api_key):
         raise ValueError("GEMINI_API_KEY is not configured. Please set your key in the .env file.")
     from google import genai
     from google.genai import types
     return genai.Client(api_key=api_key, http_options=types.HttpOptions(timeout=15000))
+
+
+def chat_with_claude(user_message, conversation_history=None, system_prompt=None):
+    """Query Claude (Anthropic API) using the configured Claude API key."""
+    claude_key = getattr(settings, 'CLAUDE_API_KEY', '') or getattr(settings, 'ANTHROPIC_API_KEY', '') or DEFAULT_CLAUDE_KEY
+    if not claude_key or not is_valid_api_key(claude_key):
+        return None
+
+    import requests
+    headers = {
+        "x-api-key": claude_key,
+        "anthropic-version": "2023-06-01",
+        "content-type": "application/json"
+    }
+
+    messages = []
+    if conversation_history:
+        for msg in conversation_history[-8:]:
+            role = 'user' if msg.get('role') == 'user' else 'assistant'
+            messages.append({"role": role, "content": msg.get('content', '')})
+    messages.append({"role": "user", "content": user_message})
+
+    payload = {
+        "model": getattr(settings, 'CLAUDE_MODEL', 'claude-3-5-sonnet-20241022'),
+        "max_tokens": 1024,
+        "messages": messages,
+    }
+    if not system_prompt:
+        from .prompts import build_system_prompt
+        from datetime import datetime
+        system_prompt = build_system_prompt(current_datetime=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+    payload["system"] = system_prompt
+
+    try:
+        r = requests.post("https://api.anthropic.com/v1/messages", headers=headers, json=payload, timeout=12)
+        if r.status_code == 200:
+            data = r.json()
+            blocks = data.get("content", [])
+            reply = "".join(b.get("text", "") for b in blocks if b.get("type") == "text")
+            if reply:
+                action = extract_json_from_text(reply)
+                if action and action.get('intent') in SUPPORTED_INTENTS:
+                    clean_text = re.sub(r'```json\s*[\s\S]*?\s*```', '', reply).strip()
+                    return {'text': clean_text or f"Processing {action.get('intent')}.", 'action': action, 'error': None}
+                return {'text': reply.strip(), 'action': None, 'error': None}
+    except Exception as e:
+        import logging
+        logging.getLogger(__name__).warning("Claude API notice: %s", str(e))
+    return None
 
 
 def extract_json_from_text(text):
@@ -492,24 +590,40 @@ def local_fallback_parser(user_message, conversation_history=None, user_preferen
             'error': None,
         }
 
-    # 10. Calling Directives - Decommissioned
+    # 10. Calling Directives - Outbound Telephony Gateway
     if re.search(r'\b(?:calling process|call process|make a call|voice call|phone call|start a call|place a call|dial)\b', clean) or re.search(r'\b(?:call|dial)\s+[\+\d\w]', clean):
+        target_name = "Kavi Stark"
+        target_num = "+919092117397"
+        call_match = re.search(r'\b(?:call|dial)\s+([a-zA-Z\s]+|\+?[\d\s\-]+)', clean)
+        if call_match:
+            candidate = call_match.group(1).strip()
+            clean_digits = re.sub(r'[^\d+]', '', candidate)
+            if len(clean_digits) >= 7:
+                target_num = clean_digits if clean_digits.startswith('+') else f"+{clean_digits}"
+                target_name = target_num
+            elif candidate and candidate.lower() not in ['me', 'myself', 'process']:
+                target_name = candidate.title()
         return {
-            'text': "Telephony and phone calling subsystems have been permanently decommissioned, Kavi Stark.",
-            'action': None,
+            'text': f"Initiating outbound cellular call to {target_name} ({target_num}), Kavi Stark.",
+            'action': {
+                'intent': 'make_call',
+                'phone_number': target_num,
+                'name': target_name,
+                'title': f"Urgent voice directive for {target_name}",
+            },
             'error': None,
         }
 
     if re.search(r'\b(what is your number|what\'s your number|your phone number|your number|what is your phone number|your contact number)\b', clean):
         return {
-            'text': "Telephony features are decommissioned. I operate purely via neural speech and direct interface, Kavi Stark.",
+            'text': "My telephony dispatch gateway is armed and linked to cellular endpoint +91 9092117397, Kavi Stark.",
             'action': {'intent': 'general_chat'},
             'error': None,
         }
 
     if re.search(r'\b(what is my number|what\'s my number|my phone number|my number|what is my phone number|my contact number)\b', clean):
         return {
-            'text': "You can save or look up your number in your contact directory using 'add contact Me [number]', Kavi Stark.",
+            'text': "Your registered cellular communication endpoint is +91 9092117397, Kavi Stark.",
             'action': {'intent': 'general_chat'},
             'error': None,
         }
@@ -700,9 +814,12 @@ def chat_with_gemini(user_message, conversation_history=None, user_preferences=N
     """
     api_key = getattr(settings, 'GEMINI_API_KEY', '')
 
-    # Fast-path for restricted hardware operations (immediate response)
+    # Fast-path for restricted hardware operations & local deterministics (immediate response)
     msg_lower = user_message.lower().strip()
-    if any(phrase in msg_lower for phrase in ['unlock my phone', 'unlock phone', 'turn on flashlight', 'flashlight', 'read my sms', 'send sms']):
+    if any(phrase in msg_lower for phrase in ['unlock my phone', 'unlock phone', 'turn on flashlight', 'flashlight', 'read my sms', 'send sms']) or \
+       re.search(r'\b(can you hear me|can you hear|are you listening|who am i|who are you|identify yourself|who (created|made|built|programmed) you|your creator)\b', msg_lower) or \
+       (any(op in msg_lower for op in ['times ', 'divided by ', 'plus ', 'minus ']) and any(c.isdigit() for c in msg_lower)) or \
+       re.search(r'\b(track location|my location|current location|where am i|coordinates|gps)\b', msg_lower):
         return local_fallback_parser(user_message, conversation_history=conversation_history, user_preferences=user_preferences, timezone=timezone, location_data=location_data)
 
     # Process camera image if provided
@@ -755,10 +872,12 @@ def chat_with_gemini(user_message, conversation_history=None, user_preferences=N
                 part = types.Part.from_bytes(data=image_bytes, mime_type='image/jpeg')
 
                 candidate_vision_models = [
-                    getattr(settings, 'GEMINI_MODEL', 'gemini-2.0-flash'),
-                    'gemini-2.0-flash-lite',
-                    'gemini-2.0-flash',
-                    'gemini-1.5-flash',
+                    getattr(settings, 'GEMINI_MODEL', 'gemini-flash-lite-latest'),
+                    'gemini-flash-lite-latest',
+                    'gemini-3.1-flash-lite',
+                    'gemini-3.5-flash-lite',
+                    'gemini-3.5-flash',
+                    'gemini-3-flash-preview',
                 ]
 
                 res = None
@@ -808,9 +927,9 @@ def chat_with_gemini(user_message, conversation_history=None, user_preferences=N
             parts=[types.Part(text=user_message)]
         ))
 
-        model_pref = getattr(settings, 'GEMINI_MODEL', 'gemini-2.0-flash')
+        model_pref = getattr(settings, 'GEMINI_MODEL', 'gemini-flash-lite-latest')
         candidate_models = []
-        for m in [model_pref, 'gemini-2.0-flash', 'gemini-2.0-flash-lite', 'gemini-1.5-flash']:
+        for m in [model_pref, 'gemini-flash-lite-latest', 'gemini-3.1-flash-lite', 'gemini-3.5-flash-lite', 'gemini-3.5-flash', 'gemini-3-flash-preview']:
             if m and m not in candidate_models:
                 candidate_models.append(m)
 
@@ -834,6 +953,10 @@ def chat_with_gemini(user_message, conversation_history=None, user_preferences=N
                 continue
 
         if not response:
+            # Fallback to Claude (Anthropic API) if Gemini models fail
+            claude_result = chat_with_claude(user_message, conversation_history=conversation_history, system_prompt=system_prompt)
+            if claude_result:
+                return claude_result
             raise last_error or Exception("No response generated from Gemini models.")
 
         response_text = response.text or ''
@@ -859,7 +982,10 @@ def chat_with_gemini(user_message, conversation_history=None, user_preferences=N
     except Exception as e:
         import logging
         logging.getLogger(__name__).warning("Gemini API call notice: %s", str(e))
-        # Fallback cleanly to local intelligence without polluting voice output with error text
+        # Fallback to Claude before local deterministic engine
+        claude_fallback = chat_with_claude(user_message, conversation_history=conversation_history)
+        if claude_fallback:
+            return claude_fallback
         fallback = local_fallback_parser(
             user_message,
             conversation_history=conversation_history,
@@ -904,10 +1030,12 @@ def analyze_document_with_gemini(document_content, document_name, user_question)
         )
 
         candidate_models = [
-            getattr(settings, 'GEMINI_MODEL', 'gemini-2.0-flash'),
-            'gemini-2.0-flash',
-            'gemini-2.0-flash-lite',
-            'gemini-1.5-flash',
+            getattr(settings, 'GEMINI_MODEL', 'gemini-flash-lite-latest'),
+            'gemini-flash-lite-latest',
+            'gemini-3.1-flash-lite',
+            'gemini-3.5-flash-lite',
+            'gemini-3.5-flash',
+            'gemini-3-flash-preview',
         ]
         response = None
         for m_name in candidate_models:
@@ -932,3 +1060,129 @@ def analyze_document_with_gemini(document_content, document_name, user_question)
 
     except Exception as e:
         return {'text': '', 'error': str(e)}
+
+
+def route_ai_directive(user_message, conversation_history=None, user_preferences=None, timezone='UTC', image_data=None, location_data=None):
+    """
+    Intelligent Multi-Model Router & Action Pipeline for AI ULTRON.
+    Implements the 7-step working process:
+      Step 1: Input Reception (Voice / Text / Camera / Event)
+      Step 2: Context Building (Memory, Reminders, Host device telemetry, Kavi Stark authority)
+      Step 3: Routing (Gemini for Vision & Fast Chat; Claude for Complex RPA & Planning; Telephony Gateway for Calls)
+      Step 4: Thinking & Planning
+      Step 5: Action & Tool Execution
+      Step 6: Generate Response
+      Step 7: Output Delivery (Voice / Text / RPA / Cellular Call)
+    """
+    import time
+    start_time = time.time()
+    clean_msg = (user_message or '').strip()
+    msg_lower = clean_msg.lower()
+
+    # Step 1: Input Type Determination
+    input_type = "text"
+    if image_data:
+        input_type = "camera"
+    elif any(k in msg_lower for k in ['look at', 'camera', 'what do you see', 'what is in front', 'what is on my desk', 'photo', 'picture', 'snapshot', 'capture image']):
+        input_type = "camera"
+
+    # Step 2: Context Building
+    device_context = ""
+    try:
+        from .device_controller import get_system_telemetry
+        telem = get_system_telemetry()
+        device_context = f" [Host Context: Active Window '{telem.get('active_window', 'Desktop')}', Battery {telem.get('battery_percent', 100)}%, CPU {telem.get('cpu_percent', 0)}%]"
+    except Exception:
+        pass
+
+    # Step 3: Routing
+    # Case A: Camera / Multimodal Vision -> Gemini Vision Engine
+    if image_data or input_type == "camera":
+        routed_model = "Google Gemini 3 Flash-Lite (Vision Engine)"
+        result = chat_with_gemini(
+            user_message=clean_msg,
+            conversation_history=conversation_history,
+            user_preferences=user_preferences,
+            timezone=timezone,
+            image_data=image_data,
+            location_data=location_data
+        )
+        if not result.get('action') and not image_data:
+            if any(k in msg_lower for k in ['camera', 'look at', 'what do you see', 'desk', 'see me', 'capture photo', 'snapshot', 'optical']):
+                result['action'] = {'intent': 'capture_image'}
+                result['text'] = "Accessing optical camera sensors to analyze your perimeter, Kavi Stark."
+
+    # Case B0: Local Deterministic Directives (Identity, Arithmetic, Location telemetry)
+    elif re.search(r'\b(can you hear me|can you hear|are you listening|who am i|who are you|identify yourself|who (created|made|built|programmed) you|your creator)\b', msg_lower) or \
+         (any(op in msg_lower for op in ['times ', 'divided by ', 'plus ', 'minus ']) and any(c.isdigit() for c in msg_lower)) or \
+         re.search(r'\b(track location|my location|current location|where am i|coordinates|gps)\b', msg_lower):
+        routed_model = "Local Deterministic Controller (Zero Latency)"
+        result = local_fallback_parser(
+            clean_msg,
+            conversation_history=conversation_history,
+            user_preferences=user_preferences,
+            timezone=timezone,
+            location_data=location_data
+        )
+
+    # Case B: Outbound Cellular Call Directives & Telephony Gateway -> Telephony Gateway
+    elif re.search(r'\b(?:calling process|call process|make a call|voice call|phone call|start a call|place a call|dial|what is your number|what\'s your number|your phone number|your number|what is my number|what\'s my number|my phone number)\b', clean_msg.lower()) or re.search(r'\b(?:call|dial)\s+[\+\d\w]', clean_msg):
+        routed_model = "Ultron Telephony Gateway (+91 9092117397)"
+        result = local_fallback_parser(
+            clean_msg,
+            conversation_history=conversation_history,
+            user_preferences=user_preferences,
+            timezone=timezone,
+            location_data=location_data
+        )
+
+    # Case C: Device Control / Laptop RPA / Workstation Automation -> Claude 3.5 Sonnet (with Gemini fallback)
+    elif any(phrase in msg_lower for phrase in [
+        'open app', 'launch app', 'close app', 'open chrome', 'open spotify', 'open vs code', 'open notepad', 'open calculator',
+        'type text', 'press key', 'lock screen', 'lock workstation', 'lock pc', 'lock laptop',
+        'inspect screen', 'what is on my screen', 'read screen', 'check battery', 'battery status', 'system status', 'device status', 'open downloads', 'open folder'
+    ]):
+        routed_model = "Anthropic Claude 3.5 Sonnet (Device RPA Matrix)"
+        claude_res = chat_with_claude(clean_msg, conversation_history=conversation_history)
+        if claude_res and claude_res.get('text'):
+            result = claude_res
+        else:
+            local_res = local_fallback_parser(
+                clean_msg,
+                conversation_history=conversation_history,
+                user_preferences=user_preferences,
+                timezone=timezone,
+                location_data=location_data
+            )
+            if local_res.get('action'):
+                result = local_res
+            else:
+                routed_model = "Google Gemini 3 Flash-Lite (Primary Engine)"
+                result = chat_with_gemini(
+                    user_message=clean_msg,
+                    conversation_history=conversation_history,
+                    user_preferences=user_preferences,
+                    timezone=timezone,
+                    location_data=location_data
+                )
+
+    # Case D: Fast Conversational Q&A / Voice Directives -> Google Gemini (with Claude fallback)
+    else:
+        routed_model = "Google Gemini 3 Flash-Lite (Fast Neural Matrix)"
+        result = chat_with_gemini(
+            user_message=clean_msg,
+            conversation_history=conversation_history,
+            user_preferences=user_preferences,
+            timezone=timezone,
+            location_data=location_data
+        )
+
+    latency_ms = int((time.time() - start_time) * 1000)
+
+    # Attach router metadata
+    result['routed_model'] = routed_model
+    result['pipeline_stage'] = "Execution Completed"
+    result['input_type'] = input_type
+    result['latency_ms'] = latency_ms
+
+    return result

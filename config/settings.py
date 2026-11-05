@@ -92,9 +92,13 @@ LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/dashboard/'
 LOGOUT_REDIRECT_URL = '/'
 
-# Gemini
-GEMINI_API_KEY = os.getenv('GEMINI_API_KEY', '')
-GEMINI_MODEL = os.getenv('GEMINI_MODEL', 'gemini-2.0-flash')
+# Dual AI Intelligence Core (Google Gemini & Anthropic Claude)
+GEMINI_API_KEY = os.getenv('GEMINI_API_KEY', 'AQ.Ab8RN6JjGb9DzxygCebSqJUlXxxe-vCKdmTJ2viUcsnYKsHVCA')
+GEMINI_MODEL = os.getenv('GEMINI_MODEL', 'gemini-flash-lite-latest')
+
+CLAUDE_API_KEY = os.getenv('CLAUDE_API_KEY', os.getenv('ANTHROPIC_API_KEY', 'apikey_0134DZBvsKi1aVKoGG4cFDwh'))
+ANTHROPIC_API_KEY = CLAUDE_API_KEY
+CLAUDE_MODEL = os.getenv('CLAUDE_MODEL', 'claude-3-5-sonnet-20241022')
 
 # REST Framework
 REST_FRAMEWORK = {

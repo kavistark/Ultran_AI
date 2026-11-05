@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone as django_timezone
 from .models import Conversation, Message, ActionLog, Contact
-from .services import chat_with_gemini
+from .services import chat_with_gemini, route_ai_directive
 from accounts.models import UserPreference
 from reminders.models import Reminder
 from integrations.permissions import is_action_allowed
@@ -73,8 +73,8 @@ def chat_api(request):
             is_voice=is_voice,
         )
 
-        # Call Gemini
-        result = chat_with_gemini(
+        # Route directive via Ultron 7-Stage Multi-Model Matrix
+        result = route_ai_directive(
             user_message=user_message,
             conversation_history=history,
             user_preferences=user_prefs,
@@ -82,22 +82,22 @@ def chat_api(request):
             location_data=location_data,
         )
 
-        if result['error']:
+        if result.get('error'):
             return JsonResponse({
                 'error': result['error'],
                 'conversation_id': conversation.id,
             }, status=503)
 
-        response_text = result['text']
+        response_text = result.get('text', '')
         action = result.get('action')
 
         # Handle structured action
         action_result = None
         if action:
             action_result = handle_action(request.user, action, conversation)
-            # If action has a dedicated verbal announcement (like listing contacts, not found, or shutdown), update response_text
-            if action_result.get('not_found') or action_result.get('shutdown') or action.get('intent') in ['list_contacts', 'add_contact']:
-                response_text = action_result['message']
+            # If action has a dedicated verbal announcement (like listing contacts, not found, calling, or shutdown), update response_text
+            if action_result.get('not_found') or action_result.get('shutdown') or action.get('intent') in ['list_contacts', 'add_contact', 'make_call']:
+                response_text = action_result.get('message', response_text)
             elif action_result.get('message') and not response_text:
                 response_text = action_result['message']
 
@@ -123,6 +123,10 @@ def chat_api(request):
             'action_result': action_result,
             'agent_mode': 'autonomous',
             'tool_executed': action.get('intent') if action else None,
+            'routed_model': result.get('routed_model', 'Google Gemini 3 Flash-Lite (Fast Neural Matrix)'),
+            'pipeline_stage': result.get('pipeline_stage', 'Execution Completed'),
+            'input_type': result.get('input_type', 'voice' if is_voice else 'text'),
+            'latency_ms': result.get('latency_ms', 0),
         })
 
     except json.JSONDecodeError:
@@ -286,6 +290,23 @@ def handle_action(user, action, conversation):
             'success': True,
             'shutdown': True,
             'message': "Shutting down AI ULTRON systems. Goodbye, Kavi Stark.",
+        }
+
+    elif intent == 'make_call':
+        from types import SimpleNamespace
+        from .telephony_service import dispatch_reminder_call, format_e164_number, get_default_phone_number
+        target = action.get('phone_number') or get_default_phone_number()
+        call_title = action.get('title') or "Voice directive from AI ULTRON"
+        directive_obj = SimpleNamespace(
+            id=7777,
+            title=call_title,
+            phone_number=format_e164_number(target)
+        )
+        call_telemetry = dispatch_reminder_call(directive_obj, user_name="Kavi Stark")
+        return {
+            'success': True,
+            'message': f"Outbound cellular call initiated to {call_telemetry.get('phone_number')} for Kavi Stark.",
+            'telemetry': call_telemetry,
         }
 
     elif intent == 'open_app':
@@ -546,32 +567,45 @@ def stt_api(request):
 @csrf_exempt
 @require_http_methods(["GET", "POST"])
 def configure_gemini_key_api(request):
-    """Get status or configure the Google Gemini API key."""
-    from .services import update_gemini_api_key, is_valid_api_key
-    api_key = getattr(settings, 'GEMINI_API_KEY', '')
-    masked_key = f"{api_key[:6]}...{api_key[-4:]}" if len(api_key) > 12 else ("Configured" if is_valid_api_key(api_key) else "Not Configured")
+    """Get status or configure Google Gemini & Claude API keys."""
+    from .services import update_gemini_api_key, update_claude_api_key, is_valid_api_key
+    gemini_key = getattr(settings, 'GEMINI_API_KEY', '')
+    claude_key = getattr(settings, 'CLAUDE_API_KEY', '') or getattr(settings, 'ANTHROPIC_API_KEY', '')
+    masked_gemini = f"{gemini_key[:6]}...{gemini_key[-4:]}" if len(gemini_key) > 12 else ("Configured" if is_valid_api_key(gemini_key) else "Not Configured")
+    masked_claude = f"{claude_key[:6]}...{claude_key[-4:]}" if len(claude_key) > 12 else ("Configured" if is_valid_api_key(claude_key) else "Not Configured")
 
     if request.method == "POST":
         try:
             data = json.loads(request.body)
-            new_key = (data.get("api_key") or "").strip()
-            if not new_key:
-                return JsonResponse({"success": False, "error": "API key cannot be empty."}, status=400)
-            ok, msg = update_gemini_api_key(new_key)
+            new_gemini = (data.get("api_key") or data.get("gemini_key") or "").strip()
+            new_claude = (data.get("claude_key") or data.get("anthropic_key") or "").strip()
+            messages = []
+            if new_gemini:
+                ok, msg = update_gemini_api_key(new_gemini)
+                messages.append(msg)
+            if new_claude:
+                ok, msg = update_claude_api_key(new_claude)
+                messages.append(msg)
             return JsonResponse({
-                "success": ok,
-                "message": msg,
-                "is_valid": is_valid_api_key(new_key),
-                "masked_key": f"{new_key[:6]}...{new_key[-4:]}" if len(new_key) > 12 else "Saved",
+                "success": True,
+                "message": " | ".join(messages) if messages else "Configuration saved.",
+                "is_valid": is_valid_api_key(new_gemini or gemini_key),
+                "gemini_configured": is_valid_api_key(new_gemini or gemini_key),
+                "claude_configured": is_valid_api_key(new_claude or claude_key),
             })
         except Exception as e:
             return JsonResponse({"success": False, "error": str(e)}, status=400)
 
     return JsonResponse({
         "success": True,
-        "is_configured": is_valid_api_key(api_key),
-        "masked_key": masked_key,
-        "model": getattr(settings, 'GEMINI_MODEL', 'gemini-2.0-flash'),
+        "is_configured": is_valid_api_key(gemini_key),
+        "gemini_configured": is_valid_api_key(gemini_key),
+        "claude_configured": is_valid_api_key(claude_key),
+        "masked_key": masked_gemini,
+        "masked_gemini": masked_gemini,
+        "masked_claude": masked_claude,
+        "model": getattr(settings, 'GEMINI_MODEL', 'gemini-flash-lite-latest'),
+        "claude_model": getattr(settings, 'CLAUDE_MODEL', 'claude-3-5-sonnet-20241022'),
     })
 
 

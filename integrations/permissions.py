@@ -50,6 +50,11 @@ ALLOWED_ACTIONS = {
         'requires_confirmation': False,
         'required_fields': [],
     },
+    'make_call': {
+        'description': 'Initiate outbound telephone call to authorized contact or default phone number',
+        'requires_confirmation': False,
+        'required_fields': [],
+    },
     'calculate': {
         'description': 'Execute mathematical and quantitative calculations',
         'requires_confirmation': False,
